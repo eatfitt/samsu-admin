@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 declare const gapi: any;
 @Injectable({
@@ -7,7 +8,6 @@ declare const gapi: any;
 })
 export class AuthenticationService {
 
-  // constructor() { }
   // login(): Promise<any> {
   //   return new Promise((resolve) => {
   //     localStorage.setItem('loggedIn', 'true');
@@ -18,7 +18,7 @@ export class AuthenticationService {
   // isLoggedIn(): boolean {
   //   return !!localStorage.getItem('loggedIn');
   // }
-  constructor(private http : HttpClient) {}
+  constructor(private http : HttpClient, protected router: Router) {}
 
   public authenticateUser(clientId, callback) {
     let auth2 : any;
@@ -37,12 +37,8 @@ export class AuthenticationService {
         localStorage.setItem('image', profile.getImageUrl());
         localStorage.setItem('name', profile.getName());
         localStorage.setItem('email', profile.getEmail());
-        // Alternatively you can create an object and return it like that - result = {
-        // token: googleUser.getAuthResponse().id_token, name: profile.getName(), image:
-        // profile.getImageUrl(), email: profile.getEmail(), };
-        console.log('userrrrrrr', googleUser)
-        localStorage.setItem('loggedIn', 'true');
-        callback.emit(googleUser);
+        console.log('user', googleUser);
+        
       }, function (error) {
         alert(JSON.stringify(error, undefined, 2));
       });

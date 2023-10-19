@@ -69,12 +69,10 @@ export class LoginComponent extends NbLoginComponent {
     //   this.router.navigate(['pages']);
     // })
     this.auth.authenticateUser(this.clientId, this.onGoogleSigninSuccess);
-    
-    //window.location.href = 'http://localhost:8081/oauth2/authorization/google';
   }
 
   loginWithAccessToken(data) {
-    console.log('log moi ne', data)
+    console.log('loginWithAccessToken', data)
   }
 
   getConfigValue(key: string): any {
@@ -83,8 +81,4 @@ export class LoginComponent extends NbLoginComponent {
   onGoogleSigninSuccess(data){
     console.log(data);
   }
-}
-
-function loginWithAccessToken(data) {
-  console.log('log moi ne', data)
 }
