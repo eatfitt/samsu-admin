@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { NbAlertModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbInputModule, NbLayoutModule, NbMenuModule } from '@nebular/theme';
 
+import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { ThemeModule } from '../@theme/theme.module';
-import { PagesComponent } from './pages.component';
+import { LoginComponent } from './authentication-components/login/login.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ECommerceModule } from './e-commerce/e-commerce.module';
-import { PagesRoutingModule } from './pages-routing.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
-import { LoginComponent } from './authentication-components/login/login.component';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { PagesRoutingModule } from './pages-routing.module';
+import { PagesComponent } from './pages.component';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { HttpClientModule } from '@angular/common/http';
     NbAlertModule,
     NbButtonModule,
     HttpClientModule,
+    GoogleSigninButtonModule
   ],
   declarations: [
     PagesComponent,

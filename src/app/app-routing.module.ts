@@ -1,12 +1,12 @@
-import { ExtraOptions, RouterModule, Routes } from '@angular/router';
+import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { NgModule } from '@angular/core';
+import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import {
   NbAuthComponent,
-  NbLoginComponent,
   NbLogoutComponent,
   NbRegisterComponent,
   NbRequestPasswordComponent,
-  NbResetPasswordComponent,
+  NbResetPasswordComponent
 } from '@nebular/auth';
 import { LoginComponent } from './pages/authentication-components/login/login.component';
 
@@ -55,7 +55,7 @@ const config: ExtraOptions = {
 };
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, config)],
+  imports: [GoogleSigninButtonModule, RouterModule.forRoot(routes, config)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {

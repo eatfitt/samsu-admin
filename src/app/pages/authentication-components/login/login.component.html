@@ -83,24 +83,10 @@
     Log In
   </button>
 
+      <asl-google-signin-button class="mx-5"></asl-google-signin-button>
 
-  <div id="g_id_onload"
-     data-client_id="1004958657894-sunq3ge7uur617frmlvndco7l6b1b6v3.apps.googleusercontent.com"
-     data-context="signin"
-     data-ux_mode="popup"
-     data-callback="loginWithAccessToken"
-     data-auto_prompt="false">
-</div>
-
-<div class="g_id_signin"
-     data-type="standard"
-     data-shape="rectangular"
-     data-theme="outline"
-     data-text="signin_with"
-     data-size="large"
-     data-logo_alignment="left">
-</div>
-
+<button (click)="openIframeInNewWindow()">Login</button>
+<iframe #oauthIframe sandbox (load)="onIframeLoad($event)" style="display: none;"></iframe>
 
   <button nbButton
           fullWidth
@@ -113,6 +99,7 @@
     <img src="../../../../../../assets/images/auth/google.png" class="login--with-google-logo">
     Login with Google
   </button>
+
 </form>
 
 <section *ngIf="socialLinks && socialLinks.length > 0" class="links" aria-label="Social sign in">
