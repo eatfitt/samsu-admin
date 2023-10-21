@@ -1,8 +1,12 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable, from, throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 
 declare const gapi: any;
+const API_ENDPOINT = 'http://localhost:8082/api';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,31 +22,31 @@ export class AuthenticationService {
   // isLoggedIn(): boolean {
   //   return !!localStorage.getItem('loggedIn');
   // }
-  constructor(private http : HttpClient, protected router: Router) {}
+  constructor(private http: HttpClient, protected router: Router, private socialAuthService: SocialAuthService) { }
 
-  public authenticateUser(clientId, callback) {
-    let auth2 : any;
-    let result : any;
-    gapi.load('auth2', function () {
-      auth2 = gapi
-        .auth2
-        .init({client_id: clientId, scope: 'profile email'});
-      //Login button reference
-      let element : any = document.getElementById('google-login-button');
-      auth2.attachClickHandler(element, {}, function (googleUser) {
-        //Getting profile object
-        let profile = googleUser.getBasicProfile();
-        //Setting data to localstorage.
-        localStorage.setItem('token', googleUser.getAuthResponse().id_token);
-        localStorage.setItem('image', profile.getImageUrl());
-        localStorage.setItem('name', profile.getName());
-        localStorage.setItem('email', profile.getEmail());
-        console.log('user', googleUser);
-        
-      }, function (error) {
-        alert(JSON.stringify(error, undefined, 2));
+  public authenticateUser(clientId: string): Observable<any> {
+    return new Observable((observer) => {
+      let auth2: any;
+      gapi.load('auth2', () => {
+        auth2 = gapi.auth2.init({ client_id: clientId, scope: 'profile email' });
+
+        // Login button reference
+        let element: any = document.getElementById('google-login-button');
+
+        auth2.attachClickHandler(element, {}, (googleUser) => {
+          // Emit the user data
+          observer.next(googleUser.Oc);
+          observer.complete();
+        }, (error) => {
+          observer.error(error);
+        });
       });
-    });
+    }).pipe(
+      catchError((error) => {
+        console.error('Error in authenticateUser:', error);
+        return throwError(error);
+      })
+    );
   }
   /**
 * Logout user from Google
@@ -57,4 +61,25 @@ export class AuthenticationService {
     callback();
   }
   
+  public getServerToken(googleAccessToken: string) {
+    return this.http.get(`${API_ENDPOINT}/auth/mobile/login-google?accessToken=${googleAccessToken}`).pipe(
+      catchError((error) => {
+        console.error('Error in getUserToken:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  public getUserToken(): Observable<any> {
+    return from(this.socialAuthService.getAccessToken(GoogleLoginProvider.PROVIDER_ID)).pipe(
+      switchMap(accessToken => {
+        return this.http.get(`${API_ENDPOINT}/auth/mobile/login-google?accessToken=${accessToken}`).pipe(
+          catchError((error) => {
+            console.error('Error in getUserToken:', error);
+            return throwError(error);
+          })
+        );
+      })
+    );
+  }
 }
