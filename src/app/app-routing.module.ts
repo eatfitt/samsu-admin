@@ -9,6 +9,7 @@ import {
   NbResetPasswordComponent
 } from '@nebular/auth';
 import { LoginComponent } from './pages/authentication-components/login/login.component';
+import { UpdatePersonalInfoComponent } from './pages/authentication-components/update-personal-info/update-personal-info.component';
 
 export const routes: Routes = [
   {
@@ -30,7 +31,7 @@ export const routes: Routes = [
       },
       {
         path: 'register',
-        component: NbRegisterComponent,
+        component: UpdatePersonalInfoComponent,
       },
       {
         path: 'logout',

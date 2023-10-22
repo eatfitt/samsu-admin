@@ -1,9 +1,12 @@
-import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider, SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NB_AUTH_OPTIONS, NbAuthResult, NbAuthService, NbAuthSocialLink, NbLoginComponent, getDeepFromObject } from '@nebular/auth';
 import { AuthenticationService } from '../../../@core/services/authentication/authentication.service';
+import { Observable } from 'rxjs';
+import { Action, Store } from '@ngrx/store';
+import { decrement, increment, reset, setUser } from '../../../app-state/user';
 
 export interface GoogleLoginResponse {
   email: string,
@@ -27,8 +30,11 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
     protected service: NbAuthService,
     @Inject(NB_AUTH_OPTIONS) protected options = {},
     protected cd: ChangeDetectorRef,
-    protected router: Router, private socialAuthService: SocialAuthService) {
+    protected router: Router, private socialAuthService: SocialAuthService,
+    private store: Store<{ user: number }>
+  ) {
     super(service, options, cd, router);
+    this.count$ = store.select('user');
   }
 
   imageURL  : string;
@@ -53,6 +59,7 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
   loginFail = false;
   @ViewChild('oauthIframe') oauthIframe: ElementRef;
   oauthWindow: Window | null;
+  count$: Observable<number>
 
   openIframeInNewWindow() {
     const oauthUrl = 'http://localhost:8081/oauth2/authorization/google';
@@ -97,7 +104,8 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
 
   ngOnInit(): void {
     this.socialAuthService.authState.subscribe((user) => {
-      console.log(user)
+      console.log(user);
+      this.store.dispatch(setUser({ googleUser: user }));
       this.socialAuthService.getAccessToken(GoogleLoginProvider.PROVIDER_ID).then(((value) => {
         console.log(value);
         this.auth.getServerToken(value).subscribe(
@@ -122,7 +130,6 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
     this.alive = false;
   }
   login(): void {
-    console.log('hehe');
     this.errors = [];
     this.messages = [];
     this.submitted = true;
@@ -147,12 +154,7 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
   }
 
   loginWithGoogle() {
-    // this.auth.login().then(() => {
-    //   this.router.navigate(['pages']);
-    // })
-    // this.auth.signInWithGoogle();
     this.auth.getUserToken();
-    // this.auth.authenticateUser(this.clientId).subscribe((data) => this.auth.getUserToken(data?.access_token).subscribe((data) => console.log(data, 'ha')));
   }
 
   loginWithAccessToken(data) {

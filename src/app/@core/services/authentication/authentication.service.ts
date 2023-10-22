@@ -6,7 +6,7 @@ import { Observable, from, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 
 declare const gapi: any;
-const API_ENDPOINT = 'http://localhost:8082/api';
+export const API_ENDPOINT = 'http://localhost:8082/api';
 @Injectable({
   providedIn: 'root'
 })
