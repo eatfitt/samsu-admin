@@ -5,6 +5,16 @@ import { Router } from '@angular/router';
 import { NB_AUTH_OPTIONS, NbAuthResult, NbAuthService, NbAuthSocialLink, NbLoginComponent, getDeepFromObject } from '@nebular/auth';
 import { AuthenticationService } from '../../../@core/services/authentication/authentication.service';
 
+export interface GoogleLoginResponse {
+  email: string,
+  firstTime: boolean,
+  jwtToken: JwtToken,
+}
+export interface JwtToken {
+  accessToken: string,
+  tokenType: string,
+}
+
 @Component({
   selector: 'ngx-login',
   templateUrl: './login.component.html',
@@ -40,6 +50,7 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
   socialLinks: NbAuthSocialLink[] = [];
   rememberMe = false;
   alive = true;
+  loginFail = false;
   @ViewChild('oauthIframe') oauthIframe: ElementRef;
   oauthWindow: Window | null;
 
@@ -89,6 +100,20 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
       console.log(user)
       this.socialAuthService.getAccessToken(GoogleLoginProvider.PROVIDER_ID).then(((value) => {
         console.log(value);
+        this.auth.getServerToken(value).subscribe(
+          value => {
+            console.log('jwt', value)
+            const googleLoginResponse: GoogleLoginResponse = value as GoogleLoginResponse;
+            if (googleLoginResponse.firstTime) {
+              this.router.navigate(['auth', 'register']);
+            } else {
+              this.router.navigate(['pages']);
+            }
+          },
+          error => {
+            this.loginFail = true;
+          }
+        )
         // this.accessToken$ = value;
       }))
     });
