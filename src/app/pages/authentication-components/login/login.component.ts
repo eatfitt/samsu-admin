@@ -1,8 +1,8 @@
-import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NB_AUTH_OPTIONS, NbAuthResult, NbAuthService, NbAuthSocialLink, NbLoginComponent, getDeepFromObject } from '@nebular/auth';
+import { SocialAuthService } from '../../../../utils/social-login/socialauth.service';
 import { AuthenticationService } from '../../../@core/services/authentication/authentication.service';
 
 @Component({
@@ -87,10 +87,6 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
   ngOnInit(): void {
     this.socialAuthService.authState.subscribe((user) => {
       console.log(user)
-      this.socialAuthService.getAccessToken(GoogleLoginProvider.PROVIDER_ID).then(((value) => {
-        console.log(value);
-        // this.accessToken$ = value;
-      }))
     });
   }
   ngOnDestroy(): void {

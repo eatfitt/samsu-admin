@@ -47,6 +47,8 @@
     "@nebular/security": "10.0.0",
     "@nebular/theme": "10.0.0",
     "@swimlane/ngx-charts": "^14.0.0",
+    "@types/google-one-tap": "^1.2.4",
+    "@types/google.accounts": "^0.0.13",
     "@types/ws": "^8.5.4",
     "angular2-chartjs": "0.4.1",
     "bootstrap": "4.3.1",

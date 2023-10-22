@@ -83,7 +83,8 @@
     Log In
   </button>
 
-      <asl-google-signin-button class="mx-5"></asl-google-signin-button>
+    <asl-google-signin-button type="standard" logo_alignment="center" width="240px" size="large">
+    </asl-google-signin-button>
 
 <button (click)="openIframeInNewWindow()">Login</button>
 <iframe #oauthIframe sandbox (load)="onIframeLoad($event)" style="display: none;"></iframe>
