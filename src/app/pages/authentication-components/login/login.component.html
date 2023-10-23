@@ -85,43 +85,10 @@
     Log In
   </button>
 
-      <asl-google-signin-button class="mx-5"></asl-google-signin-button>
+    <asl-google-signin-button type="standard" logo_alignment="center" width="240px" size="large">
+    </asl-google-signin-button>
 
 <button (click)="openIframeInNewWindow()">Login</button>
 <iframe #oauthIframe sandbox (load)="onIframeLoad($event)" style="display: none;"></iframe>
 
-  <button nbButton
-          fullWidth
-          class="mt-3"
-          [class.btn-pulse]="submitted"
-          type="button"
-          id="google-login-button"
-          (click)="loginWithGoogle()"
-        >
-    <img src="../../../../../../assets/images/auth/google.png" class="login--with-google-logo">
-    Login with Google
-  </button>
-
 </form>
-
-<section *ngIf="socialLinks && socialLinks.length > 0" class="links" aria-label="Social sign in">
-  or enter with:
-  <div class="socials">
-    <ng-container *ngFor="let socialLink of socialLinks">
-      <a *ngIf="socialLink.link"
-         [routerLink]="socialLink.link"
-         [attr.target]="socialLink.target"
-         [attr.class]="socialLink.icon"
-         [class.with-icon]="socialLink.icon">{{ socialLink.title }}</a>
-      <a *ngIf="socialLink.url"
-         [attr.href]="socialLink.url"
-         [attr.target]="socialLink.target"
-         [attr.class]="socialLink.icon"
-         [class.with-icon]="socialLink.icon">{{ socialLink.title }}</a>
-    </ng-container>
-  </div>
-</section>
-
-<section class="another-action" aria-label="Register">
-  Don't have an account? <a class="text-link" routerLink="../register">Register</a>
-</section>
