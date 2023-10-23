@@ -1,6 +1,10 @@
 import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NB_AUTH_OPTIONS, NbAuthResult, NbAuthService, NbAuthSocialLink, NbRegisterComponent, getDeepFromObject } from '@nebular/auth';
+import { Store } from '@ngrx/store';
+import { SocialUser } from '../../../../utils/social-login/entities/social-user';
+import { Observable } from 'rxjs-compat';
+import { getUserUserState } from '../../../app-state/user';
 
 @Component({
   selector: 'ngx-update-personal-info',
@@ -15,26 +19,29 @@ export class UpdatePersonalInfoComponent extends NbRegisterComponent {
   submitted = false;
   errors: string[] = [];
   messages: string[] = [];
-  user: any = {};
   socialLinks: NbAuthSocialLink[] = [];
+  user: Observable<SocialUser>;
 
   constructor(protected service: NbAuthService,
-              @Inject(NB_AUTH_OPTIONS) protected options = {},
-              protected cd: ChangeDetectorRef,
-              protected router: Router) {
-                super(service, options, cd, router)
-
+    @Inject(NB_AUTH_OPTIONS) protected options = {},
+    protected cd: ChangeDetectorRef,
+    protected router: Router,
+    private store: Store<{ user: SocialUser }>
+  ) {
+    super(service, options, cd, router);
     this.redirectDelay = this.getConfigValue('forms.register.redirectDelay');
     this.showMessages = this.getConfigValue('forms.register.showMessages');
     this.strategy = this.getConfigValue('forms.register.strategy');
     this.socialLinks = this.getConfigValue('forms.login.socialLinks');
   }
 
+  ngOnInit() {
+    this.user = this.store.select(getUserUserState);
+  }
+
   register(): void {
     this.errors = this.messages = [];
     this.submitted = true;
-    console.log('user', this.user)
-
   }
 
   getConfigValue(key: string): any {

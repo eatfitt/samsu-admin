@@ -6,22 +6,12 @@ import { Observable, from, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 
 declare const gapi: any;
-export const API_ENDPOINT = 'http://localhost:8082/api';
+export const API_ENDPOINT = 'http://localhost:8081/api';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  // login(): Promise<any> {
-  //   return new Promise((resolve) => {
-  //     localStorage.setItem('loggedIn', 'true');
-  //     resolve(true);
-  //   });
-  // }
-
-  // isLoggedIn(): boolean {
-  //   return !!localStorage.getItem('loggedIn');
-  // }
   constructor(private http: HttpClient, protected router: Router, private socialAuthService: SocialAuthService) { }
 
   public authenticateUser(clientId: string): Observable<any> {

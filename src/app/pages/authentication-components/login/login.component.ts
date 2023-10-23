@@ -1,12 +1,14 @@
-import { GoogleLoginProvider, SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NB_AUTH_OPTIONS, NbAuthResult, NbAuthService, NbAuthSocialLink, NbLoginComponent, getDeepFromObject } from '@nebular/auth';
+import { SocialAuthService } from '../../../../utils/social-login/socialauth.service';
 import { AuthenticationService } from '../../../@core/services/authentication/authentication.service';
 import { Observable } from 'rxjs';
-import { Action, Store } from '@ngrx/store';
-import { decrement, increment, reset, setUser } from '../../../app-state/user';
+import { Store } from '@ngrx/store';
+import { setUser } from '../../../app-state/user';
+import { SocialUser } from '../../../../utils/social-login/public-api';
 
 export interface GoogleLoginResponse {
   email: string,
@@ -31,10 +33,9 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
     @Inject(NB_AUTH_OPTIONS) protected options = {},
     protected cd: ChangeDetectorRef,
     protected router: Router, private socialAuthService: SocialAuthService,
-    private store: Store<{ user: number }>
+    private store: Store<{ user: SocialUser }>
   ) {
     super(service, options, cd, router);
-    this.count$ = store.select('user');
   }
 
   imageURL  : string;
@@ -105,25 +106,21 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
   ngOnInit(): void {
     this.socialAuthService.authState.subscribe((user) => {
       console.log(user);
-      this.store.dispatch(setUser({ googleUser: user }));
-      this.socialAuthService.getAccessToken(GoogleLoginProvider.PROVIDER_ID).then(((value) => {
-        console.log(value);
-        this.auth.getServerToken(value).subscribe(
-          value => {
-            console.log('jwt', value)
-            const googleLoginResponse: GoogleLoginResponse = value as GoogleLoginResponse;
-            if (googleLoginResponse.firstTime) {
-              this.router.navigate(['auth', 'register']);
-            } else {
-              this.router.navigate(['pages']);
-            }
-          },
-          error => {
-            this.loginFail = true;
+      this.store.dispatch(setUser({ user }));
+      this.auth.getServerToken(user.authToken).subscribe(
+        value => {
+          console.log('jwt', value)
+          const googleLoginResponse: GoogleLoginResponse = value as GoogleLoginResponse;
+          if (googleLoginResponse.firstTime) {
+            this.router.navigate(['auth', 'register']);
+          } else {
+            this.router.navigate(['pages']);
           }
-        )
-        // this.accessToken$ = value;
-      }))
+        },
+        error => {
+          this.loginFail = true;
+        }
+      )
     });
   }
   ngOnDestroy(): void {
@@ -153,18 +150,8 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
     });
   }
 
-  loginWithGoogle() {
-    this.auth.getUserToken();
-  }
-
-  loginWithAccessToken(data) {
-    console.log('loginWithAccessToken', data)
-  }
-
   getConfigValue(key: string): any {
     return getDeepFromObject(this.options, key, null);
   }
-  onGoogleSigninSuccess(data){
-    console.log(data);
-  }
+
 }
