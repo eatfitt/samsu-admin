@@ -52,7 +52,6 @@ import { StatsProgressBarService } from './mock/stats-progress-bar.service';
 import { VisitorsAnalyticsService } from './mock/visitors-analytics.service';
 import { SecurityCamerasService } from './mock/security-cameras.service';
 import { MockDataModule } from './mock/mock-data.module';
-import { API_ENDPOINT } from './services/authentication/authentication.service';
 
 const socialLinks = [
   {
@@ -115,24 +114,7 @@ export const NB_CORE_PROVIDERS = [
     forms: {
       login: {
         socialLinks: socialLinks,
-      },
-      register: {
-        socialLinks: socialLinks,
-        method: 'post',
-        endpoint: `${API_ENDPOINT}/auth/signup`,
-        redirect: {
-          success: '/pages',
-          failure: null,
-        },
-        defaultErrors: ['Something went wrong, please try again.'],
-        defaultMessages: ['You have been successfully updated.'],
-        user: {
-          favouriteGenshin: {
-            required: true,
-            minLength: 2
-          }
-        }
-      },
+      }
     },
   }).providers,
 

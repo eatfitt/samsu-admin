@@ -4,11 +4,10 @@ import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, 
 import { Router } from '@angular/router';
 import { NB_AUTH_OPTIONS, NbAuthResult, NbAuthService, NbAuthSocialLink, NbLoginComponent, getDeepFromObject } from '@nebular/auth';
 import { SocialAuthService } from '../../../../utils/social-login/socialauth.service';
-import { AuthenticationService } from '../../../@core/services/authentication/authentication.service';
+import { AuthenticationService, SignInRequest } from '../../../@core/services/authentication/authentication.service';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Jwt, UserState, setUserJwt, setUserSocialUser } from '../../../app-state/user';
-import { SocialUser } from '../../../../utils/social-login/public-api';
 
 export interface GoogleLoginResponse {
   email: string,
@@ -27,7 +26,6 @@ export interface JwtToken {
 })
 export class LoginComponent extends NbLoginComponent implements OnInit, OnDestroy {
   constructor(
-    private http: HttpClient,
     private auth: AuthenticationService,
     protected service: NbAuthService,
     @Inject(NB_AUTH_OPTIONS) protected options = {},
@@ -52,7 +50,11 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
 
   errors: string[] = [];
   messages: string[] = [];
-  user: any = {};
+  user: SignInRequest = {
+    usernameOrEmail: '',
+    password: ''
+  };
+  errorMessage = '';
   submitted: boolean = false;
   socialLinks: NbAuthSocialLink[] = [];
   rememberMe = false;
@@ -61,31 +63,6 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
   @ViewChild('oauthIframe') oauthIframe: ElementRef;
   oauthWindow: Window | null;
   count$: Observable<number>
-
-  openIframeInNewWindow() {
-    const oauthUrl = 'http://localhost:8081/oauth2/authorization/google';
-
-    this.oauthWindow = window.open(oauthUrl, '_blank', 'width=600,height=400');
-
-    // Add an interval to check the URL of the popup window
-    window.addEventListener('message', (event) => {
-      // Ensure the message is from the expected origin
-      if (event.origin === 'http://localhost:8081') {
-        if (event.data === 'success') {
-          // Handle the success message (e.g., you can close the current window)
-          window.close();
-        }
-      }
-    });
-  }
-  getResponseFromBody(popupWindow: Window) {
-    const popupWindowHtml = popupWindow.document.documentElement.innerHTML;
-    popupWindow.close();
-
-    // Handle the HTML content as needed
-    console.log('Popup Window HTML:', popupWindowHtml);
-
-  }
 
   onIframeLoad(event: any) {
     const iframe = this.oauthIframe.nativeElement;
@@ -120,35 +97,38 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
         },
         error => {
           this.loginFail = true;
+          this.errorMessage = 'Login Failed';
         }
       )
     });
   }
+
   ngOnDestroy(): void {
     this.alive = false;
   }
+
   login(): void {
-    this.errors = [];
-    this.messages = [];
-    this.submitted = true;
-
-    this.service.authenticate(this.strategy, this.user).subscribe((result: NbAuthResult) => {
-      this.submitted = false;
-
-      if (result.isSuccess()) {
-        this.messages = result.getMessages();
-      } else {
-        this.errors = result.getErrors();
+    if (!this.user.password.trim() || !this.user.usernameOrEmail.trim()) {
+      this.loginFail = true;
+      this.errorMessage = "Please fill in all fields"
+    } else {
+      this.loginFail = false;
+    }
+    this.auth.signIn(this.user).subscribe(
+      (token: JwtToken) => {
+        const jwt: Jwt = {
+          email: this.user.usernameOrEmail,
+          firstTime: false,
+          jwtToken: token
+        }
+        this.store.dispatch(setUserJwt({jwt: jwt}));
+        this.router.navigate(['pages']);
+      },
+      error => {
+        this.loginFail = true;
+        this.errorMessage = 'Login Failed';
       }
-
-      const redirect = result.getRedirect();
-      if (redirect) {
-        setTimeout(() => {
-          return this.router.navigateByUrl(redirect);
-        }, this.redirectDelay);
-      }
-      this.cd.detectChanges();
-    });
+    );
   }
 
   getConfigValue(key: string): any {
