@@ -7,7 +7,7 @@ import { SocialAuthService } from '../../../../utils/social-login/socialauth.ser
 import { AuthenticationService } from '../../../@core/services/authentication/authentication.service';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { setUser } from '../../../app-state/user';
+import { Jwt, UserState, setUserJwt, setUserSocialUser } from '../../../app-state/user';
 import { SocialUser } from '../../../../utils/social-login/public-api';
 
 export interface GoogleLoginResponse {
@@ -33,7 +33,7 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
     @Inject(NB_AUTH_OPTIONS) protected options = {},
     protected cd: ChangeDetectorRef,
     protected router: Router, private socialAuthService: SocialAuthService,
-    private store: Store<{ user: SocialUser }>
+    private store: Store<{ user: UserState }>
   ) {
     super(service, options, cd, router);
   }
@@ -106,11 +106,12 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
   ngOnInit(): void {
     this.socialAuthService.authState.subscribe((user) => {
       console.log(user);
-      this.store.dispatch(setUser({ user }));
+      this.store.dispatch(setUserSocialUser({ socialUser: user }));
       this.auth.getServerToken(user.authToken).subscribe(
         value => {
           console.log('jwt', value)
-          const googleLoginResponse: GoogleLoginResponse = value as GoogleLoginResponse;
+          const googleLoginResponse: Jwt = value as Jwt;
+          this.store.dispatch(setUserJwt({jwt: googleLoginResponse}))
           if (googleLoginResponse.firstTime) {
             this.router.navigate(['auth', 'register']);
           } else {

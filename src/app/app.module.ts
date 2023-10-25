@@ -24,6 +24,7 @@ import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { userReducer } from './app-state/user';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { appReducer } from './app-state/app-state';
 
 
 @NgModule({
@@ -44,9 +45,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
-    StoreModule.forRoot({
-      user: userReducer
-    }),
+    StoreModule.forRoot(appReducer),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
     }),

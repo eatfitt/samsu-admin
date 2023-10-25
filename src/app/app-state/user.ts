@@ -1,5 +1,6 @@
 import { createReducer, on, createAction, props, createSelector } from '@ngrx/store';
 import { SocialUser } from '../../utils/social-login/public-api';
+import { AppState } from './app-state';
 
 export interface Jwt {
   email: string,
@@ -11,32 +12,31 @@ export interface JwtToken {
   tokenType: string,
 }
 export interface UserState {
-  user: SocialUser,
+  socialUser: SocialUser,
   jwt: Jwt
 }
 export const initialState: UserState = {
-  user: {} as SocialUser,
+  socialUser: {} as SocialUser,
   jwt: {} as Jwt,
 };
 
-const userState = (state: UserState) => state;
+export const userState = (state: AppState) => state.user;
 
 // Actions
-export const increment = createAction('[User] Increment');
-export const decrement = createAction('[User] Decrement');
-export const reset = createAction('[User] Reset');
-export const setUser = createAction('[User] Set User', props<UserState>());
+export const setUserSocialUser = createAction('[User] Set Social User', props<{ socialUser: SocialUser }>());
+export const setUserJwt = createAction('[User] Set Jwt', props<{ jwt: Jwt }>());
 
 
 // Reducer
 export const userReducer = createReducer(
   initialState,
-  on(setUser, (state, { user }) => ({... state, user}))
+  on(setUserSocialUser, (state, { socialUser }) => ({... state, socialUser: socialUser})),
+  on(setUserJwt, (state, { jwt }) => ({... state, jwt: jwt})),
 );
 
 // Selector
-export const getUserUserState = createSelector(userState, (state: UserState) => {
-  return state.user;
+export const getUserSocialUserState = createSelector(userState, (state: UserState) => {
+  return state.socialUser;
 })
 export const getUserJwtState = createSelector(userState, (state: UserState) => {
   return state.jwt;
