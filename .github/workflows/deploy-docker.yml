@@ -1,0 +1,26 @@
+name: Build and Dockerize Angular App
+
+on:
+  push:
+    branches:
+      - main  # Change this to the branch you want to trigger the workflow on
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build and Dockerize Angular App
+      run: |
+        # Build the Docker image
+        docker build -t samsu-admin:latest -f Dockerfile .
+
+        # Push the Docker image to a container registry (e.g., Docker Hub)
+        docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+        docker push samsu-admin:latest
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
