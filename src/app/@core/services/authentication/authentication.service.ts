@@ -1,8 +1,7 @@
-import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 
@@ -20,7 +19,7 @@ export class AuthenticationService {
   }
   
   public getServerToken(googleAccessToken: string) {
-    return this.http.get(`${this.apiEndPoint}/auth/mobile/login-google?accessToken=${googleAccessToken}`).pipe(
+    return this.http.get(`${this.apiEndPoint}/auth/login-google?accessToken=${googleAccessToken}`).pipe(
       catchError((error) => {
         console.error('Error in getUserToken:', error);
         return throwError(error);

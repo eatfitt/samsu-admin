@@ -10,5 +10,5 @@
 
 export const environment = {
   production: false,
-  apiEndPoint:"http://localhost:8082/api"
+  apiEndPoint: "https://api.samsu-fpt.software/api"
 };
