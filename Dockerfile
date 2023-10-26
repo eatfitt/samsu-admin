@@ -1,7 +1,5 @@
-FROM node:latest as build
+FROM node:18 as build
 
-# Set the working directory
-RUN mkdir -p /usr/src/app
 # Add the source code to app
 WORKDIR /usr/src/app
 
