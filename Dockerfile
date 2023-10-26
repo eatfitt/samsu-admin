@@ -1,16 +1,19 @@
+# Stage 1: Build the Angular application
 FROM node:18 as build
 
-# Add the source code to app
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-# Install all the dependencies
+WORKDIR /app
+COPY package*.json /app/
 RUN npm install --legacy-peer-deps
-
-COPY . .
-# Generate the build of the application
+COPY . /app/
 RUN npm run build:prod
 
+# Stage 2: Create the Nginx server
+FROM nginx:alpine
+
+# Copy the Angular build from the build stage to the Nginx server
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# (Optional) Replace the default Nginx configuration with your own custom configuration
 EXPOSE 4200
 
-CMD ["npm", "start"]
+CMD ["nginx", "-g", "daemon off;"]
