@@ -32,13 +32,13 @@ jobs:
     steps:
       - name: Deploy to DigitalOcean Droplet
         uses: appleboy/ssh-action@master
-          with:
-            host: ${{secrets.HOST}}
-            username: ${{secrets.USERNAME}}
-            key: ${{secrets.SSH_KEY}}
-            script: |
-              docker pull thienduc12311/samsu-admin
-              docker rm -f samsu-admin
-              docker run -d --name samsu-admin -p 4200:4200 thienduc12311/samsu-admin
-              echo 'Deployment to digital ocean finished'
+        with:
+          host: ${{secrets.HOST}}
+          username: ${{secrets.USERNAME}}
+          key: ${{secrets.SSH_KEY}}
+          script: |
+            docker pull thienduc12311/samsu-admin
+            docker rm -f samsu-admin
+            docker run -d --name samsu-admin -p 4200:4200 thienduc12311/samsu-admin
+            echo 'Deployment to digital ocean finished'
 
