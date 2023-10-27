@@ -1,12 +1,10 @@
-import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
-import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { NB_AUTH_OPTIONS, NbAuthResult, NbAuthService, NbAuthSocialLink, NbLoginComponent, getDeepFromObject } from '@nebular/auth';
+import { NB_AUTH_OPTIONS, NbAuthService, NbAuthSocialLink, NbLoginComponent, getDeepFromObject } from '@nebular/auth';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { SocialAuthService } from '../../../../utils/social-login/socialauth.service';
 import { AuthenticationService, SignInRequest } from '../../../@core/services/authentication/authentication.service';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
 import { Jwt, UserState, setUserJwt, setUserSocialUser } from '../../../app-state/user';
 
 export interface GoogleLoginResponse {
@@ -64,29 +62,12 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
   oauthWindow: Window | null;
   count$: Observable<number>
 
-  onIframeLoad(event: any) {
-    const iframe = this.oauthIframe.nativeElement;
-
-    if (event.target === iframe.contentWindow) {
-      // Check the current URL of the iframe
-      const currentUrl = iframe.contentWindow.location.href;
-
-      if (currentUrl.includes('http://localhost:8081/api/auth/login-google')) {
-        // Handle the response as needed
-
-        // Close the popup window
-        this.oauthWindow?.close();
-      }
-    }
-  }
 
   ngOnInit(): void {
     this.socialAuthService.authState.subscribe((user) => {
-      console.log(user);
       this.store.dispatch(setUserSocialUser({ socialUser: user }));
       this.auth.getServerToken(user.authToken).subscribe(
         value => {
-          console.log('jwt', value)
           const googleLoginResponse: Jwt = value as Jwt;
           this.store.dispatch(setUserJwt({jwt: googleLoginResponse}))
           if (googleLoginResponse.firstTime) {
