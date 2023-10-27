@@ -14,6 +14,8 @@ FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # (Optional) Replace the default Nginx configuration with your own custom configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 4200
 
 CMD ["nginx", "-g", "daemon off;"]
