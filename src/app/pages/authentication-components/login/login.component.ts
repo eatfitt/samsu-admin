@@ -5,7 +5,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { SocialAuthService } from '../../../../utils/social-login/socialauth.service';
 import { AuthenticationService, SignInRequest } from '../../../@core/services/authentication/authentication.service';
-import { Jwt, UserState, setUserJwt, setUserSocialUser } from '../../../app-state/user';
+import { Jwt, UserState, UserSummary, setUserJwt, setUserSocialUser, setUserUserSummary } from '../../../app-state/user';
+import { UserService } from '../../../@core/services/user/user.service';
 
 export interface GoogleLoginResponse {
   email: string,
@@ -29,7 +30,9 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
     @Inject(NB_AUTH_OPTIONS) protected options = {},
     protected cd: ChangeDetectorRef,
     protected router: Router, private socialAuthService: SocialAuthService,
-    private store: Store<{ user: UserState }>
+    private store: Store<{ user: UserState }>,
+    private userService: UserService
+  
   ) {
     super(service, options, cd, router);
   }
@@ -70,6 +73,8 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
         value => {
           const googleLoginResponse: Jwt = value as Jwt;
           this.store.dispatch(setUserJwt({jwt: googleLoginResponse}))
+          sessionStorage.setItem('socialUser', JSON.stringify(user));
+          sessionStorage.setItem('jwt', JSON.stringify(googleLoginResponse));
           if (googleLoginResponse.firstTime) {
             this.router.navigate(['auth', 'register']);
           } else {
@@ -102,8 +107,13 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
           firstTime: false,
           jwtToken: token
         }
+        sessionStorage.setItem('jwt',  JSON.stringify(jwt));
         this.store.dispatch(setUserJwt({jwt: jwt}));
-        this.router.navigate(['pages']);
+        this.userService.getMe(`${token.tokenType} ${token.accessToken}`).subscribe((userSummary: UserSummary) => {
+          sessionStorage.setItem('userSummary', JSON.stringify(userSummary));
+          this.store.dispatch(setUserUserSummary({userSummary: userSummary}));
+          this.router.navigate(['pages']);
+        });
       },
       error => {
         this.loginFail = true;

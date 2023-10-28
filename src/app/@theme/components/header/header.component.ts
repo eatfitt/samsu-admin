@@ -1,10 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { NB_WINDOW, NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 
 import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { UserState, UserSummary } from '../../../app-state/user';
+import { SocialUser } from '../../../../utils/social-login/public-api';
+import { filter } from 'rxjs/operators';
+import { UserService } from '../../../@core/services/user/user.service';
 
 @Component({
   selector: 'ngx-header',
@@ -16,6 +21,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
   user: any;
+  socialUser: SocialUser = null;
+  userSummary: UserSummary = null;
 
   themes = [
     {
@@ -43,17 +50,40 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private themeService: NbThemeService,
-              private userService: UserData,
               private layoutService: LayoutService,
-              private breakpointService: NbMediaBreakpointsService) {
+              @Inject(NB_WINDOW) private window,   
+              private breakpointService: NbMediaBreakpointsService,
+              private userService: UserService, 
+              private store: Store<{ user: UserState }>) {
   }
 
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
 
-    this.userService.getUsers()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((users: any) => this.user = users.nick);
+    this.store.select(state => state.user.socialUser).subscribe(user => {
+      this.socialUser = {...user}
+    });
+    this.store.select(state => state.user.userSummary).subscribe(userSummary => {
+      this.userSummary = {...userSummary}
+    });
+
+    this.menuService.onItemClick()
+    .pipe(
+      filter(({ tag }) => tag === 'user-dropdown'),
+      map(({ item: { title } }) => title),
+    )
+    .subscribe(title => {
+      switch(title) {
+        case 'Profile':
+          console.log('To be implemented');
+          break;
+        case 'Log out':
+          this.logout();
+          break;
+        default:
+          break;
+      }
+    });
 
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
@@ -90,5 +120,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
+  }
+
+  logout() {
+    this.userService.logOut();
   }
 }

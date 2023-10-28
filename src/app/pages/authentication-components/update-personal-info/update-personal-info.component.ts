@@ -31,7 +31,6 @@ export class UpdatePersonalInfoComponent extends NbRegisterComponent {
     protected cd: ChangeDetectorRef,
     protected router: Router,
     private store: Store<{ user: UserState }>,
-    private auth: AuthenticationService,
     private userServive: UserService
   ) {
     super(service, options, cd, router);

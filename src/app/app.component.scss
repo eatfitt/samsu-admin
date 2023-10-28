@@ -1,0 +1,24 @@
+::ng-deep nb-auth-block {
+  margin: auto 0 !important;
+}
+
+::ng-deep nb-card-body {
+  display: block !important;
+}
+
+::ng-deep nb-auth-block {
+  max-width: none !important;
+  height: 100% !important;
+}
+
+::ng-deep nb-auth nb-card-header {
+  display: none !important;
+}
+
+::ng-deep nb-auth nb-card-body {
+  background: url("../assets/images/auth/login-background.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}

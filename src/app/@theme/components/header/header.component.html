@@ -21,8 +21,9 @@
     <nb-action class="user-action" *nbIsGranted="['view', 'user']" >
       <nb-user [nbContextMenu]="userMenu"
                [onlyPicture]="userPictureOnly"
-               [name]="user?.name"
-               [picture]="user?.picture">
+               [name]="socialUser?.name ?? userSummary.name"
+               [picture]="socialUser?.photoUrl ?? '../../../../assets/images/kitten-default.png'"
+               nbContextMenuTag="user-dropdown">
       </nb-user>
     </nb-action>
   </nb-actions>

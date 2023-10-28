@@ -3,7 +3,11 @@
 // @nebular out of the box themes
 @import '@nebular/theme/styles/themes';
 
+$nb-enable-css-custom-properties: true;
+
 $nb-themes: nb-register-theme((
+  color-primary-default: #0074d5,
+  color-info-default: #003662,
   layout-padding-top: 2.25rem,
 
   menu-item-icon-margin: 0 0.5rem 0 0,
