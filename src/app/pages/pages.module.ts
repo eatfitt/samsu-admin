@@ -12,6 +12,10 @@ import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { PagesComponent } from './pages.component';
 import { UpdatePersonalInfoComponent } from './authentication-components/update-personal-info/update-personal-info.component';
+import { AllEventsComponent } from './management/events/all-events/all-events.component';
+import { AllStudentsComponent } from './management/students/all-students/all-students.component';
+import { TablesRoutingModule } from './tables/tables-routing.module';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 @NgModule({
   imports: [
@@ -29,12 +33,16 @@ import { UpdatePersonalInfoComponent } from './authentication-components/update-
     NbAlertModule,
     NbButtonModule,
     HttpClientModule,
-    GoogleSigninButtonModule
+    GoogleSigninButtonModule,
+    TablesRoutingModule,
+    Ng2SmartTableModule,
   ],
   declarations: [
     PagesComponent,
     LoginComponent,
     UpdatePersonalInfoComponent,
+    AllEventsComponent,
+    AllStudentsComponent,
   ],
 })
 export class PagesModule {

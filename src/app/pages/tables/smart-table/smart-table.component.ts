@@ -29,6 +29,9 @@ export class SmartTableComponent {
       id: {
         title: 'ID',
         type: 'number',
+        filter: {
+          type: 'checkbox',
+        }
       },
       firstName: {
         title: 'First Name',
@@ -47,13 +50,13 @@ export class SmartTableComponent {
         type: 'string',
       },
       age: {
-        title: 'Age',
+        title: 'Roll',
         type: 'number',
       },
     },
   };
 
-  source: LocalDataSource = new LocalDataSource();
+  source: LocalDataSource | any = new LocalDataSource();
 
   constructor(private service: SmartTableData) {
     const data = this.service.getData();
@@ -66,5 +69,14 @@ export class SmartTableComponent {
     } else {
       event.confirm.reject();
     }
+  }
+  ngOnInit() {
+    this.source.onChanged().subscribe((change) => {
+      console.log('change', change);
+      if (change.filter.filters[0]) {
+        console.log('test this', change.filter.filters[0].search)
+        this.source = this.service.getData().filter(data => data.firstName === 'John')
+      }
+    });
   }
 }

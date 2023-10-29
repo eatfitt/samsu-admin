@@ -1,0 +1,11 @@
+<ngx-excel-importer (onGetDataFromExcel)="importFromExcel($event)"></ngx-excel-importer>
+<nb-card>
+  <nb-card-header>
+    Students
+  </nb-card-header>
+
+  <nb-card-body>
+    <ng2-smart-table [settings]="settings" [source]="source" >
+    </ng2-smart-table>
+  </nb-card-body>
+</nb-card>

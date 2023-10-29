@@ -2,8 +2,8 @@ import { NbMenuItem } from '@nebular/theme';
 
 export const MENU_ITEMS: NbMenuItem[] = [
   {
-    title: 'E-commerce',
-    icon: 'shopping-cart-outline',
+    title: 'Dashboard',
+    icon: 'home-outline',
     link: '/pages/dashboard',
     home: true,
   },
@@ -13,8 +13,44 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/iot-dashboard',
   },
   {
-    title: 'FEATURES',
+    title: 'MANAGEMENT',
     group: true,
+  },
+  {
+    title: 'Events',
+    icon: 'calendar-outline',
+    link: '/pages/dashboard',
+    home: true,
+  },
+  {
+    title: 'Students',
+    icon: 'person-outline',
+    link: '/pages/students',
+    home: true,
+  },
+  {
+    title: 'Managers',
+    icon: 'people-outline',
+    link: '/pages/dashboard',
+    home: true,
+  },
+  {
+    title: 'Staffs',
+    icon: 'people-outline',
+    link: '/pages/dashboard',
+    home: true,
+  },
+  {
+    title: 'Announcements',
+    icon: 'volume-up-outline',
+    link: '/pages/dashboard',
+    home: true,
+  },
+  {
+    title: 'Posts',
+    icon: 'cast-outline',
+    link: '/pages/dashboard',
+    home: true,
   },
   {
     title: 'Layout',
