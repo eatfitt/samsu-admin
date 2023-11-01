@@ -47,7 +47,8 @@ export class SeoService implements OnDestroy {
       filter((event) => event instanceof NavigationEnd),
       takeUntil(this.destroy$),
     )
-      .subscribe(() => {
+      .subscribe((event) => {
+        console.log(event);
         this.linkCanonical.setAttribute('href', this.getCanonicalUrl());
       });
   }

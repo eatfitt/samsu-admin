@@ -6,6 +6,8 @@ import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { PagesComponent } from './pages.component';
 import { AllStudentsComponent } from './management/students/all-students/all-students.component';
+import { AllGroupsComponent } from './management/groups/all-groups/all-groups.component';
+import { UserComponent } from './management/user/user.component';
 
 const routes: Routes = [{
   path: '',
@@ -22,6 +24,14 @@ const routes: Routes = [{
     {
       path: 'students',
       component: AllStudentsComponent,
+    },
+    {
+      path: 'groups',
+      component: AllGroupsComponent,
+    },
+    {
+      path: 'user/:id',
+      component: UserComponent,
     },
     {
       path: 'layout',

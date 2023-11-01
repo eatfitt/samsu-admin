@@ -16,6 +16,9 @@ import { AllEventsComponent } from './management/events/all-events/all-events.co
 import { AllStudentsComponent } from './management/students/all-students/all-students.component';
 import { TablesRoutingModule } from './tables/tables-routing.module';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { AllGroupsComponent } from './management/groups/all-groups/all-groups.component';
+import { GroupCardComponent } from './management/groups/group-card/group-card.component';
+import { UserComponent } from './management/user/user.component';
 
 @NgModule({
   imports: [
@@ -43,6 +46,9 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
     UpdatePersonalInfoComponent,
     AllEventsComponent,
     AllStudentsComponent,
+    AllGroupsComponent,
+    GroupCardComponent,
+    UserComponent,
   ],
 })
 export class PagesModule {

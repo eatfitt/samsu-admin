@@ -9,7 +9,8 @@ interface President {
 @Component({
   selector: "ngx-excel-importer",
   template: `
-    <input type="file" (change)="onFileChange($event)" multiple="false" />
+    <div class="small font-weight-bold">Import Excel</div>
+    <input  type="file" (change)="onFileChange($event)" multiple="false" />
     <!-- <table class="sjs-table">
       <tr *ngFor="let row of data">
         <td *ngFor="let val of row">{{ val }}</td>
