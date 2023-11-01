@@ -25,3 +25,35 @@
     </nb-card-footer>
   </nb-card>
 </ng-template>
+
+<ng-template #importResultDialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Import Students</nb-card-header>
+    <nb-card-body>
+      <div class="text-success"><strong>Successful</strong>: {{importSuccess}} / {{importAmount}} students</div>
+      <div class="text-danger"><strong>Failed</strong>: {{importFailed}} / {{importAmount}} students</div>
+      <div class="failed-import-list">
+        
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button class="btn btn-danger size-small mt-2" (click)="openFailedList()">View Failed Data</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<ng-template #failedImportListDialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Update Failed Report</nb-card-header>
+    <nb-card-body>
+      <div class="failed-import-list">
+        <ng2-smart-table [settings]="reimportFailSetting" [source]="sourceAddingStudents" >
+        </ng2-smart-table>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
+      <button nbButton class="bg-primary text-light ml-3" (click)="importStudent()">Import</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>

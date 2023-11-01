@@ -13,7 +13,6 @@ import {
 } from "../../../app-state/user";
 
 export interface InitUserRequest {
-  username: string;
   password: string;
 }
 
@@ -55,7 +54,20 @@ export interface AddListUserResponse {
   amount: number;
   success: number;
   failed: number;
-  userImportsFail: Array<Object>;
+  userImportsFail?: Array<UserImportsFail>;
+}
+export interface UserImportsFail {
+  message: string;
+  userImport: UserImport;
+}
+export interface UserImport {
+  email: string;
+  name: string;
+  password: string;
+  role: string;
+  rollnumber: string;
+  username: string;
+  valid: boolean;
 }
 
 @Injectable({
@@ -139,12 +151,6 @@ export class UserService {
     return this.http
       .post(`${this.apiEndPoint}/users/list`, mappedUsers, options)
       .pipe(
-        // map((res: AddListUserResponse) => {
-        //   if (res.failed > 0 || res.success < res.amount) {
-        //     console.log("Error in getAllUsers: ",res.userImportsFail);
-        //     return throwError(res.userImportsFail);
-        //   }
-        // }),
         catchError((error) => {
           console.error("Error in getAllUsers:", error);
           return throwError(error);
@@ -174,6 +180,7 @@ export class UserService {
     sessionStorage.removeItem("jwt");
     sessionStorage.removeItem("userSummary");
     sessionStorage.removeItem("socialUser");
+    sessionStorage.setItem('loggedOut', 'true');
     this.router.navigateByUrl("/");
   }
 }

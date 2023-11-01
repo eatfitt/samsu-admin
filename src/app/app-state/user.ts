@@ -53,6 +53,6 @@ export const getUserSocialUserState = createSelector(userState, (state: UserStat
 export const getUserJwtState = createSelector(userState, (state: UserState) => {
   return state.jwt;
 })
-export const setUserUserSummaryState = createSelector(userState, (state: UserState) => {
+export const getUserUserSummaryState = createSelector(userState, (state: UserState) => {
   return state.userSummary;
 })

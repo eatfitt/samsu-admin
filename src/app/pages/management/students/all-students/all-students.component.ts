@@ -2,12 +2,14 @@ import { Component, TemplateRef, ViewChild } from "@angular/core";
 import { LocalDataSource } from "ng2-smart-table";
 import {
   AddListUserRequest,
+  AddListUserResponse,
   GetAllUsersResponse,
+  UserImportsFail,
   UserService,
 } from "../../../../@core/services/user/user.service";
 import { UserState } from "../../../../app-state/user";
 import { Store } from "@ngrx/store";
-import { NbDialogService } from "@nebular/theme";
+import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { Router } from "@angular/router";
 
 @Component({
@@ -19,6 +21,12 @@ import { Router } from "@angular/router";
 // TODO: Thêm hình sinh viên thì tốt
 export class AllStudentsComponent {
   @ViewChild("dialog", { static: true }) contentTemplate: TemplateRef<any>;
+  @ViewChild("importResultDialog", { static: true }) importResultDialog: TemplateRef<any>;
+  @ViewChild("failedImportListDialog", { static: true }) failedImportListDialog: TemplateRef<any>;
+
+  importAmount = 0;
+  importSuccess = 0;
+  importFailed = 0;
 
   settings = {
     add: {
@@ -33,7 +41,7 @@ export class AllStudentsComponent {
     },
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
-      confirmDelete: true,
+      // confirmDelete: true,
     },
     columns: {
       rollnumber: {
@@ -52,60 +60,68 @@ export class AllStudentsComponent {
         title: "Username",
         type: "string",
       },
-      dob: {
-        title: "DOB",
-        type: "string",
-      },
     },
   };
 
-  data: AddListUserRequest[] = [
-    {
-      rollnumber: "SE161779",
-      name: "Đỗ Ngân Hà",
-      email: "hadnse161779@fpt.edu.vn",
-      username: "elnganha",
-      dob: "14/09/2001",
-      role: "ROLE_MANAGER",
+  reimportFailSetting = {
+    actions: {
+      add: false
     },
-    {
-      rollnumber: "SE151779",
-      name: "Nguyễn Trần Thiên Đức",
-      email: "duc79@fpt.edu.vn",
-      username: "ducduc",
-      dob: "01/01/2001",
-      role: "ROLE_MANAGER",
+    add: {
+      addButtonContent: '<i class="nb-plus"></i>',
+      createButtonContent: '<i class="nb-checkmark"></i>',
+      cancelButtonContent: '<i class="nb-close"></i>',
     },
-    {
-      rollnumber: "SE151773",
-      name: "Trương Nguyễn Anh Huy",
-      email: "huy73@fpt.edu.vn",
-      username: "huyhuy",
-      dob: "02/02/2001",
-      role: "ROLE_MANAGER",
+    edit: {
+      editButtonContent: '<i class="nb-edit"></i>',
+      saveButtonContent: '<i class="nb-checkmark"></i>',
+      cancelButtonContent: '<i class="nb-close"></i>',
     },
-    {
-      rollnumber: "SE161777",
-      name: "Thái Văn Mẫn",
-      email: "man77@fpt.edu.vn",
-      username: "manman",
-      dob: "03/03/2001",
-      role: "ROLE_MANAGER",
+    delete: {
+      deleteButtonContent: '<i class="nb-trash"></i>',
+      // confirmDelete: true,
     },
-  ];
+    columns: {
+      rollnumber: {
+        title: "Roll Number",
+        type: "string",
+      },
+      name: {
+        title: "Name",
+        type: "string",
+      },
+      email: {
+        title: "Email",
+        type: "string",
+      },
+      username: {
+        title: "Username",
+        type: "string",
+      },
+      message: {
+        title: "Reason Failed",
+        type: "string",
+        editable: false,
+        // filter: false,
+      }
+    },
+  };
 
-  addingData: AddListUserRequest[] = [];
+  data: AddListUserRequest[] = [];
+
+  addingData: Partial<AddListUserRequest>[] = [];
 
   source: LocalDataSource | any = new LocalDataSource();
   sourceAddingStudents: LocalDataSource | any = new LocalDataSource();
 
   bearerToken = "";
+  private contentTemplateRef: NbDialogRef<AllStudentsComponent>;
 
   constructor(
     private userService: UserService,
     private store: Store<{ user: UserState }>,
     private dialogService: NbDialogService,
-    private router: Router
+    private router: Router,
   ) {
     // this.source.load(this.data);
     // this.source.setFilter([{field: 'rollnumber', search: '79'}, {field: 'name', search: 'ha'}, ])
@@ -127,7 +143,7 @@ export class AllStudentsComponent {
       };
     });
     this.sourceAddingStudents.load(this.addingData);
-    this.open2();
+    this.openToBeImported();
   }
 
   fetchData() {
@@ -155,8 +171,16 @@ export class AllStudentsComponent {
       });
   }
 
-  open2() {
-    this.dialogService.open(this.contentTemplate, {
+  openToBeImported() {
+    this.contentTemplateRef = this.dialogService.open(this.contentTemplate, {
+      context: "this is some additional data passed to dialog",
+    });
+  }
+
+  openFailedList() {
+    this.contentTemplateRef.close();
+    this.sourceAddingStudents.load(this.addingData);
+    this.contentTemplateRef = this.dialogService.open(this.failedImportListDialog, {
       context: "this is some additional data passed to dialog",
     });
   }
@@ -164,9 +188,26 @@ export class AllStudentsComponent {
   importStudent() {
     this.sourceAddingStudents.getAll().then((value) => {
       console.log(value);
+      this.contentTemplateRef.close();
       this.userService.addListUser(this.bearerToken, value).subscribe(
-        (data) => {
-          console.log(data);
+        (res: AddListUserResponse) => {
+          this.importAmount = res.amount;
+          this.importSuccess = res.success;
+          this.importFailed = res.failed;
+          console.log(res);
+          this.addingData = res.userImportsFail.map((item: UserImportsFail) => {
+            return {
+              rollnumber: item.userImport.rollnumber,
+              name: item.userImport.name,
+              email: item.userImport.email,
+              username: item.userImport.username,
+              role: "ROLE_STUDENT",
+              message: item.message
+            };
+          });
+          this.contentTemplateRef = this.dialogService.open(this.importResultDialog, {
+            context: 'Import Result'
+          });
           this.fetchData();
         },
         (error) => alert(`these are whats wrong ${error}`)

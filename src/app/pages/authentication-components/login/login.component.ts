@@ -67,6 +67,11 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
 
 
   ngOnInit(): void {
+    const loggedOut = JSON.parse(sessionStorage.getItem("loggedOut"));
+    if (loggedOut === 'true') {
+      return;
+    }
+
     this.socialAuthService.authState.subscribe((user) => {
       this.store.dispatch(setUserSocialUser({ socialUser: user }));
       this.auth.getServerToken(user.authToken).subscribe(
@@ -75,6 +80,11 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
           this.store.dispatch(setUserJwt({jwt: googleLoginResponse}))
           sessionStorage.setItem('socialUser', JSON.stringify(user));
           sessionStorage.setItem('jwt', JSON.stringify(googleLoginResponse));
+          this.userService.getMe(`${googleLoginResponse.jwtToken.tokenType} ${googleLoginResponse.jwtToken.accessToken}`).subscribe((userSummary: UserSummary) => {
+            sessionStorage.setItem('userSummary', JSON.stringify(userSummary));
+            this.store.dispatch(setUserUserSummary({userSummary: userSummary}));
+          });
+          sessionStorage.setItem('loggedOut', 'false');
           if (googleLoginResponse.firstTime) {
             this.router.navigate(['auth', 'register']);
           } else {
