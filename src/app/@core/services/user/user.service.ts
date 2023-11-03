@@ -12,6 +12,13 @@ import {
   setUserUserSummary,
 } from "../../../app-state/user";
 
+export enum RoleEnum {
+  ROLE_ADMIN = 0,
+  ROLE_MANAGER = 1,
+  ROLE_STAFF = 2,
+  ROLE_STUDENT = 3,
+}
+
 export interface InitUserRequest {
   password: string;
 }
@@ -44,8 +51,16 @@ export interface AddListUserRequest {
   name: string;
   rollnumber: string;
   email: string;
-  role: string;
+  role: string | number;
   dob?: string;
+  createAt?: Date;
+  department?: Department;
+  avatar?: string;
+  status?: number;
+}
+
+export interface Department {
+  name: string;
 }
 
 export interface AddUserRequest {}
@@ -153,6 +168,36 @@ export class UserService {
       .pipe(
         catchError((error) => {
           console.error("Error in getAllUsers:", error);
+          return throwError(error);
+        })
+      );
+  }
+
+  public deleteUser(bearerToken: string, rollnumber: string) {
+    const headers = new HttpHeaders()
+      .set("Content-Type", "application/json")
+      .set("Authorization", bearerToken);
+    const options = { headers: headers };
+    return this.http
+      .delete(`${this.apiEndPoint}/users/${rollnumber}`, options)
+      .pipe(
+        catchError((error) => {
+          console.error("Error in deleteUser:", error);
+          return throwError(error);
+        })
+      );
+  }
+
+  public updateUser(bearerToken: string, rollnumber: string, user: AddListUserRequest) {
+    const headers = new HttpHeaders()
+      .set("Content-Type", "application/json")
+      .set("Authorization", bearerToken);
+    const options = { headers: headers };
+    return this.http
+      .put(`${this.apiEndPoint}/users/${rollnumber}`, JSON.stringify(user), options)
+      .pipe(
+        catchError((error) => {
+          console.error("Error in deleteUser:", error);
           return throwError(error);
         })
       );

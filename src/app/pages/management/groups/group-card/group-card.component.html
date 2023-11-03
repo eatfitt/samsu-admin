@@ -1,16 +1,58 @@
-<div class="col-lg-3">
-    <nb-card>
-      <nb-card-header>
-        <div class="d-flex justify-content-between">
-            <h5>{{group.name}}</h5>
-            <button class="btn btn-outline-primary">Add</button>
-        </div>
-      </nb-card-header>
-      <nb-card-body>
-        <div>
-            <div>Member count</div>
-            <div>{{memberCount}}</div>
-        </div>
-      </nb-card-body>
-    </nb-card>
-  </div>
+<nb-card>
+  <nb-card-header>
+    <div class="d-flex justify-content-between align-items-baseline">
+      <a [routerLink]="['..', 'group', group.id]" class="h6 text-decoration-none">{{group.name}}</a>
+      <button class="btn" [nbPopover]="tabs" nbPopoverPlacement="bottom">
+        <nb-icon icon="more-vertical"></nb-icon>
+      </button>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div>
+      <div>Member count</div>
+      <div>{{memberCount}}</div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<ng-template #changeGroupNameDialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Change group name</nb-card-header>
+    <nb-card-body>
+      <input type="text" nbInput [disabled]="isApiSuccess" placeholder="Text field" [(ngModel)]="groupName">
+      <div class="text-success mt-2" *ngIf="isApiSuccess && !isApiFailed">
+        Updated successfully!
+      </div>
+      <div class="text-danger mt-2" *ngIf="!isApiSuccess && isApiFailed">
+        Updated failed! Try again.
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
+      <button *ngIf="isApiSuccess !== true" nbButton class="bg-primary text-light ml-3" (click)="onChangeGroupName()">Change</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<ng-template #tabs>
+  <nb-tabset>
+    <nb-tab *ngFor="let action of groupActionItems" [tabTitle]="action.title">
+      <div class="px-4" role="button" (click)="openDialog(action.id)">
+        {{action.title}}
+      </div>
+    </nb-tab>
+  </nb-tabset>
+</ng-template>
+
+<ng-template #confirmDeleteDialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Confirm delete?</nb-card-header>
+    <nb-card-body>
+      Do you want to delete the group <strong>{{ group.name }}</strong>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
+      <button nbButton class="bg-primary text-light ml-3" (click)="deleteGroup()">Delete</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>

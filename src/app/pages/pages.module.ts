@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NbAlertModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbInputModule, NbLayoutModule, NbMenuModule } from '@nebular/theme';
+import { NbAlertModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbContextMenuModule, NbIconModule, NbInputModule, NbLayoutModule, NbMenuModule, NbPopoverModule, NbSelectModule } from '@nebular/theme';
 
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { HttpClientModule } from '@angular/common/http';
@@ -19,6 +19,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { AllGroupsComponent } from './management/groups/all-groups/all-groups.component';
 import { GroupCardComponent } from './management/groups/group-card/group-card.component';
 import { UserComponent } from './management/user/user.component';
+import { SingleGroupComponent } from './management/groups/single-group/single-group.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,9 @@ import { UserComponent } from './management/user/user.component';
     GoogleSigninButtonModule,
     TablesRoutingModule,
     Ng2SmartTableModule,
+    NbSelectModule,
+    NbIconModule,
+    NbPopoverModule
   ],
   declarations: [
     PagesComponent,
@@ -49,6 +53,7 @@ import { UserComponent } from './management/user/user.component';
     AllGroupsComponent,
     GroupCardComponent,
     UserComponent,
+    SingleGroupComponent,
   ],
 })
 export class PagesModule {

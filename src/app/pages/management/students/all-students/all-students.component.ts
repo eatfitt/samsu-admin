@@ -4,12 +4,13 @@ import {
   AddListUserRequest,
   AddListUserResponse,
   GetAllUsersResponse,
+  RoleEnum,
   UserImportsFail,
   UserService,
 } from "../../../../@core/services/user/user.service";
 import { UserState } from "../../../../app-state/user";
 import { Store } from "@ngrx/store";
-import { NbDialogRef, NbDialogService } from "@nebular/theme";
+import { NbDialogRef, NbDialogService, NbToastrService } from "@nebular/theme";
 import { Router } from "@angular/router";
 
 @Component({
@@ -23,12 +24,20 @@ export class AllStudentsComponent {
   @ViewChild("dialog", { static: true }) contentTemplate: TemplateRef<any>;
   @ViewChild("importResultDialog", { static: true }) importResultDialog: TemplateRef<any>;
   @ViewChild("failedImportListDialog", { static: true }) failedImportListDialog: TemplateRef<any>;
+  @ViewChild("deleteUserDialog", { static: true }) deleteUserDialog: TemplateRef<any>;
+  @ViewChild("updateUserDialog", { static: true }) updateUserDialog: TemplateRef<any>;
 
   importAmount = 0;
   importSuccess = 0;
   importFailed = 0;
 
+  selectedK = '';
+  selectedMajor = '';
+
   settings = {
+    actions: {
+      add: false
+    },
     add: {
       addButtonContent: '<i class="nb-plus"></i>',
       createButtonContent: '<i class="nb-checkmark"></i>',
@@ -38,12 +47,22 @@ export class AllStudentsComponent {
       editButtonContent: '<i class="nb-edit"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
+      confirmSave: true,
     },
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
-      // confirmDelete: true,
+      confirmDelete: true,
     },
     columns: {
+      avatar: {
+        title: '',
+        type: 'html',
+        valuePrepareFunction: (images) => {
+          return `<img class='table-avatar-img' src="${images}"/>`
+        },
+        editable: false,
+        filter: false,
+      },
       rollnumber: {
         title: "Roll Number",
         type: "string",
@@ -60,6 +79,93 @@ export class AllStudentsComponent {
         title: "Username",
         type: "string",
       },
+      role: {
+        title: "Role",
+        type: "string",
+        defaultValue: 'ROLE_STUDENT',
+        //addable: false,
+        filter: {
+          type: 'list',
+          config: {
+            selectText: 'Select...',
+              list: [
+                { value: 'ROLE_ADMIN', title: 'ROLE_ADMIN' },
+                { value: 'ROLE_MANAGER', title: 'ROLE_MANAGER' },
+                { value: 'ROLE_STAFF', title: 'ROLE_STAFF' },
+                { value: 'ROLE_STUDENT', title: 'ROLE_STUDENT' },
+              ],
+          }
+        },
+        editor: {
+          type: 'list',
+          config: {
+            selectText: 'Select...',
+              list: [
+                { value: 'ROLE_ADMIN', title: 'ROLE_ADMIN' },
+                { value: 'ROLE_MANAGER', title: 'ROLE_MANAGER' },
+                { value: 'ROLE_STAFF', title: 'ROLE_STAFF' },
+                { value: 'ROLE_STUDENT', title: 'ROLE_STUDENT' },
+              ],
+          }
+        }
+      }
+    },
+  };
+
+  importSetting = {
+    add: {
+      addButtonContent: '<i class="nb-plus"></i>',
+      createButtonContent: '<i class="nb-checkmark"></i>',
+      cancelButtonContent: '<i class="nb-close"></i>',
+    },
+    edit: {
+      editButtonContent: '<i class="nb-edit"></i>',
+      saveButtonContent: '<i class="nb-checkmark"></i>',
+      cancelButtonContent: '<i class="nb-close"></i>',
+    },
+    delete: {
+      deleteButtonContent: '<i class="nb-trash"></i>',
+      confirmDelete: true,
+    },
+    columns: {
+      rollnumber: {
+        title: "Roll Number",
+        type: "string",
+        filter: false,
+      },
+      name: {
+        title: "Name",
+        type: "string",
+        filter: false,
+      },
+      email: {
+        title: "Email",
+        type: "string",
+        filter: false,
+      },
+      username: {
+        title: "Username",
+        type: "string",
+        filter: false,
+      },
+      role: {
+        title: "Role",
+        type: "list",
+        defaultValue: 'ROLE_STUDENT',
+        //addable: false,
+        filter: false,
+        editor: {
+          config: {
+            selectText: 'Select...',
+              list: [
+                { value: 'ROLE_ADMIN', title: 'Student' },
+                { value: 'ROLE_MANAGER', title: 'Student' },
+                { value: 'ROLE_STAFF', title: 'Student' },
+                { value: 'ROLE_STUDENT', title: 'Student' },
+              ],
+          }
+        }
+      }
     },
   };
 
@@ -85,29 +191,51 @@ export class AllStudentsComponent {
       rollnumber: {
         title: "Roll Number",
         type: "string",
+        filter: false,
       },
       name: {
         title: "Name",
         type: "string",
+        filter: false,
       },
       email: {
         title: "Email",
         type: "string",
+        filter: false,
       },
       username: {
         title: "Username",
         type: "string",
+        filter: false,
+      },
+      role: {
+        title: "Role",
+        type: "list",
+        defaultValue: 'ROLE_STUDENT',
+        //addable: false,
+        filter: false,
+        editor: {
+          config: {
+            selectText: 'Select...',
+              list: [
+                { value: 'ROLE_ADMIN', title: 'Student' },
+                { value: 'ROLE_MANAGER', title: 'Student' },
+                { value: 'ROLE_STAFF', title: 'Student' },
+                { value: 'ROLE_STUDENT', title: 'Student' },
+              ],
+          }
+        }
       },
       message: {
         title: "Reason Failed",
         type: "string",
         editable: false,
-        // filter: false,
+        filter: false,
       }
     },
   };
 
-  data: AddListUserRequest[] = [];
+  data: any[] = [];
 
   addingData: Partial<AddListUserRequest>[] = [];
 
@@ -115,13 +243,15 @@ export class AllStudentsComponent {
   sourceAddingStudents: LocalDataSource | any = new LocalDataSource();
 
   bearerToken = "";
+  selectedStudent: Partial<AddListUserRequest> = null;
   private contentTemplateRef: NbDialogRef<AllStudentsComponent>;
 
   constructor(
-    private userService: UserService,
-    private store: Store<{ user: UserState }>,
-    private dialogService: NbDialogService,
-    private router: Router,
+    protected userService: UserService,
+    protected store: Store<{ user: UserState }>,
+    protected dialogService: NbDialogService,
+    protected router: Router,
+    protected toastrService: NbToastrService
   ) {
     // this.source.load(this.data);
     // this.source.setFilter([{field: 'rollnumber', search: '79'}, {field: 'name', search: 'ha'}, ])
@@ -132,16 +262,16 @@ export class AllStudentsComponent {
   }
 
   importFromExcel(data: any[][]) {
-    this.addingData = data.map((item) => {
+    this.addingData = data.splice(1, data.length).map((item) => {
       return {
         rollnumber: item[0],
         name: item[1],
         email: item[2],
         username: item[3],
-        dob: item[4], // you might need to convert this to a date format
-        role: "ROLE_STUDENT",
+        role: item[4],
       };
     });
+    this.sourceAddingStudents.setPaging({page: 1, perPage: 10 })
     this.sourceAddingStudents.load(this.addingData);
     this.openToBeImported();
   }
@@ -155,17 +285,17 @@ export class AllStudentsComponent {
           .subscribe((users: GetAllUsersResponse) => {
             this.bearerToken = `${token.tokenType} ${token.accessToken}`;
             this.data = users.content
-              .filter((c) => c.role === 3)
               .map((c) => {
                 return {
+                  avatar: c.avatar ?? '../../../../../assets/images/kitten-default.png',
                   rollnumber: c.rollnumber,
                   name: c.name,
                   email: c.email,
                   username: c.username,
-                  dob: c.dob,
-                  role: c.role.toString(),
+                  role: RoleEnum[c.role],
                 };
               });
+            this.source.setPaging({page: 1, perPage: 10 });
             this.source.load(this.data);
           });
       });
@@ -201,7 +331,7 @@ export class AllStudentsComponent {
               name: item.userImport.name,
               email: item.userImport.email,
               username: item.userImport.username,
-              role: "ROLE_STUDENT",
+              role: item.userImport.role,
               message: item.message
             };
           });
@@ -210,7 +340,10 @@ export class AllStudentsComponent {
           });
           this.fetchData();
         },
-        (error) => alert(`these are whats wrong ${error}`)
+        (error) => {
+          console.log(error)
+          alert(`Error: ${error.error.message}`)
+        }
       );
     });
   }
@@ -218,4 +351,58 @@ export class AllStudentsComponent {
     console.log(event);
     this.router.navigate(["pages", "user", event.data.username]);
   }
+
+  filterTable() {
+    this.source.setFilter([{field: 'rollnumber', search: this.selectedMajor + this.selectedK}])
+  }
+
+  openDialog(dialog) {
+    this.contentTemplateRef = this.dialogService.open(dialog);
+  }
+
+  onDeleteConfirm(event) {
+    console.log(event);
+    this.selectedStudent = event.data;
+    this.openDialog(this.deleteUserDialog);
+  }
+
+  onEditConfirm(event) {
+    console.log(event);
+    this.selectedStudent = event.newData;
+    this.openDialog(this.updateUserDialog);
+  }
+
+  deleteUser() {
+    this.userService.deleteUser(this.bearerToken, this.selectedStudent.rollnumber)
+    .subscribe(
+      data => {
+        this.toastrService.show('Deleted Successfully', `Success`, { status: 'success'});
+        this.contentTemplateRef.close();
+        this.fetchData();
+      },
+      error => { // them error tu api
+        this.toastrService.show('Deleted Failed', `Failed`, { status: 'danger'});
+        this.contentTemplateRef.close();
+      },
+    )
+  }
+
+  updateUser() {
+    let studentPayload = this.selectedStudent;
+    studentPayload.role = RoleEnum[studentPayload.role];
+    studentPayload.status = 1;
+    this.userService.updateUser(this.bearerToken, this.selectedStudent.rollnumber, studentPayload as AddListUserRequest)
+    .subscribe(
+      data => {
+        this.toastrService.show('Update Successfully', `Success`, { status: 'success'});
+        this.contentTemplateRef.close();
+        this.fetchData();
+      },
+      error => { // them error tu api
+        this.toastrService.show('Update Failed', `Failed`, { status: 'danger'});
+        this.contentTemplateRef.close();
+      },
+    )
+  }
+  
 }

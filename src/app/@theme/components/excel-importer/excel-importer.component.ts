@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { WorkBook, WorkSheet, read, utils, writeFileXLSX } from "xlsx";
 
 interface President {
@@ -9,8 +9,10 @@ interface President {
 @Component({
   selector: "ngx-excel-importer",
   template: `
-    <div class="small font-weight-bold">Import Excel</div>
-    <input  type="file" (change)="onFileChange($event)" multiple="false" />
+    <div class="small font-weight-bold mb-1">Import Excel 
+      <a class="small" target="_blank" [href]="sampleData">Sample Data</a>
+    </div>
+    <input type="file" (change)="onFileChange($event)" multiple="false" />
     <!-- <table class="sjs-table">
       <tr *ngFor="let row of data">
         <td *ngFor="let val of row">{{ val }}</td>
@@ -38,6 +40,7 @@ interface President {
 })
 export class ExcelImporterComponent {
   // rows: President[] = [{ Name: "SheetJS", Index: 0 }];
+  @Input() sampleData = 'https://docs.google.com/spreadsheets/d/1rHdjZBLNlYs-FbxJO4i7OumvXYH3RMs0rzoatuBqSSc/edit?usp=sharing';
   @Output() importFromExcel: EventEmitter<any[][]> = new EventEmitter<any[][]>();
   data: any[][] = [];
 

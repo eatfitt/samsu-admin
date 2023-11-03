@@ -1,3 +1,41 @@
-<ng-container *ngFor="let group of groups">
-    <ngx-group-card [group]="group"></ngx-group-card>
-</ng-container>
+<nb-card>
+  <nb-card-header>
+    <div class="d-flex justify-content-between align-items-baseline">
+      <div class="d-flex">
+        <h5>Groups <span class="pl-2 text-muted">{{groups.length}}</span></h5> 
+      </div>
+      <button class="btn btn-primary" (click)="openDialog(createGorupDialog)">
+        Add group
+      </button>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="container">
+      <div class="row">
+        <ng-container *ngFor="let group of groups; trackBy:identify">
+          <ngx-group-card class="col-md-4 col-sm-6" [group]="group" [bearerToken]="bearerToken"
+            (apiReturnSuccessful)="fetchData()"></ngx-group-card>
+        </ng-container>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<ng-template #createGorupDialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Create group</nb-card-header>
+    <nb-card-body>
+      <input type="text" [disabled]="isApiSuccess" nbInput placeholder="Group name" [(ngModel)]="newGroupName">
+      <div class="text-success mt-2" *ngIf="isApiSuccess && !isApiFailed">
+        Created successfully!
+      </div>
+      <div class="text-danger mt-2" *ngIf="!isApiSuccess && isApiFailed">
+        Create failed! Try again.
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
+      <button nbButton *ngIf="!isApiSuccess" class="bg-primary text-light ml-3" (click)="createGroup()">Create group</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>

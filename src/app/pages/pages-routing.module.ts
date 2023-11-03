@@ -8,6 +8,7 @@ import { PagesComponent } from './pages.component';
 import { AllStudentsComponent } from './management/students/all-students/all-students.component';
 import { AllGroupsComponent } from './management/groups/all-groups/all-groups.component';
 import { UserComponent } from './management/user/user.component';
+import { SingleGroupComponent } from './management/groups/single-group/single-group.component';
 
 const routes: Routes = [{
   path: '',
@@ -32,6 +33,10 @@ const routes: Routes = [{
     {
       path: 'user/:id',
       component: UserComponent,
+    },
+    {
+      path: 'group/:id',
+      component: SingleGroupComponent,
     },
     {
       path: 'layout',

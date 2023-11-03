@@ -23,25 +23,19 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
-    title: 'Students',
+    title: 'Users',
     icon: 'person-outline',
     link: '/pages/students',
     home: true,
   },
   {
     title: 'Groups',
-    icon: 'person-outline',
+    icon: 'people-outline',
     link: '/pages/groups',
     home: true,
   },
   {
     title: 'Managers',
-    icon: 'people-outline',
-    link: '/pages/dashboard',
-    home: true,
-  },
-  {
-    title: 'Staffs',
     icon: 'people-outline',
     link: '/pages/dashboard',
     home: true,

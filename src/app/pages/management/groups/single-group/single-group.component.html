@@ -7,11 +7,8 @@
         <nb-select-label>Class</nb-select-label>
         <nb-select class="pl-2" [(selected)]="selectedK" (selectedChange)="filterTable()">
           <nb-option value="">All</nb-option>
-          <nb-option value="14">K14</nb-option>
           <nb-option value="15">K15</nb-option>
           <nb-option value="16">K16</nb-option>
-          <nb-option value="17">K17</nb-option>
-          <nb-option value="18">K18</nb-option>
         </nb-select>
       </nb-card-body>
     </div>
@@ -22,7 +19,6 @@
           <nb-option value="">All Major</nb-option>
           <nb-option value="SE">Software Engineering</nb-option>
           <nb-option value="SS">Business</nb-option>
-          <nb-option value="SA">English</nb-option>
         </nb-select>
       </nb-card-body>
     </div>
@@ -34,27 +30,27 @@
   <nb-card-header>
     <div class="d-flex justify-content-between">
       <div class="d-flex">
-        <h5>Users</h5> 
+        <h5>Students</h5> 
       </div>
       <button class="btn btn-primary" (click)="importFromExcel([])">
-        Add user
+        Add student
       </button>
     </div>
   </nb-card-header>
 
-  <!-- (userRowSelect)="navigateUser($event)" -->
   <nb-card-body>
     <ng2-smart-table [settings]="settings" [source]="source"
-      (deleteConfirm)="onDeleteConfirm($event)" (editConfirm)="onEditConfirm($event)">
+    (userRowSelect)="navigateUser($event)" (deleteConfirm)="onDeleteConfirm($event)"
+    >
     </ng2-smart-table>
   </nb-card-body>
 </nb-card>
 
 <ng-template #dialog let-data let-ref="dialogRef">
   <nb-card>
-    <nb-card-header>Import User</nb-card-header>
+    <nb-card-header>Import Students</nb-card-header>
     <nb-card-body>
-      <ng2-smart-table [settings]="importSetting" [source]="sourceAddingStudents" >
+      <ng2-smart-table [settings]="importSetting" [source]="sourceAddingStudents" (createConfirm)="confirmCreate($event)" >
       </ng2-smart-table>
     </nb-card-body>
     <nb-card-footer>
@@ -66,7 +62,7 @@
 
 <ng-template #importResultDialog let-data let-ref="dialogRef">
   <nb-card>
-    <nb-card-header>Import User</nb-card-header>
+    <nb-card-header>Import Students</nb-card-header>
     <nb-card-body>
       <div class="text-success"><strong>Successful</strong>: {{importSuccess}} / {{importAmount}} students</div>
       <div class="text-danger"><strong>Failed</strong>: {{importFailed}} / {{importAmount}} students</div>
@@ -75,7 +71,7 @@
       </div>
     </nb-card-body>
     <nb-card-footer>
-      <button *ngIf="importFailed > 0" class="btn btn-danger size-small mt-2" (click)="openFailedList()">View Failed Data</button>
+      <button class="btn btn-danger size-small mt-2" (click)="openFailedList()">View Failed Data</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>
@@ -98,26 +94,13 @@
 
 <ng-template #deleteUserDialog let-data let-ref="dialogRef">
   <nb-card>
-    <nb-card-header>Delete User</nb-card-header>
+    <nb-card-header>Delete Student</nb-card-header>
     <nb-card-body>
       Do you want to delete {{ selectedStudent.name }}
     </nb-card-body>
     <nb-card-footer>
       <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
-      <button nbButton class="bg-primary text-light ml-3" (click)="deleteUser()">Delete</button>
-    </nb-card-footer>
-  </nb-card>
-</ng-template>
-
-<ng-template #updateUserDialog let-data let-ref="dialogRef">
-  <nb-card>
-    <nb-card-header>Update User</nb-card-header>
-    <nb-card-body>
-      Do you want to update {{ selectedStudent.name }}
-    </nb-card-body>
-    <nb-card-footer>
-      <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
-      <button nbButton class="bg-primary text-light ml-3" (click)="updateUser()">Update</button>
+      <button nbButton class="bg-primary text-light ml-3" (click)="deleteUser()">Import</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>

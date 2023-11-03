@@ -3,12 +3,11 @@ import { NB_WINDOW, NbMediaBreakpointsService, NbMenuService, NbSidebarService, 
 
 import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil, filter } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { UserState, UserSummary } from '../../../app-state/user';
 import { SocialUser } from '../../../../utils/social-login/public-api';
-import { filter } from 'rxjs/operators';
 import { UserService } from '../../../@core/services/user/user.service';
 
 @Component({
