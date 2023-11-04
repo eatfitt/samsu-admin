@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { NbDialogService } from '@nebular/theme';
+import { NbDialogService, NbIconLibraries } from '@nebular/theme';
 import { UserState } from '../../../../app-state/user';
 import { Store } from '@ngrx/store';
 import { Group, GroupService } from '../../../../@core/services/group/group.service';
@@ -24,7 +24,9 @@ export class AllGroupsComponent {
     private groupService: GroupService,
     private store: Store<{ user: UserState }>,
     private dialogService: NbDialogService,
+    iconsLibrary: NbIconLibraries
   ) {
+    iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
   }
 
   ngOnInit() {

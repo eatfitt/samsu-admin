@@ -1,3 +1,5 @@
-::ng-deep .cursor-pointer {
-    cursor: pointer;
+::ng-deep .hover-pointer {
+    &:hover {
+        cursor: pointer;
+    }
 }

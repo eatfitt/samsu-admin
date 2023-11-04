@@ -3,3 +3,9 @@
     width: 30px;
     object-fit: fill;
 }
+
+::ng-deep .hover-pointer {
+    &:hover {
+        cursor: pointer;
+    }
+}

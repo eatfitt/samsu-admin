@@ -9,7 +9,8 @@ import { NbCalendarDayCellComponent } from '@nebular/theme';
 export class DayCellComponent extends NbCalendarDayCellComponent<Date> {
   @HostBinding('class') classes = 'day-cell';
 
-  @HostListener('click') onClick() {
-    // do work
-  }
+  // @HostListener('click') onClick() {
+  //   // do work
+  //   console.log('anything cool here?')
+  // }
 }

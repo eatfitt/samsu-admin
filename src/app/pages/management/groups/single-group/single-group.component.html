@@ -2,7 +2,6 @@
   <nb-card-header>
     <div class="d-flex justify-content-between">
         <h5>Group: {{ group?.name }}</h5> 
-
       <button class="btn" [nbContextMenu]="items">
         <nb-icon icon="more-vertical"></nb-icon>
       </button>
@@ -91,5 +90,5 @@
 </ng-template>
 
 <ng-template #excelImporterDialog let-data let-ref="dialogRef">
-  <ngx-excel-importer></ngx-excel-importer>
+  <ngx-excel-importer (importFromExcel)="importFromExcel($event)"></ngx-excel-importer>
 </ng-template>

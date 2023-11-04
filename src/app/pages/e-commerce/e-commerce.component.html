@@ -1,10 +1,56 @@
 <div class="row">
   <div class="col-md-8">
-    <ngx-all-students [pager]="pager" [showImport]="false"></ngx-all-students>
+    <ngx-all-students [pager]="pager" [showImport]="false" [showAction]="false"></ngx-all-students>
     <ngx-all-groups></ngx-all-groups>
   </div>
+  <div class="col-md-4">
+    <nb-calendar [(date)]="date" (dateChange)="handleDateChange($event)"></nb-calendar>
+    <nb-card class="mt-4">
+      <nb-tabset fullWidth>
+        <nb-tab class="p-0" tabTitle="Selected">
+
+          <nb-list>
+            <nb-list-item class="border-left border-primary border-bottom-0 border-top-0 my-3 py-2 px-0"
+              style="border-width: 3px !important;"
+              *ngFor="let selectedDateEvent of selectedDateEvents">
+              <div class="container">
+                <div class="row">
+                  <div class="col-4 font-weight-bold">{{date | date:"MMM dd"}} {{selectedDateEvent.time}}</div>
+                  <div class="col-8">{{selectedDateEvent.title}}</div>
+                </div>
+              </div>
+            </nb-list-item>
+          </nb-list>
+        </nb-tab>
+
+        <nb-tab class="p-0" tabTitle="Upcoming">
+          <nb-list>
+            <nb-list-item  class="border-left border-primary border-bottom-0 border-top-0 my-3 py-2 px-0"
+              style="border-width: 3px !important;"
+              *ngFor="let upcomingEvent of upcomingEvents">
+              <div class="container">
+                <div class="row">
+                  <div class="col-4 font-weight-bold">{{upcomingEvent.time}}</div>
+                  <div class="col-8">{{upcomingEvent.title}}</div>
+                </div>
+              </div>
+            </nb-list-item>
+          </nb-list>
+        </nb-tab>
+      </nb-tabset>
+    </nb-card>
+
+    <nb-card>
+      <nb-card-header>Event Attendance</nb-card-header>
+      <nb-card-body>
+        <ngx-echarts-multiple-xaxis></ngx-echarts-multiple-xaxis>
+      </nb-card-body>
+    </nb-card>
+  </div>
 </div>
-<div class="row">
+
+
+<!-- <div class="row">
   <div class="col-xxl-5">
     <div class="row">
       <div class="col-md-6">
@@ -41,4 +87,4 @@
   <div class="col-xxl-3">
     <ngx-user-activity></ngx-user-activity>
   </div>
-</div>
+</div> -->

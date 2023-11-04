@@ -58,6 +58,7 @@ const components = [
     ChartModule,
     NbCardModule,
   ],
+  exports: [EchartsMultipleXaxisComponent] ,
   declarations: [...routedComponents, ...components],
 })
 export class ChartsModule {}

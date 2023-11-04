@@ -25,6 +25,7 @@ export class AllStudentsComponent {
     display: true,
     perPage: 10
   };
+  @Input() showAction = true;
   @Input() showImport = true;
   @ViewChild("dialog", { static: true }) contentTemplate: TemplateRef<any>;
   @ViewChild("importResultDialog", { static: true }) importResultDialog: TemplateRef<any>;
@@ -202,7 +203,9 @@ export class AllStudentsComponent {
     this.settings = {
       pager: this.pager,
       actions: {
-        add: false
+        add: false,
+        edit: this.showAction,
+        delete: this.showAction,
       },
       add: {
         addButtonContent: '<i class="nb-plus"></i>',

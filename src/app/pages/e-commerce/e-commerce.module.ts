@@ -13,6 +13,7 @@ import {
   NbCheckboxModule,
   NbInputModule,
   NbContextMenuModule,
+  NbCalendarModule,
 } from '@nebular/theme';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -68,6 +69,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AllGroupsComponent } from '../management/groups/all-groups/all-groups.component';
 import { GroupCardComponent } from '../management/groups/group-card/group-card.component';
 import { FormsModule } from '@angular/forms';
+import { EchartsMultipleXaxisComponent } from '../charts/echarts/echarts-multiple-xaxis.component';
+import { ChartsModule } from '../charts/charts.module';
 
 @NgModule({
   imports: [
@@ -96,6 +99,8 @@ import { FormsModule } from '@angular/forms';
     NbInputModule,
     FormsModule,
     NbContextMenuModule,
+    NbCalendarModule,
+    ChartsModule
   ],
   declarations: [
     ECommerceComponent,

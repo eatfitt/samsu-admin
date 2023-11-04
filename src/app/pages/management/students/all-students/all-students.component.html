@@ -2,7 +2,7 @@
   <nb-card-header>
     <div class="d-flex justify-content-between">
       <div class="d-flex">
-        <h5>Users</h5> 
+        <h5 class="hover-pointer" [routerLink]="['..', 'users']">Users</h5> 
       </div>
       <button class="btn" [nbContextMenu]="items">
         <nb-icon icon="more-vertical"></nb-icon>
@@ -91,5 +91,5 @@
 </ng-template>
 
 <ng-template #excelImporterDialog let-data let-ref="dialogRef">
-  <ngx-excel-importer></ngx-excel-importer>
+  <ngx-excel-importer (importFromExcel)="importFromExcel($event)"></ngx-excel-importer>
 </ng-template>
