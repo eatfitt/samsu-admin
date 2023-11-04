@@ -56,6 +56,7 @@
            placeholder="Email address"
            fullWidth
            fieldSize="large"
+            [required]="getConfigValue('forms.validation.email.required')"
            disabled="true">
     <ng-container *ngIf="email.invalid && email.touched">
       <p class="caption status-danger" *ngIf="email.errors?.required">

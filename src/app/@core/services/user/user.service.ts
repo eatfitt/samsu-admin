@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
+import { Store } from "@ngrx/store";
 import { Observable, throwError } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { catchError } from "rxjs/operators";
 import { environment } from "../../../../environments/environment";
 import { SocialUser } from "../../../../utils/social-login/public-api";
-import { Store } from "@ngrx/store";
 import {
   setUserJwt,
   setUserSocialUser,
@@ -204,10 +204,10 @@ export class UserService {
   }
 
   checkLoggedIn() {
-    const loggedInUser = JSON.parse(sessionStorage.getItem("socialUser"));
-    const loggedInJwt = JSON.parse(sessionStorage.getItem("jwt"));
+    const loggedInUser = JSON.parse(localStorage.getItem("socialUser"));
+    const loggedInJwt = JSON.parse(localStorage.getItem("jwt"));
     const loggedInUserSummary = JSON.parse(
-      sessionStorage.getItem("userSummary")
+      localStorage.getItem("userSummary")
     );
     if (!!loggedInJwt) {
       this.store.dispatch(setUserSocialUser({ socialUser: loggedInUser }));
@@ -215,17 +215,19 @@ export class UserService {
       this.store.dispatch(
         setUserUserSummary({ userSummary: loggedInUserSummary })
       );
-      // this.router.navigate(["pages"]);
+      this.router.navigate(["pages"]);
     } else {
       this.router.navigate(["/"]);
     }
   }
 
   logOut() {
-    sessionStorage.removeItem("jwt");
-    sessionStorage.removeItem("userSummary");
-    sessionStorage.removeItem("socialUser");
-    sessionStorage.setItem('loggedOut', 'true');
+    localStorage.removeItem("jwt");
+    localStorage.removeItem("userSummary");
+    localStorage.removeItem("socialUser");
+    localStorage.removeItem('token');
+    localStorage.removeItem('email');
+    localStorage.setItem('loggedOut', 'true');
     this.router.navigateByUrl("/");
   }
 }

@@ -5,8 +5,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { SocialAuthService } from '../../../../utils/social-login/socialauth.service';
 import { AuthenticationService, SignInRequest } from '../../../@core/services/authentication/authentication.service';
-import { Jwt, UserState, UserSummary, setUserJwt, setUserSocialUser, setUserUserSummary } from '../../../app-state/user';
 import { UserService } from '../../../@core/services/user/user.service';
+import { Jwt, UserState, UserSummary, setUserJwt, setUserSocialUser, setUserUserSummary } from '../../../app-state/user';
 
 export interface GoogleLoginResponse {
   email: string,
@@ -67,7 +67,8 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
 
 
   ngOnInit(): void {
-    const loggedOut = JSON.parse(sessionStorage.getItem("loggedOut"));
+    this.userService.checkLoggedIn();
+    const loggedOut = JSON.parse(localStorage.getItem("loggedOut"));
     if (loggedOut === 'true') {
       return;
     }
@@ -78,13 +79,13 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
         value => {
           const googleLoginResponse: Jwt = value as Jwt;
           this.store.dispatch(setUserJwt({jwt: googleLoginResponse}))
-          sessionStorage.setItem('socialUser', JSON.stringify(user));
-          sessionStorage.setItem('jwt', JSON.stringify(googleLoginResponse));
+          localStorage.setItem('socialUser', JSON.stringify(user));
+          localStorage.setItem('jwt', JSON.stringify(googleLoginResponse));
           this.userService.getMe(`${googleLoginResponse.jwtToken.tokenType} ${googleLoginResponse.jwtToken.accessToken}`).subscribe((userSummary: UserSummary) => {
-            sessionStorage.setItem('userSummary', JSON.stringify(userSummary));
+            localStorage.setItem('userSummary', JSON.stringify(userSummary));
             this.store.dispatch(setUserUserSummary({userSummary: userSummary}));
           });
-          sessionStorage.setItem('loggedOut', 'false');
+          localStorage.setItem('loggedOut', 'false');
           if (googleLoginResponse.firstTime) {
             this.router.navigate(['auth', 'register']);
           } else {
@@ -117,10 +118,10 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
           firstTime: false,
           jwtToken: token
         }
-        sessionStorage.setItem('jwt',  JSON.stringify(jwt));
+        localStorage.setItem('jwt', JSON.stringify(jwt));
         this.store.dispatch(setUserJwt({jwt: jwt}));
         this.userService.getMe(`${token.tokenType} ${token.accessToken}`).subscribe((userSummary: UserSummary) => {
-          sessionStorage.setItem('userSummary', JSON.stringify(userSummary));
+          localStorage.setItem('userSummary', JSON.stringify(userSummary));
           this.store.dispatch(setUserUserSummary({userSummary: userSummary}));
           this.router.navigate(['pages']);
         });

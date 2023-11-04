@@ -19,7 +19,7 @@ export class AuthenticationService {
   }
   
   public getServerToken(googleAccessToken: string) {
-    return this.http.get(`${this.apiEndPoint}/auth/login-google?accessToken=${googleAccessToken}`).pipe(
+    return this.http.post(`${this.apiEndPoint}/auth/login-google?accessToken=${googleAccessToken}`, {}).pipe(
       catchError((error) => {
         console.error('Error in getUserToken:', error);
         return throwError(error);
