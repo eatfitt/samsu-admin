@@ -36,24 +36,22 @@ export class GroupCardComponent {
       this.memberCount = this.group.users.length;
       this.groupName = this.group.name;
       this.groupActionItems = [
-        {title: 'View group', id: 1},
-        {title: 'Change group name', id: 2},
-        {title: 'Delete group', id: 3},
+        {title: 'Change group name', id: 1},
+        {title: 'Delete group', id: 2},
       ]
     }
   }
 
   openDialog(action) {
     switch (action) {
-      case 2: 
+      case 1: 
         this.dialogService.open(this.changeGroupNameDialog, {
           context: "",
         });
         break;
-      case 3: 
+      case 2: 
         this.contentTemplateRef = this.dialogService.open(this.confirmDeleteDialog);
         break;
-       
     }
 
   }

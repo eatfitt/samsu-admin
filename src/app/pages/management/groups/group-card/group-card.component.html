@@ -35,13 +35,14 @@
 </ng-template>
 
 <ng-template #tabs>
-  <nb-tabset>
-    <nb-tab *ngFor="let action of groupActionItems" [tabTitle]="action.title">
-      <div class="px-4" role="button" (click)="openDialog(action.id)">
-        {{action.title}}
-      </div>
-    </nb-tab>
-  </nb-tabset>
+  <nb-list>
+    
+    <nb-list-item *ngFor="let action of groupActionItems" (click)="openDialog(action.id)">
+      <button class="btn">
+        {{ action.title }}
+      </button>
+    </nb-list-item>
+  </nb-list>
 </ng-template>
 
 <ng-template #confirmDeleteDialog let-data let-ref="dialogRef">
