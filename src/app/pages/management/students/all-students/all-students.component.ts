@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, Input, SimpleChanges } from "@angular/core";
+import { Component, TemplateRef, ViewChild, Input, OnDestroy } from "@angular/core";
 import { LocalDataSource } from "ng2-smart-table";
 import {
   AddListUserRequest,
@@ -12,6 +12,7 @@ import { UserState } from "../../../../app-state/user";
 import { Store } from "@ngrx/store";
 import { NbDialogRef, NbDialogService, NbMenuService, NbToastrService } from "@nebular/theme";
 import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "ngx-all-students",
@@ -176,7 +177,7 @@ export class AllStudentsComponent {
   bearerToken = "";
   selectedStudent: Partial<AddListUserRequest> = null;
   items = [{ title: 'Import List User' }, { title: 'Add User Manually' }];
-
+  test: Subscription;
   private contentTemplateRef: NbDialogRef<AllStudentsComponent>;
 
   constructor(
@@ -193,7 +194,7 @@ export class AllStudentsComponent {
   ngOnInit() {
     this.userService.checkLoggedIn();
     this.fetchData();
-    this.menuService.onItemClick().subscribe((event) => {
+    this.test = this.menuService.onItemClick().subscribe((event) => {
       if (event.item.title === 'Import List User') {
         this.openDialog(this.excelImporterDialog);
       } else if (event.item.title === 'Add User Manually') {
@@ -206,6 +207,12 @@ export class AllStudentsComponent {
         add: false,
         edit: this.showAction,
         delete: this.showAction,
+        custom: [
+          {
+            name: 'View',
+            title: 'View ',
+          }
+        ],
       },
       add: {
         addButtonContent: '<i class="nb-plus"></i>',
@@ -432,5 +439,7 @@ export class AllStudentsComponent {
       },
     )
   }
-  
+  ngOnDestroy() {
+    this.test.unsubscribe();
+  }
 }
