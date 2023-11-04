@@ -25,6 +25,7 @@ export class AllStudentsComponent {
     display: true,
     perPage: 10
   };
+  @Input() showImport = true;
   @ViewChild("dialog", { static: true }) contentTemplate: TemplateRef<any>;
   @ViewChild("importResultDialog", { static: true }) importResultDialog: TemplateRef<any>;
   @ViewChild("failedImportListDialog", { static: true }) failedImportListDialog: TemplateRef<any>;

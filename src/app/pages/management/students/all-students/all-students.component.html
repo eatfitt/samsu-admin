@@ -1,4 +1,4 @@
-<ngx-excel-importer (importFromExcel)="importFromExcel($event)"></ngx-excel-importer>
+<ngx-excel-importer *ngIf="showImport" (importFromExcel)="importFromExcel($event)"></ngx-excel-importer>
 <nb-card>
   <nb-card-header>Filter</nb-card-header>
   <div class="d-flex">

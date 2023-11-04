@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { NbToastrService } from "@nebular/theme";
 import { WorkBook, WorkSheet, read, utils } from "xlsx";
 
 interface President {
@@ -12,7 +13,7 @@ interface President {
     <div class="small font-weight-bold mb-1">Import Excel 
       <a class="small" target="_blank" [href]="sampleData">Sample Data</a>
     </div>
-    <input type="file" (change)="onFileChange($event)" multiple="false" />
+    <input type="file" (change)="onFileChange($event)" multiple="false" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
     <!-- <table class="sjs-table">
       <tr *ngFor="let row of data">
         <td *ngFor="let val of row">{{ val }}</td>
@@ -65,10 +66,18 @@ export class ExcelImporterComponent {
   //   writeFileXLSX(wb, "SheetJSAngularAoO.xlsx");
   // }
 
+  constructor(
+    public toastrService: NbToastrService
+  ) {}
+
   onFileChange(evt: any) {
     /* wire up file reader */
     const target: DataTransfer = <DataTransfer>evt.target;
     if (target.files.length !== 1) throw new Error("Cannot use multiple files");
+    if (target.files[0].type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      this.toastrService.show('You must import type xlxs/excel', `Import fail`, { status: 'danger'});
+      return;
+    }
     const reader: FileReader = new FileReader();
     reader.onload = (e: any) => {
       /* read workbook */
