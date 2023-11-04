@@ -6,6 +6,11 @@ import { UserService } from '../../@core/services/user/user.service';
   templateUrl: './e-commerce.component.html',
 })
 export class ECommerceComponent {
+  pager = {
+    display: true,
+    perPage: 3
+  }
+
   constructor(
     private userService: UserService
   ) {

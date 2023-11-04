@@ -26,8 +26,7 @@
           name="usernameOrEmail" id="input-usernameOrEmail" placeholder="Username or Email"
           autofocus
           [status]="usernameOrEmail.dirty ? (usernameOrEmail.invalid || loginFail ? 'danger' : 'primary') : 'primary'"
-          [required]="getConfigValue('forms.validation.email.required')"
-          [attr.aria-invalid]="usernameOrEmail.invalid && usernameOrEmail.touched ? true : null">
+          required="true">
         <ng-container *ngIf="usernameOrEmail.invalid && usernameOrEmail.touched">
           <p class="error-message" *ngIf="usernameOrEmail.errors?.required"> Email is required! </p>
           <p class="error-message" *ngIf="usernameOrEmail.errors?.pattern"> Email should be the real
@@ -39,10 +38,7 @@
         <input nbInput fullWidth [(ngModel)]="user.password" #password="ngModel" name="password"
           type="password" id="input-password" placeholder="Password"
           [status]="password.dirty ? (password.invalid || loginFail  ? 'danger' : 'primary') : 'primary'"
-          [required]="getConfigValue('forms.validation.password.required')"
-          [minlength]="getConfigValue('forms.validation.password.minLength')"
-          [maxlength]="getConfigValue('forms.validation.password.maxLength')"
-          [attr.aria-invalid]="password.invalid && password.touched ? true : null">
+          required="true">
         <ng-container *ngIf="password.invalid && password.touched ">
           <p class="error-message" *ngIf="password.errors?.required"> Password is required! </p>
           <p class="error-message" *ngIf="password.errors?.minlength || password.errors?.maxlength">

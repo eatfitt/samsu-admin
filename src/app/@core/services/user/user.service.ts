@@ -24,16 +24,16 @@ export interface InitUserRequest {
 }
 
 export interface GetAllUsersListResponse {
-  created_at: string;
-  id: number;
+  created_at?: string;
+  id?: number;
   name: string;
   username: string;
   email: string;
-  department: string;
-  avatar: string;
-  dob: string;
-  role: number;
-  status: number;
+  department?: string;
+  avatar?: string;
+  dob?: string | number;
+  role: string | number;
+  status?: number;
   rollnumber: string;
 }
 export interface GetAllUsersResponse {
@@ -134,7 +134,7 @@ export class UserService {
       .set("Content-Type", "application/json")
       .set("Authorization", bearerToken);
     const options = { headers: headers };
-    return this.http.get(`${this.apiEndPoint}/users`, options).pipe(
+    return this.http.get(`${this.apiEndPoint}/users?page=${page}&size=${size}`, options).pipe(
       catchError((error) => {
         console.error("Error in getAllUsers:", error);
         return throwError(error);

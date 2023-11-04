@@ -23,7 +23,7 @@ const routes: Routes = [{
       component: DashboardComponent,
     },
     {
-      path: 'students',
+      path: 'users',
       component: AllStudentsComponent,
     },
     {

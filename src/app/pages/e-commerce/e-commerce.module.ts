@@ -8,6 +8,10 @@ import {
   NbIconModule,
   NbSelectModule,
   NbListModule,
+  NbPopoverModule,
+  NbAlertModule,
+  NbCheckboxModule,
+  NbInputModule,
 } from '@nebular/theme';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -55,6 +59,14 @@ import { EarningCardBackComponent } from './earning-card/back-side/earning-card-
 import { EarningPieChartComponent } from './earning-card/back-side/earning-pie-chart.component';
 import { EarningCardFrontComponent } from './earning-card/front-side/earning-card-front.component';
 import { EarningLiveUpdateChartComponent } from './earning-card/front-side/earning-live-update-chart.component';
+import { AllStudentsComponent } from '../management/students/all-students/all-students.component';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { TablesRoutingModule } from '../tables/tables-routing.module';
+import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { HttpClientModule } from '@angular/common/http';
+import { AllGroupsComponent } from '../management/groups/all-groups/all-groups.component';
+import { GroupCardComponent } from '../management/groups/group-card/group-card.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -71,6 +83,18 @@ import { EarningLiveUpdateChartComponent } from './earning-card/front-side/earni
     NgxEchartsModule,
     NgxChartsModule,
     LeafletModule,
+    HttpClientModule,
+    GoogleSigninButtonModule,
+    TablesRoutingModule,
+    Ng2SmartTableModule,
+    NbSelectModule,
+    NbIconModule,
+    NbPopoverModule,
+    NbAlertModule,
+    NbCheckboxModule,
+    NbInputModule,
+    FormsModule
+
   ],
   declarations: [
     ECommerceComponent,
@@ -105,6 +129,9 @@ import { EarningLiveUpdateChartComponent } from './earning-card/front-side/earni
     EarningCardBackComponent,
     EarningPieChartComponent,
     EarningLiveUpdateChartComponent,
+    AllStudentsComponent,
+    AllGroupsComponent,
+    GroupCardComponent,
   ],
   providers: [
     CountryOrdersMapService,
