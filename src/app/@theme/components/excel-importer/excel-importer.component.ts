@@ -3,27 +3,22 @@ import {
   EventEmitter,
   Input,
   Output,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from "@angular/core";
 import { NbDialogService, NbToastrService } from "@nebular/theme";
 import { WorkBook, WorkSheet, read, utils, writeFileXLSX } from "xlsx";
 
-interface President {
-  Name: string;
-  Index: number;
-}
 
 @Component({
   selector: "ngx-excel-importer",
   template: `
-    <button class="btn btn-primary" (click)="popUpImporter()">Import</button>
 
-    <ng-template #importDialog let-data let-ref="dialogRef">
       <nb-card>
         <nb-card-header>
           <div class="d-flex justify-content-between">
-            <div>Import</div>
+            <div>{{ buttonText }}</div>
             <a class="small" target="_blank" [href]="sampleData">Sample Data</a>
           </div>
         </nb-card-header>
@@ -35,13 +30,7 @@ interface President {
             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
           />
         </nb-card-body>
-        <nb-card-footer>
-          <button nbButton class="bg-danger text-light" (click)="ref.close()">
-            Close
-          </button>
-        </nb-card-footer>
       </nb-card>
-    </ng-template>
     <!-- <table class="sjs-table">
       <tr *ngFor="let row of data">
         <td *ngFor="let val of row">{{ val }}</td>
@@ -70,6 +59,7 @@ interface President {
 export class ExcelImporterComponent {
   // rows: President[] = [{ Name: "SheetJS", Index: 0 }];
   @Input() sampleData = "https://sgp1.digitaloceanspaces.com/samsu/assets/50b73f64-a966-4729-9560-c1650be98774_SAMSUUserImportExample.xlsx";
+  @Input() buttonText = 'Import';
   @Output() importFromExcel: EventEmitter<any[][]> = new EventEmitter<
     any[][]
   >();
@@ -105,9 +95,6 @@ export class ExcelImporterComponent {
     private dialogService: NbDialogService
   ) {}
 
-  popUpImporter() {
-    this.dialogService.open(this.importDialog);
-  }
 
   onFileChange(evt: any) {
     /* wire up file reader */

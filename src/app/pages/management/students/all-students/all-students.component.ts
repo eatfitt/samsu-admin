@@ -10,7 +10,7 @@ import {
 } from "../../../../@core/services/user/user.service";
 import { UserState } from "../../../../app-state/user";
 import { Store } from "@ngrx/store";
-import { NbDialogRef, NbDialogService, NbToastrService } from "@nebular/theme";
+import { NbDialogRef, NbDialogService, NbMenuService, NbToastrService } from "@nebular/theme";
 import { Router } from "@angular/router";
 
 @Component({
@@ -31,6 +31,7 @@ export class AllStudentsComponent {
   @ViewChild("failedImportListDialog", { static: true }) failedImportListDialog: TemplateRef<any>;
   @ViewChild("deleteUserDialog", { static: true }) deleteUserDialog: TemplateRef<any>;
   @ViewChild("updateUserDialog", { static: true }) updateUserDialog: TemplateRef<any>;
+  @ViewChild("excelImporterDialog", { static: true }) excelImporterDialog: TemplateRef<any>;
 
   importAmount = 0;
   importSuccess = 0;
@@ -173,6 +174,8 @@ export class AllStudentsComponent {
 
   bearerToken = "";
   selectedStudent: Partial<AddListUserRequest> = null;
+  items = [{ title: 'Import List User' }, { title: 'Add User Manually' }];
+
   private contentTemplateRef: NbDialogRef<AllStudentsComponent>;
 
   constructor(
@@ -180,7 +183,8 @@ export class AllStudentsComponent {
     protected store: Store<{ user: UserState }>,
     protected dialogService: NbDialogService,
     protected router: Router,
-    protected toastrService: NbToastrService
+    protected toastrService: NbToastrService,
+    protected menuService: NbMenuService
   ) {
     // this.source.load(this.data);
     // this.source.setFilter([{field: 'rollnumber', search: '79'}, {field: 'name', search: 'ha'}, ])
@@ -188,6 +192,13 @@ export class AllStudentsComponent {
   ngOnInit() {
     this.userService.checkLoggedIn();
     this.fetchData();
+    this.menuService.onItemClick().subscribe((event) => {
+      if (event.item.title === 'Import List User') {
+        this.openDialog(this.excelImporterDialog);
+      } else if (event.item.title === 'Add User Manually') {
+        this.importFromExcel([]);
+      }
+    })
     this.settings = {
       pager: this.pager,
       actions: {

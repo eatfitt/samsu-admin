@@ -42,7 +42,8 @@ import { SingleGroupComponent } from './management/groups/single-group/single-gr
     Ng2SmartTableModule,
     NbSelectModule,
     NbIconModule,
-    NbPopoverModule
+    NbPopoverModule,
+    NbContextMenuModule,
   ],
   declarations: [
     PagesComponent,

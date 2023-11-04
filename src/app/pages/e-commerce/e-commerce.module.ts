@@ -12,6 +12,7 @@ import {
   NbAlertModule,
   NbCheckboxModule,
   NbInputModule,
+  NbContextMenuModule,
 } from '@nebular/theme';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -93,8 +94,8 @@ import { FormsModule } from '@angular/forms';
     NbAlertModule,
     NbCheckboxModule,
     NbInputModule,
-    FormsModule
-
+    FormsModule,
+    NbContextMenuModule,
   ],
   declarations: [
     ECommerceComponent,

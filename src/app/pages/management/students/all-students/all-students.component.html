@@ -1,43 +1,11 @@
-<ngx-excel-importer *ngIf="showImport" (importFromExcel)="importFromExcel($event)"></ngx-excel-importer>
-<nb-card>
-  <nb-card-header>Filter</nb-card-header>
-  <div class="d-flex">
-    <div>
-      <nb-card-body>
-        <nb-select-label>Class</nb-select-label>
-        <nb-select class="pl-2" [(selected)]="selectedK" (selectedChange)="filterTable()">
-          <nb-option value="">All</nb-option>
-          <nb-option value="14">K14</nb-option>
-          <nb-option value="15">K15</nb-option>
-          <nb-option value="16">K16</nb-option>
-          <nb-option value="17">K17</nb-option>
-          <nb-option value="18">K18</nb-option>
-        </nb-select>
-      </nb-card-body>
-    </div>
-    <div>
-      <nb-card-body>
-        <nb-select-label>Major</nb-select-label>
-        <nb-select class="pl-2" [(selected)]="selectedMajor" (selectedChange)="filterTable()">
-          <nb-option value="">All Major</nb-option>
-          <nb-option value="SE">Software Engineering</nb-option>
-          <nb-option value="SS">Business</nb-option>
-          <nb-option value="SA">English</nb-option>
-        </nb-select>
-      </nb-card-body>
-    </div>
-    
-  </div>
-  
-</nb-card>
 <nb-card>
   <nb-card-header>
     <div class="d-flex justify-content-between">
       <div class="d-flex">
         <h5>Users</h5> 
       </div>
-      <button class="btn btn-primary" (click)="importFromExcel([])">
-        Add user
+      <button class="btn" [nbContextMenu]="items">
+        <nb-icon icon="more-vertical"></nb-icon>
       </button>
     </div>
   </nb-card-header>
@@ -120,4 +88,8 @@
       <button nbButton class="bg-primary text-light ml-3" (click)="updateUser()">Update</button>
     </nb-card-footer>
   </nb-card>
+</ng-template>
+
+<ng-template #excelImporterDialog let-data let-ref="dialogRef">
+  <ngx-excel-importer></ngx-excel-importer>
 </ng-template>

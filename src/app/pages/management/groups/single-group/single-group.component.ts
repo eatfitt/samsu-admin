@@ -3,7 +3,7 @@ import { AddListUserRequest, GetAllUsersListResponse, GetAllUsersResponse, RoleE
 import { AllStudentsComponent } from '../../students/all-students/all-students.component';
 import { UserState } from '../../../../app-state/user';
 import { Store } from '@ngrx/store';
-import { NbDialogService, NbToastrService } from '@nebular/theme';
+import { NbDialogService, NbMenuService, NbToastrService } from '@nebular/theme';
 import { Router } from '@angular/router';
 import { GetSingleGroupResponse, Group, GroupService, PutUpdateGroupRequest } from '../../../../@core/services/group/group.service';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -90,9 +90,10 @@ constructor(
   public dialogService: NbDialogService,
   public router: Router,
   public groupService: GroupService,
-  public toastrService: NbToastrService
+  public toastrService: NbToastrService,
+  public menuService: NbMenuService
 ) {
-  super(userService, store, dialogService, router, toastrService);
+  super(userService, store, dialogService, router, toastrService, menuService);
   let url = this.router.url;
   this.groupId = Number(url.split('/').pop());
 }
