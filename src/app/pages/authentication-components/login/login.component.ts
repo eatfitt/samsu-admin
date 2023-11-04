@@ -67,7 +67,7 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
 
 
   ngOnInit(): void {
-    this.userService.checkLoggedIn();
+    this.userService.checkLoggedIn(true);
     const loggedOut = JSON.parse(localStorage.getItem("loggedOut"));
     if (loggedOut === 'true') {
       return;

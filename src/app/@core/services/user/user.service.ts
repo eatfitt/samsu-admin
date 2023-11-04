@@ -204,7 +204,7 @@ export class UserService {
       );
   }
 
-  checkLoggedIn() {
+  checkLoggedIn(isNavigate = false) {
     const loggedInUser = JSON.parse(localStorage.getItem("socialUser"));
     const loggedInJwt = JSON.parse(localStorage.getItem("jwt"));
     const loggedInUserSummary = JSON.parse(
@@ -216,7 +216,7 @@ export class UserService {
       this.store.dispatch(
         setUserUserSummary({ userSummary: loggedInUserSummary })
       );
-      this.router.navigate(["pages"]);
+      if (isNavigate) this.router.navigate(["pages"]);
     } else {
       this.router.navigate(["/"]);
     }

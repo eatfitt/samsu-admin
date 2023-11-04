@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { WorkBook, WorkSheet, read, utils, writeFileXLSX } from "xlsx";
+import { WorkBook, WorkSheet, read, utils } from "xlsx";
 
 interface President {
   Name: string;
@@ -40,7 +40,7 @@ interface President {
 })
 export class ExcelImporterComponent {
   // rows: President[] = [{ Name: "SheetJS", Index: 0 }];
-  @Input() sampleData = 'https://docs.google.com/spreadsheets/d/1rHdjZBLNlYs-FbxJO4i7OumvXYH3RMs0rzoatuBqSSc/edit?usp=sharing';
+  @Input() sampleData = 'https://sgp1.digitaloceanspaces.com/samsu/assets/50b73f64-a966-4729-9560-c1650be98774_SAMSUUserImportExample.xlsx';
   @Output() importFromExcel: EventEmitter<any[][]> = new EventEmitter<any[][]>();
   data: any[][] = [];
 

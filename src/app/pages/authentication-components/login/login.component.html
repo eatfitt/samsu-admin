@@ -28,7 +28,7 @@
           [status]="usernameOrEmail.dirty ? (usernameOrEmail.invalid || loginFail ? 'danger' : 'primary') : 'primary'"
           required="true">
         <ng-container *ngIf="usernameOrEmail.invalid && usernameOrEmail.touched">
-          <p class="error-message" *ngIf="usernameOrEmail.errors?.required"> Email is required! </p>
+          <!-- <p class="error-message" *ngIf="usernameOrEmail.errors?.required"> Email is required! </p> -->
           <p class="error-message" *ngIf="usernameOrEmail.errors?.pattern"> Email should be the real
             one! </p>
         </ng-container>
