@@ -1,6 +1,13 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { NbToastrService } from "@nebular/theme";
-import { WorkBook, WorkSheet, read, utils } from "xlsx";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  TemplateRef,
+  ViewChild,
+} from "@angular/core";
+import { NbDialogService, NbToastrService } from "@nebular/theme";
+import { WorkBook, WorkSheet, read, utils, writeFileXLSX } from "xlsx";
 
 interface President {
   Name: string;
@@ -10,10 +17,31 @@ interface President {
 @Component({
   selector: "ngx-excel-importer",
   template: `
-    <div class="small font-weight-bold mb-1">Import Excel 
-      <a class="small" target="_blank" [href]="sampleData">Sample Data</a>
-    </div>
-    <input type="file" (change)="onFileChange($event)" multiple="false" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+    <button class="btn btn-primary" (click)="popUpImporter()">Import</button>
+
+    <ng-template #importDialog let-data let-ref="dialogRef">
+      <nb-card>
+        <nb-card-header>
+          <div class="d-flex justify-content-between">
+            <div>Import</div>
+            <a class="small" target="_blank" [href]="sampleData">Sample Data</a>
+          </div>
+        </nb-card-header>
+        <nb-card-body class="bg-white">
+          <input
+            type="file"
+            (change)="onFileChange($event)"
+            multiple="false"
+            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+          />
+        </nb-card-body>
+        <nb-card-footer>
+          <button nbButton class="bg-danger text-light" (click)="ref.close()">
+            Close
+          </button>
+        </nb-card-footer>
+      </nb-card>
+    </ng-template>
     <!-- <table class="sjs-table">
       <tr *ngFor="let row of data">
         <td *ngFor="let val of row">{{ val }}</td>
@@ -41,20 +69,26 @@ interface President {
 })
 export class ExcelImporterComponent {
   // rows: President[] = [{ Name: "SheetJS", Index: 0 }];
-  @Input() sampleData = 'https://sgp1.digitaloceanspaces.com/samsu/assets/50b73f64-a966-4729-9560-c1650be98774_SAMSUUserImportExample.xlsx';
-  @Output() importFromExcel: EventEmitter<any[][]> = new EventEmitter<any[][]>();
+  @Input() sampleData = "https://sgp1.digitaloceanspaces.com/samsu/assets/50b73f64-a966-4729-9560-c1650be98774_SAMSUUserImportExample.xlsx";
+  @Output() importFromExcel: EventEmitter<any[][]> = new EventEmitter<
+    any[][]
+  >();
+  @ViewChild("importDialog", { static: true }) importDialog: TemplateRef<any>;
+
   data: any[][] = [];
 
   // ngOnInit(): void {
   //   (async () => {
-  //     const f = await fetch("https://sheetjs.com/pres.numbers");
+  //     const f = await fetch(
+  //       "https://sgp1.digitaloceanspaces.com/samsu/assets/50b73f64-a966-4729-9560-c1650be98774_SAMSUUserImportExample.xlsx"
+  //     );
   //     const ab = await f.arrayBuffer();
 
   //     /* parse workbook */
   //     const wb = read(ab);
 
   //     /* update data */
-  //     this.rows = utils.sheet_to_json<President>(wb.Sheets[wb.SheetNames[0]]);
+  //     this.rows = utils.sheet_to_json<any>(wb.Sheets[wb.SheetNames[0]]);
   //   })();
   // }
 
@@ -67,15 +101,27 @@ export class ExcelImporterComponent {
   // }
 
   constructor(
-    public toastrService: NbToastrService
+    public toastrService: NbToastrService,
+    private dialogService: NbDialogService
   ) {}
+
+  popUpImporter() {
+    this.dialogService.open(this.importDialog);
+  }
 
   onFileChange(evt: any) {
     /* wire up file reader */
     const target: DataTransfer = <DataTransfer>evt.target;
     if (target.files.length !== 1) throw new Error("Cannot use multiple files");
-    if (target.files[0].type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      this.toastrService.show('You must import type xlxs/excel', `Import fail`, { status: 'danger'});
+    if (
+      target.files[0].type !==
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ) {
+      this.toastrService.show(
+        "You must import type xlxs/excel",
+        `Import fail`,
+        { status: "danger" }
+      );
       return;
     }
     const reader: FileReader = new FileReader();
@@ -93,6 +139,6 @@ export class ExcelImporterComponent {
       this.importFromExcel.emit(this.data);
     };
     reader.readAsArrayBuffer(target.files[0]);
-    evt.target.value = '';
+    evt.target.value = "";
   }
 }
