@@ -5,7 +5,7 @@ import { Store } from "@ngrx/store";
 import { Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { environment } from "../../../../environments/environment";
-import { SocialUser } from "../../../../utils/social-login/public-api";
+import { SocialAuthService, SocialUser } from "../../../../utils/social-login/public-api";
 import {
   setUserJwt,
   setUserSocialUser,
@@ -93,6 +93,7 @@ export class UserService {
   constructor(
     private http: HttpClient,
     protected router: Router,
+    private socialAuthService: SocialAuthService,
     private store: Store<{ user: SocialUser }>
   ) {
     this.apiEndPoint = environment.apiEndPoint;
@@ -227,6 +228,7 @@ export class UserService {
     localStorage.removeItem("socialUser");
     localStorage.removeItem('token');
     localStorage.removeItem('email');
+    this.socialAuthService.signOut();
     localStorage.setItem('loggedOut', 'true');
     this.router.navigateByUrl("/");
   }
