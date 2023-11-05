@@ -9,3 +9,12 @@
         cursor: pointer;
     }
 }
+::ng-deep ng2-smart-table .ng2-smart-actions ng2-st-tbody-custom a.ng2-smart-action {
+    font-size: 0.9rem !important;
+    margin-top: 0.8rem;
+    height: 2rem;
+}
+::ng-deep ng2-smart-table .ng2-smart-actions ng2-st-tbody-edit-delete,
+::ng-deep ng2-smart-table .ng2-smart-actions ng2-st-tbody-edit-delete a.ng2-smart-action {
+    height: 2rem;
+}

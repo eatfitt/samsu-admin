@@ -186,7 +186,7 @@ export class AllStudentsComponent {
     protected dialogService: NbDialogService,
     protected router: Router,
     protected toastrService: NbToastrService,
-    protected menuService: NbMenuService
+    protected menuService: NbMenuService,
   ) {
     // this.source.load(this.data);
     // this.source.setFilter([{field: 'rollnumber', search: '79'}, {field: 'name', search: 'ha'}, ])
@@ -210,7 +210,7 @@ export class AllStudentsComponent {
         custom: [
           {
             name: 'View',
-            title: 'View ',
+            title: 'View Profile',
           }
         ],
       },
@@ -439,6 +439,17 @@ export class AllStudentsComponent {
       },
     )
   }
+
+  onCustomAction(event) {
+    const data = event.data;
+    console.log(event)
+    switch (event.action) {
+      case 'View':
+        this.router.navigateByUrl(`pages/user/${data.username}`)
+        break;
+    }
+  }
+
   ngOnDestroy() {
     this.test.unsubscribe();
   }

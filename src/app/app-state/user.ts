@@ -18,6 +18,8 @@ export interface UserSummary {
   status: string,
   dob: string,
   department: string,
+  rollnumber: string,
+  username: string;
 }
 export interface UserState {
   socialUser: SocialUser,

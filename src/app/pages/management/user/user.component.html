@@ -1,1 +1,60 @@
-<p>user works!</p>
+<nb-card>
+    <nb-card-body>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-5">
+                        <img style="object-fit: cover; width: 100%;"
+                            src="../../../../assets/images/kitten-corporate.png">
+                    </div>
+                    <div class="col-md-7">
+                        <h4>{{ user.name }}</h4>
+                        <div>{{ user.rollnumber }} - {{ jwt.email }}</div>
+                        <nb-tag class="my-2" status="primary" appearance="filled"
+                            [text]="user.role"></nb-tag>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h4>Groups</h4>
+                <nb-tag class="mr-2" *ngFor="let group of groups" [text]="group"></nb-tag>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>
+<nb-tabset>
+    <nb-tab tabTitle="2020">
+        <ng-container *ngTemplateOutlet="semesterTab"></ng-container>
+    </nb-tab>
+    <nb-tab tabTitle="2021">
+        <ng-container *ngTemplateOutlet="semesterTab"></ng-container>
+    </nb-tab>
+    <nb-tab tabTitle="2022">
+        <ng-container *ngTemplateOutlet="semesterTab"></ng-container>
+    </nb-tab>
+    <nb-tab tabTitle="2023">
+        <ng-container *ngTemplateOutlet="semesterTab"></ng-container>
+    </nb-tab>
+</nb-tabset>
+<ng-template #semesterTab>
+    <div class="row">
+        <div class="col-md-4">
+            <nb-card>
+                <nb-card-header>Statistic</nb-card-header>
+                <nb-card-body></nb-card-body>
+            </nb-card>
+        </div>
+        <div class="col-md-4">
+            <nb-card>
+                <nb-card-header>Achievements</nb-card-header>
+                <nb-card-body></nb-card-body>
+            </nb-card>
+        </div>
+        <div class="col-md-4">
+            <nb-card>
+                <nb-card-header>Events</nb-card-header>
+                <nb-card-body></nb-card-body>
+            </nb-card>
+        </div>
+    </div>
+</ng-template>

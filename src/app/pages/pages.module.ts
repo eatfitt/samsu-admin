@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NbAlertModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbContextMenuModule, NbIconModule, NbInputModule, NbLayoutModule, NbMenuModule, NbPopoverModule, NbSelectModule } from '@nebular/theme';
+import { NbAlertModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbContextMenuModule, NbIconModule, NbInputModule, NbLayoutModule, NbMenuModule, NbPopoverModule, NbSelectModule, NbTabsetModule, NbTagModule } from '@nebular/theme';
 
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { HttpClientModule } from '@angular/common/http';
@@ -44,6 +44,8 @@ import { SingleGroupComponent } from './management/groups/single-group/single-gr
     NbIconModule,
     NbPopoverModule,
     NbContextMenuModule,
+    NbTabsetModule,
+    NbTagModule
   ],
   declarations: [
     PagesComponent,
