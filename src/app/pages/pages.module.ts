@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NbAlertModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbContextMenuModule, NbIconModule, NbInputModule, NbLayoutModule, NbMenuModule, NbPopoverModule, NbSelectModule, NbTabsetModule, NbTagModule } from '@nebular/theme';
+import { NbAlertModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbContextMenuModule, NbIconModule, NbInputModule, NbLayoutModule, NbMenuModule, NbPopoverModule, NbSelectModule, NbStepperModule, NbTabsetModule, NbTagModule, NbTreeGridModule } from '@nebular/theme';
 
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { HttpClientModule } from '@angular/common/http';
@@ -20,6 +20,7 @@ import { AllGroupsComponent } from './management/groups/all-groups/all-groups.co
 import { GroupCardComponent } from './management/groups/group-card/group-card.component';
 import { UserComponent } from './management/user/user.component';
 import { SingleGroupComponent } from './management/groups/single-group/single-group.component';
+import { AddEventComponent } from './management/events/add-event/add-event.component';
 
 @NgModule({
   imports: [
@@ -45,7 +46,9 @@ import { SingleGroupComponent } from './management/groups/single-group/single-gr
     NbPopoverModule,
     NbContextMenuModule,
     NbTabsetModule,
-    NbTagModule
+    NbTagModule,
+    NbStepperModule,
+    NbTreeGridModule
   ],
   declarations: [
     PagesComponent,
@@ -57,6 +60,7 @@ import { SingleGroupComponent } from './management/groups/single-group/single-gr
     // GroupCardComponent,
     UserComponent,
     SingleGroupComponent,
+    AddEventComponent,
   ],
 })
 export class PagesModule {

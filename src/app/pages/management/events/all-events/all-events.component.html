@@ -1,1 +1,67 @@
-<p>all-events works!</p>
+<div class="container"></div>
+<div class="row">
+    <div class="col-md-9">
+        <nb-card>
+            <nb-card-header>
+                <div class="d-flex justify-content-between">
+                    <h5>Events</h5>
+                    <button class="btn btn-outline-primary" (click)="navigateTo('/pages/events/add')">
+                        <nb-icon [icon]="'plus-round'" pack="ion"></nb-icon>
+                    </button>
+                </div>
+            </nb-card-header>
+            <nb-card-body>
+                <nb-tabset>
+                    <nb-tab tabTitle="Grid">
+                        <ng-container [ngTemplateOutlet]="gridView"
+                            [ngTemplateOutletContext]="{events: mockEvents}"></ng-container>
+                    </nb-tab>
+                    <nb-tab tabTitle="List"></nb-tab>
+                </nb-tabset>
+            </nb-card-body>
+        </nb-card>
+    </div>
+    <div class="col-md-3">
+        <nb-card>
+            <nb-card-header>
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <div>Statistic</div>
+                    <nb-select [(selected)]="selectedStatisticTime">
+                        <nb-option value="week">Week</nb-option>
+                        <nb-option value="month">Month</nb-option>
+                        <nb-option value="year">Year</nb-option>
+                    </nb-select>
+                </div>
+            </nb-card-header>
+            <nb-card-body>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="subtitle">Events</div>
+                        <div class="h4">15</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="subtitle">Attendees</div>
+                        <div class="h4">300</div>
+                    </div>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>
+<ng-template #gridView let-events="events">
+    <div class="row">
+        <div class="col-lg-4 col-md-6" *ngFor="let event of events">
+            <nb-card>
+                <nb-card-header class="banner-url px-3"
+                    [ngStyle]="{'background-image': 'url(' + event.bannerUrls + ')'}">
+                    <nb-tag [text]="event.status" class="float-right"></nb-tag>
+                </nb-card-header>
+                <nb-card-body>
+                    <h6>{{ event.title }}</h6>
+                    <div>{{ event.startTime | date:"MMM dd yyyy, hh:mm a" }}</div>
+                    <div>{{ event.attendances }} people are going</div>
+                </nb-card-body>
+            </nb-card>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,65 @@
+<nb-card class="col-md-12 col-lg-12 col-xxxl-12">
+    <nb-card-body>
+        <nb-stepper orientation="horizontal">
+            <nb-step label="Basic Information">
+                <h5>Basic Information</h5>
+                <ng-container [ngTemplateOutlet]="basicInformationTemplate"></ng-container>
+                <button nbButton disabled nbStepperNext>prev</button>
+                <button class="float-right" nbButton nbStepperNext>next</button>
+            </nb-step>
+            <nb-step label="Feedback Form">
+                <h5>Feedback Form</h5>
+                <ng-container [ngTemplateOutlet]="feedbackFormTemplate"></ng-container>
+                <button nbButton nbStepperPrevious>prev</button>
+                <button class="float-right" nbButton nbStepperNext>next</button>
+            </nb-step>
+            <nb-step label="Attendance List">
+                <h3>Attendance List</h3>
+                <button nbButton nbStepperPrevious>prev</button>
+                <button class="float-right" nbButton nbStepperNext>next</button>
+            </nb-step>
+            <nb-step label="Review">
+                <h3>Review</h3>
+                <button nbButton nbStepperPrevious>prev</button>
+                <button class="float-right" nbButton disabled nbStepperNext>next</button>
+            </nb-step>
+        </nb-stepper>
+    </nb-card-body>
+</nb-card>
+<ng-template #excelImporterDialog>
+    <ngx-excel-importer
+        sampleData="https://docs.google.com/spreadsheets/d/1zyKopWzyAkoPdjrvlGcrFcY3pX5TR2gdVLS6pP9FrMY/edit?usp=sharing"
+        (importFromExcel)="importFeedbackFromExcel($event)"></ngx-excel-importer>
+</ng-template>
+<ng-template #basicInformationTemplate>
+    <div>Lười waaaa import proposal là cái gì, có nhập dùm mình mấy field này k hay nó kiểu pdf thoi yawns anw</div>
+</ng-template>
+<ng-template #feedbackFormTemplate>
+    <ngx-excel-importer (importFromExcel)="importFeedbackFromExcel($event)"></ngx-excel-importer>
+    <div>
+        <div class="container border mb-5 pt-3"
+            *ngFor="let feedback of feedbackQuestionList; let i = index">
+            <div class="label mb-2">Question {{i + 1}}</div>
+            <div class="d-flex justify-content-between mb-3">
+                <input class="flex-grow-1 mw-100" nbInput [(ngModel)]="feedback.question">
+                <nb-select [(selected)]="feedback.type">
+                    <nb-option value="MultipleSelect">Multiple Select</nb-option>
+                    <nb-option value="SingleSelect">Single Select</nb-option>
+                    <nb-option value="OpenEnded">Open Ended</nb-option>
+                </nb-select>
+            </div>
+            <ng-container *ngIf="feedback.answer.length > 0">
+                <div class="d-flex mb-2 ml-5" *ngFor="let answer of feedback.answer; let j = index">
+                    <input class="flex-grow-1 mw-100" nbInput [(ngModel)]="feedback.answer[j]">
+                    <button (click)="deleteAnswer(i, j)" class="btn input-group-text">
+                        <nb-icon class="small" [icon]="'close'" pack="ion"></nb-icon>
+                    </button>
+                </div>
+            </ng-container>
+            <button (click)="addAnswer(i)" class="btn btn-link ml-5">
+                <nb-icon status="primary" class="small mr-2" [icon]="'plus'" pack="ion"></nb-icon>
+                <span class="label">Add answer</span>
+            </button>
+        </div>
+    </div>
+</ng-template>

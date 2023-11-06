@@ -17,17 +17,25 @@ export const MENU_ITEMS: NbMenuItem[] = [
     group: true,
   },
   {
-    title: 'Events',
-    icon: 'calendar-outline',
-    link: '/pages/dashboard',
-    home: true,
-  },
-  {
     title: 'Users',
     icon: 'person-outline',
     link: '/pages/users',
     home: true,
   },
+  {
+      title: 'Events',
+      icon: 'calendar-outline',
+      children: [
+        {
+          title: 'All events',
+          link: '/pages/events',
+        },
+        {
+          title: 'Calendar',
+          link: '/pages/events/calendar',
+        },
+      ],
+    },
   {
     title: 'Groups',
     icon: 'people-outline',

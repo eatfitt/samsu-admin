@@ -9,6 +9,8 @@ import { AllStudentsComponent } from './management/students/all-students/all-stu
 import { AllGroupsComponent } from './management/groups/all-groups/all-groups.component';
 import { UserComponent } from './management/user/user.component';
 import { SingleGroupComponent } from './management/groups/single-group/single-group.component';
+import { AllEventsComponent } from './management/events/all-events/all-events.component';
+import { AddEventComponent } from './management/events/add-event/add-event.component';
 
 const routes: Routes = [{
   path: '',
@@ -25,6 +27,14 @@ const routes: Routes = [{
     {
       path: 'users',
       component: AllStudentsComponent,
+    },
+    {
+      path: 'events',
+      component: AllEventsComponent,
+    },
+    {
+      path: 'events/add',
+      component: AddEventComponent,
     },
     {
       path: 'groups',
