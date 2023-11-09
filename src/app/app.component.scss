@@ -14,3 +14,6 @@
 ::ng-deep nb-auth nb-card-header {
   display: none !important;
 }
+::ng-deep .ql-editor {
+  min-height: 150px !important;
+}

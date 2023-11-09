@@ -1,8 +1,7 @@
-import { Component, Input, SimpleChanges, ChangeDetectionStrategy, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { NbDialogRef, NbDialogService, NbToastrService } from '@nebular/theme';
+import { isObject } from 'lodash';
 import { Group, GroupService } from '../../../../@core/services/group/group.service';
-import { isObject } from 'rxjs/internal-compatibility';
-import { NbDialogRef, NbDialogService, NbMenuService, NbToastrService } from '@nebular/theme';
-import { filter, map } from 'rxjs/operators';
 import { AllStudentsComponent } from '../../students/all-students/all-students.component';
 
 @Component({

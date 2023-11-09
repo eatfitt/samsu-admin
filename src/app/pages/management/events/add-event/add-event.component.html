@@ -14,7 +14,7 @@
                 <button class="float-right" nbButton nbStepperNext>next</button>
             </nb-step>
             <nb-step label="Attendance List">
-                <h3>Attendance List</h3>
+                <h5>Attendance List</h5>
                 <button nbButton nbStepperPrevious>prev</button>
                 <button class="float-right" nbButton nbStepperNext>next</button>
             </nb-step>
@@ -32,7 +32,49 @@
         (importFromExcel)="importFeedbackFromExcel($event)"></ngx-excel-importer>
 </ng-template>
 <ng-template #basicInformationTemplate>
-    <div>Lười waaaa import proposal là cái gì, có nhập dùm mình mấy field này k hay nó kiểu pdf thoi yawns anw</div>
+<nb-card>
+    <nb-card-body class="example-items-col">
+        <div class="form-group">
+            <label for="title" class="font-weight-bold">Title</label>
+            <input type="text" nbInput fullWidth id="title" placeholder="Title">
+        </div>
+        <div class="form-group">
+            <label for="proposal" class="font-weight-bold" style="margin-top: 1rem;">Proposal</label>
+            <input [formControl]="inputFormControl" nbInput fullWidth type="text" placeholder="Search proposal"
+                [nbAutocomplete]="auto" id="proposal" />
+            <nb-autocomplete #auto [activeFirst]="true">
+                <nb-option *ngFor="let option of filteredOptions$ | async" [value]="option">
+                    {{ option }}
+                </nb-option>
+            </nb-autocomplete>
+        </div>
+        <div class="form-group">
+            <label for="description" class="font-weight-bold" style="margin-top: 1rem;">Content</label>
+            <!-- <textarea nbInput fullWidth id="description" placeholder="Textarea"></textarea> -->
+            <quill-editor [(ngModel)]="editorContent" [config]="editorConfig"></quill-editor>
+
+        </div>
+        <div class="form-group">
+            <nb-card>
+                <nb-card-body class="bg-white">
+                    <label for="bannerImg" class="font-weight-bold" style="margin-top: 1rem;">Banner image</label> <br>
+                    <div class="input-group">
+                        <!-- <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                        </div> -->
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                aria-describedby="inputGroupFileAddon01" (change)="onFileChange($event)">
+                            <label class="custom-file-label" for="inputGroupFile01">Choose image</label>
+                        </div>
+                    </div>
+                    <!-- <input id="bannerImg" type="file" (change)="onFileChange($event)" multiple="false"
+                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" /> -->
+                </nb-card-body>
+            </nb-card>
+        </div>
+    </nb-card-body>
+</nb-card>
 </ng-template>
 <ng-template #feedbackFormTemplate>
     <ngx-excel-importer (importFromExcel)="importFeedbackFromExcel($event)"></ngx-excel-importer>

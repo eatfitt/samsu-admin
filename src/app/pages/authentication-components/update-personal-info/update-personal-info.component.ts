@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { NB_AUTH_OPTIONS, NbAuthResult, NbAuthService, NbAuthSocialLink, NbRegisterComponent, getDeepFromObject } from '@nebular/auth';
+import { NB_AUTH_OPTIONS, NbAuthService, NbAuthSocialLink, NbRegisterComponent, getDeepFromObject } from '@nebular/auth';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { SocialUser } from '../../../../utils/social-login/entities/social-user';
-import { Observable } from 'rxjs-compat';
-import { Jwt, UserState, UserSummary, getUserJwtState, getUserSocialUserState, getUserUserSummaryState, setUserUserSummary } from '../../../app-state/user';
 import { InitUserRequest, UserService } from '../../../@core/services/user/user.service';
+import { Jwt, UserState, UserSummary, getUserJwtState, getUserUserSummaryState } from '../../../app-state/user';
 
 @Component({
   selector: 'ngx-update-personal-info',

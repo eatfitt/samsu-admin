@@ -1,14 +1,13 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { NB_WINDOW, NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 
-import { UserData } from '../../../@core/data/users';
-import { LayoutService } from '../../../@core/utils';
-import { map, takeUntil, filter } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { UserState, UserSummary } from '../../../app-state/user';
+import { Subject } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
 import { SocialUser } from '../../../../utils/social-login/public-api';
 import { UserService } from '../../../@core/services/user/user.service';
+import { LayoutService } from '../../../@core/utils';
+import { UserState, UserSummary } from '../../../app-state/user';
 
 @Component({
   selector: 'ngx-header',
@@ -111,7 +110,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleSidebar(): boolean {
     this.sidebarService.toggle(true, 'menu-sidebar');
-    this.layoutService.changeLayoutSize();
+    this.layoutService.changeLayoutSize(true);
 
     return false;
   }

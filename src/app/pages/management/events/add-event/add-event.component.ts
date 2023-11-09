@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { NbIconLibraries } from '@nebular/theme';
+import { Observable, map, of, startWith } from 'rxjs';
 import { Event } from '../../../../@core/services/event/event.service';
 import { getRandomDate } from '../../../../@core/utils/mock-data';
-import { NbIconLibraries } from '@nebular/theme';
 
 enum FeedbackType {
   MultipleSelect,
@@ -29,9 +31,23 @@ interface FSEntry {
 @Component({
   selector: 'ngx-add-event',
   templateUrl: './add-event.component.html',
-  styleUrls: ['./add-event.component.scss']
+  styleUrls: ['./add-event.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddEventComponent {
+export class AddEventComponent implements OnInit {
+  proposals: string[] = ['Proposal 1', 'Proposal 2', 'Proposal 3'];
+  options: string[];
+  filteredOptions$: Observable<string[]>;
+  inputFormControl: FormControl;
+  myForm: FormGroup;
+  editorContent: string;
+  editorConfig = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link'],
+    ],
+  };
   event: Event = {
       semestersName: '',
       title: '',
@@ -42,7 +58,19 @@ export class AddEventComponent {
       bannerUrls: '',
   }
   feedbackQuestionList: Feedback[] = [];
+  ngOnInit(): void {
+    this.options = ['Proposal 1', 'Proposal 2', 'Proposal 3', 'Proposal 4'];
+    this.filteredOptions$ = of(this.options);
 
+    this.inputFormControl = new FormControl();
+
+    this.filteredOptions$ = this.inputFormControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(filterString => this.filter(filterString)),
+      );
+
+  }
   constructor(
     iconsLibrary: NbIconLibraries
   ) {
@@ -69,5 +97,9 @@ export class AddEventComponent {
   }
   addAnswer(i) {
     this.feedbackQuestionList[i].answer.push('Sample answer');
+  }
+  private filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.options.filter(optionValue => optionValue.toLowerCase().includes(filterValue));
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { delay, shareReplay, debounceTime } from 'rxjs/operators';
+import { debounceTime, delay, shareReplay } from 'rxjs/operators';
 
 @Injectable()
 export class LayoutService {
@@ -10,8 +10,8 @@ export class LayoutService {
     shareReplay({ refCount: true }),
   );
 
-  changeLayoutSize() {
-    this.layoutSize$.next();
+  changeLayoutSize(value: any) {
+    this.layoutSize$.next(value);
   }
 
   onChangeLayoutSize(): Observable<any> {
