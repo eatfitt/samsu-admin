@@ -19,6 +19,12 @@
                 <button nbButton nbStepperPrevious>prev</button>
                 <button class="float-right" nbButton nbStepperNext>next</button>
             </nb-step>
+            <nb-step label="Tasks">
+                <h5>Tasks</h5>
+                <ng-container [ngTemplateOutlet]="tasksTemplate"></ng-container>
+                <button nbButton nbStepperPrevious>prev</button>
+                <button class="float-right" nbButton nbStepperNext>next</button>
+            </nb-step>
             <nb-step label="Review">
                 <h3>Review</h3>
                 <button nbButton nbStepperPrevious>prev</button>
@@ -110,4 +116,7 @@
 </ng-template>
 <ng-template #attendanceListTemplate>
     <ngx-add-event-attendance-list (addAttendanceList)="addAttendanceList($event)"></ngx-add-event-attendance-list>
+</ng-template>
+<ng-template #tasksTemplate>
+    <ngx-add-task></ngx-add-task>
 </ng-template>
