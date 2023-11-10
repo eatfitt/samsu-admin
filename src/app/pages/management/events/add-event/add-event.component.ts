@@ -15,18 +15,6 @@ interface Feedback {
   question: string,
   answer: string[],
 }
-interface TreeNode<T> {
-  data: T;
-  children?: TreeNode<T>[];
-  expanded?: boolean;
-}
-
-interface FSEntry {
-  name: string;
-  size: string;
-  kind: string;
-  items?: number;
-}
 
 @Component({
   selector: 'ngx-add-event',
@@ -58,6 +46,8 @@ export class AddEventComponent implements OnInit {
       bannerUrls: '',
   }
   feedbackQuestionList: Feedback[] = [];
+  attendanceList: any = [];
+
   ngOnInit(): void {
     this.options = ['Proposal 1', 'Proposal 2', 'Proposal 3', 'Proposal 4'];
     this.filteredOptions$ = of(this.options);
@@ -91,13 +81,20 @@ export class AddEventComponent implements OnInit {
     this.feedbackQuestionList = this.feedbackQuestionList.concat(importedFeedbackQuestionList);
   }
 
-
   deleteAnswer(i, j) {
     this.feedbackQuestionList[i].answer.splice(j, 1);
   }
   addAnswer(i) {
     this.feedbackQuestionList[i].answer.push('Sample answer');
   }
+  deleteQuestion(i) {
+    this.feedbackQuestionList.splice(i, 1);
+  }
+
+  addAttendanceList(event) {
+    this.attendanceList = event;
+  }
+
   private filter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.options.filter(optionValue => optionValue.toLowerCase().includes(filterValue));

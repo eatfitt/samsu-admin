@@ -1,0 +1,20 @@
+<label class="label">Select Group to Import</label>
+<input #autoInput nbInput fullWidth="" type="text" (input)="onChange()" placeholder="Enter value"
+    [nbAutocomplete]="auto" />
+<nb-autocomplete #auto (selectedChange)="onSelectGroup($event)">
+    <nb-option *ngFor="let group of filterGroups" [value]="group.name"> {{ group.name }}
+    </nb-option>
+</nb-autocomplete>
+<div class="my-3">
+    <ng2-smart-table [settings]="settings" [source]="attendanceList">
+    </ng2-smart-table>
+</div>
+<ng-template #confirmAddGroupDialog let-ref="dialogRef">
+    <nb-card>
+        <nb-card-body> Do you want to add group {{ selectedGroup.name }} ? </nb-card-body>
+        <nb-card-footer>
+            <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
+            <button nbButton class="bg-primary text-light ml-3" (click)="addGroup()">Update</button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>
