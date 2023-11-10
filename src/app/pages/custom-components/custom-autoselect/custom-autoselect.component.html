@@ -1,0 +1,7 @@
+<label class="label">{{ label }}</label>
+<input #autoInput nbInput fullWidth="" type="text" (input)="onChange()" placeholder="Enter value"
+    [nbAutocomplete]="auto" />
+<nb-autocomplete #auto (selectedChange)="handleSelect($event)">
+    <nb-option *ngFor="let item of filteredArr" [value]="item[property]"> {{ item[property] }}
+    </nb-option>
+</nb-autocomplete>
