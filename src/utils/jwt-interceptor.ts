@@ -14,7 +14,7 @@ export class JwtInterceptor implements HttpInterceptor {
         const skipInjection = request.context.get(SKIP_JWT_AUTHENTICATION_INJECTION);
 
         // If a token exists, add it to the Authorization header
-        if (parsedJwtToken.jwtToken.accessToken && !skipInjection) {
+        if (parsedJwtToken?.jwtToken?.accessToken && !skipInjection) {
             request = request.clone({
                 setHeaders: {
                     Authorization: `Bearer ${parsedJwtToken.jwtToken.accessToken}`
