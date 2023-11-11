@@ -225,7 +225,8 @@ export class UserService {
   logOut() {
     localStorage.removeItem("jwt");
     this.store.dispatch(setUserSocialUser(null));
-    this.store.dispatch(setUserJwt({ jwt: null }))
+    this.store.dispatch(setUserJwt({ jwt: null }));
+    this.store.dispatch(setUserUserSummary(null));
     localStorage.removeItem("userSummary");
     localStorage.removeItem("socialUser");
     localStorage.removeItem('token');
