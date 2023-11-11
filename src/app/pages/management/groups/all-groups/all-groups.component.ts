@@ -1,9 +1,9 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { NbDialogService, NbIconLibraries } from '@nebular/theme';
-import { UserState } from '../../../../app-state/user';
 import { Store } from '@ngrx/store';
 import { Group, GroupService } from '../../../../@core/services/group/group.service';
 import { UserService } from '../../../../@core/services/user/user.service';
+import { UserState } from '../../../../app-state/user';
 
 @Component({
   selector: 'ngx-all-groups',
@@ -36,7 +36,7 @@ export class AllGroupsComponent {
 
   fetchData() {
     this.store
-      .select((state) => state.user.jwt.jwtToken)
+      .select((state) => state.user?.jwt?.jwtToken)
       .subscribe((token) => {
         this.bearerToken = `${token.tokenType} ${token.accessToken}`;
         this.groupService

@@ -2,7 +2,8 @@ import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, 
 import { Router } from '@angular/router';
 import { NB_AUTH_OPTIONS, NbAuthService, NbAuthSocialLink, NbLoginComponent, getDeepFromObject } from '@nebular/auth';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { isObject, isString } from 'lodash';
+import { Observable, filter } from 'rxjs';
 import { SocialAuthService } from '../../../../utils/social-login/socialauth.service';
 import { AuthenticationService, SignInRequest } from '../../../@core/services/authentication/authentication.service';
 import { UserService } from '../../../@core/services/user/user.service';
@@ -73,7 +74,7 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
       return;
     }
 
-    this.socialAuthService.authState.subscribe((user) => {
+    this.socialAuthService.authState.pipe(filter(user => isObject(user) && isString(user?.authToken))).subscribe((user) => {
       this.store.dispatch(setUserSocialUser({ socialUser: user }));
       this.auth.getServerToken(user.authToken).subscribe(
         value => {

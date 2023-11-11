@@ -1,8 +1,8 @@
-import { Component, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
-import { Group, GroupService } from '../../../../../@core/services/group/group.service';
-import { UserService } from '../../../../../@core/services/user/user.service';
+import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import { NbDialogRef, NbDialogService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
+import { Group, GroupService } from '../../../../../@core/services/group/group.service';
+import { UserService } from '../../../../../@core/services/user/user.service';
 import { UserState } from '../../../../../app-state/user';
 
 @Component({
@@ -68,7 +68,7 @@ export class AddEventAttendanceListComponent {
 
   fetchData() {
     this.store
-      .select((state) => state.user.jwt.jwtToken)
+      .select((state) => state.user?.jwt?.jwtToken)
       .subscribe((token) => {
         this.bearerToken = `${token.tokenType} ${token.accessToken}`;
         this.groupService

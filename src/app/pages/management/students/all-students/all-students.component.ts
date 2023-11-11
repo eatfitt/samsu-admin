@@ -1,5 +1,9 @@
-import { Component, TemplateRef, ViewChild, Input, OnDestroy } from "@angular/core";
+import { Component, Input, TemplateRef, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
+import { NbDialogRef, NbDialogService, NbMenuService, NbToastrService } from "@nebular/theme";
+import { Store } from "@ngrx/store";
 import { LocalDataSource } from "ng2-smart-table";
+import { Subscription } from "rxjs";
 import {
   AddListUserRequest,
   AddListUserResponse,
@@ -9,10 +13,6 @@ import {
   UserService,
 } from "../../../../@core/services/user/user.service";
 import { UserState } from "../../../../app-state/user";
-import { Store } from "@ngrx/store";
-import { NbDialogRef, NbDialogService, NbMenuService, NbToastrService } from "@nebular/theme";
-import { Router } from "@angular/router";
-import { Subscription } from "rxjs";
 
 @Component({
   selector: "ngx-all-students",
@@ -305,7 +305,7 @@ export class AllStudentsComponent {
 
   fetchData() {
     this.store
-      .select((state) => state.user.jwt.jwtToken)
+      .select((state) => state.user?.jwt?.jwtToken)
       .subscribe((token) => {
         this.userService
           .getAllUsers(`${token.tokenType} ${token.accessToken}`)

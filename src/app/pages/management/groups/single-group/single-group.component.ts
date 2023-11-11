@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { AddListUserRequest, GetAllUsersListResponse, GetAllUsersResponse, RoleEnum, UserService } from '../../../../@core/services/user/user.service';
-import { AllStudentsComponent } from '../../students/all-students/all-students.component';
-import { UserState } from '../../../../app-state/user';
-import { Store } from '@ngrx/store';
-import { NbDialogService, NbMenuService, NbToastrService } from '@nebular/theme';
 import { Router } from '@angular/router';
-import { GetSingleGroupResponse, Group, GroupService, PutUpdateGroupRequest } from '../../../../@core/services/group/group.service';
+import { NbDialogService, NbMenuService, NbToastrService } from '@nebular/theme';
+import { Store } from '@ngrx/store';
 import { LocalDataSource } from 'ng2-smart-table';
+import { GetSingleGroupResponse, GroupService, PutUpdateGroupRequest } from '../../../../@core/services/group/group.service';
+import { GetAllUsersListResponse, GetAllUsersResponse, RoleEnum, UserService } from '../../../../@core/services/user/user.service';
+import { UserState } from '../../../../app-state/user';
+import { AllStudentsComponent } from '../../students/all-students/all-students.component';
 
 @Component({
   selector: 'ngx-single-group',
@@ -184,7 +184,7 @@ ngOnInit(): void {
 
   fetchData() {
     this.store
-      .select((state) => state.user.jwt.jwtToken)
+      .select((state) => state.user?.jwt?.jwtToken)
       .subscribe((token) => {
         this.groupService
           .getSingleGroup(`${token.tokenType} ${token.accessToken}`, this.groupId)
@@ -210,7 +210,7 @@ ngOnInit(): void {
 
   getListUsers() {
     this.store
-      .select((state) => state.user.jwt.jwtToken)
+      .select((state) => state.user?.jwt?.jwtToken)
       .subscribe((token) => {
         this.userService
           .getAllUsers(`${token.tokenType} ${token.accessToken}`)
