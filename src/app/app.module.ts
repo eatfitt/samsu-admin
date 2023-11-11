@@ -3,7 +3,7 @@
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,15 +16,15 @@ import {
   NbToastrModule,
   NbWindowModule,
 } from '@nebular/theme';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { JwtInterceptor } from '../utils/jwt-interceptor';
 import { GoogleLoginProvider, SocialAuthServiceConfig } from '../utils/social-login/public-api';
 import { CoreModule } from './@core/core.module';
 import { ThemeModule } from './@theme/theme.module';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { StoreModule } from '@ngrx/store';
-import { userReducer } from './app-state/user';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { appReducer } from './app-state/app-state';
+import { AppComponent } from './app.component';
 
 
 @NgModule({
@@ -70,6 +70,11 @@ import { appReducer } from './app-state/app-state';
           console.error(err);
         }
       } as SocialAuthServiceConfig,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true,
     }
   ],
   bootstrap: [AppComponent],

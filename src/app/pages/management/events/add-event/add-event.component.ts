@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { NbIconLibraries } from '@nebular/theme';
 import { Observable, map, of, startWith } from 'rxjs';
+import { FileUploadService } from '../../../../../services/file-upload.service';
 import { Event } from '../../../../@core/services/event/event.service';
 import { getRandomDate } from '../../../../@core/utils/mock-data';
 
@@ -62,7 +63,8 @@ export class AddEventComponent implements OnInit {
 
   }
   constructor(
-    iconsLibrary: NbIconLibraries
+    iconsLibrary: NbIconLibraries,
+    private uploadService: FileUploadService
   ) {
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
   }
@@ -90,7 +92,22 @@ export class AddEventComponent implements OnInit {
   deleteQuestion(i) {
     this.feedbackQuestionList.splice(i, 1);
   }
-
+  onFileChange(data) {
+    const file = data.target.files[0];
+    if (file) {
+      this.uploadService.uploadFile(file).subscribe(
+        url => {
+          console.log('File uploaded successfully. URL:', url);
+          // Do something with the URL, such as updating the event object
+          this.event.bannerUrls = url;
+        },
+        error => {
+          console.error('File upload failed:', error);
+          // Handle error appropriately
+        }
+      );
+    }
+  }
   addAttendanceList(event) {
     this.attendanceList = event;
   }
