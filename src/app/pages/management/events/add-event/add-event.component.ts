@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { NbIconLibraries } from '@nebular/theme';
+import { NbDialogRef, NbDialogService, NbIconLibraries } from '@nebular/theme';
 import { Observable, map, of, startWith } from 'rxjs';
 import { FileUploadService } from '../../../../../services/file-upload.service';
 import { Event } from '../../../../@core/services/event/event.service';
@@ -24,6 +24,8 @@ interface Feedback {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddEventComponent implements OnInit {
+  @ViewChild("importFeedbackFormDialog", { static: true }) importFeedbackFormDialog: TemplateRef<any>;
+
   proposals: string[] = ['Proposal 1', 'Proposal 2', 'Proposal 3'];
   options: string[];
   filteredOptions$: Observable<string[]>;
@@ -47,7 +49,14 @@ export class AddEventComponent implements OnInit {
       bannerUrls: '',
   }
   feedbackQuestionList: Feedback[] = [];
+  sampleFeedbackQuestion: Feedback = {
+    type: FeedbackType.OpenEnded,
+    question: '',
+    answer: [''],
+  }
   attendanceList: any = [];
+
+  private contentTemplateRef: NbDialogRef<AddEventComponent>;
 
   ngOnInit(): void {
     this.options = ['Proposal 1', 'Proposal 2', 'Proposal 3', 'Proposal 4'];
@@ -64,7 +73,10 @@ export class AddEventComponent implements OnInit {
   }
   constructor(
     iconsLibrary: NbIconLibraries,
-    private uploadService: FileUploadService
+    private uploadService: FileUploadService,
+    private dialogService: NbDialogService,
+    private cdr: ChangeDetectorRef,
+
   ) {
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
   }
@@ -81,6 +93,8 @@ export class AddEventComponent implements OnInit {
       return feedbackQuestion;
     });
     this.feedbackQuestionList = this.feedbackQuestionList.concat(importedFeedbackQuestionList);
+    this.cdr.detectChanges(); 
+    this.contentTemplateRef.close();
   }
 
   deleteAnswer(i, j) {
@@ -91,6 +105,11 @@ export class AddEventComponent implements OnInit {
   }
   deleteQuestion(i) {
     this.feedbackQuestionList.splice(i, 1);
+  }
+  addQuestion() {
+    this.feedbackQuestionList.push(this.sampleFeedbackQuestion);
+    this.cdr.detectChanges(); 
+    this.contentTemplateRef.close();
   }
   onFileChange(data) {
     const file = data.target.files[0];
@@ -115,5 +134,9 @@ export class AddEventComponent implements OnInit {
   private filter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.options.filter(optionValue => optionValue.toLowerCase().includes(filterValue));
+  }
+
+  openDialog(dialog) {
+    this.contentTemplateRef = this.dialogService.open(dialog);
   }
 }

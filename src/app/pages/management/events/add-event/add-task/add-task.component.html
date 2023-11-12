@@ -2,10 +2,10 @@
     <div class="row">
         <div [ngClass]="{'col-md-4': selectedTask, 'col-md-12': !selectedTask}">
             <nb-list>
-                <nb-list-item *ngFor="let task of mockTaskList" class="container px-0">
-                    <div class="row w-100" (click)="selectedTask = task">
-                        <div class="col-11" [ngClass]="{'text-primary': task.id === selectedTask?.id}">{{ task.title }}</div>
-                        <div class="col-1 badge badge-secondary fa-1x">{{ task.status }}</div>
+                <nb-list-item *ngFor="let task of mockTaskList" class="container px-0"  (click)="selectedTask = task">
+                    <div class="d-flex w-100 justify-content-between">
+                        <div  [ngClass]="{'text-primary': task.id === selectedTask?.id}">{{ task.title }}</div>
+                        <div class="badge badge-secondary fa-1x">{{ task.status }}</div>
                     </div>
                 </nb-list-item>
             </nb-list>

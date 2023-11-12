@@ -33,11 +33,6 @@
         </nb-stepper>
     </nb-card-body>
 </nb-card>
-<ng-template #excelImporterDialog>
-    <ngx-excel-importer
-        sampleData="https://docs.google.com/spreadsheets/d/1zyKopWzyAkoPdjrvlGcrFcY3pX5TR2gdVLS6pP9FrMY/edit?usp=sharing"
-        (importFromExcel)="importFeedbackFromExcel($event)"></ngx-excel-importer>
-</ng-template>
 <ng-template #basicInformationTemplate>
 <nb-card>
     <nb-card-body class="example-items-col">
@@ -84,7 +79,8 @@
 </nb-card>
 </ng-template>
 <ng-template #feedbackFormTemplate>
-    <ngx-excel-importer (importFromExcel)="importFeedbackFromExcel($event)"></ngx-excel-importer>
+    <!-- <ngx-excel-importer (importFromExcel)="importFeedbackFromExcel($event)"></ngx-excel-importer> -->
+    <button class="d-block mb-3 btn btn-outline-primary" (click)="openDialog(importFeedbackFormDialog)">+ Add feedback</button>
     <div class="d-flex" *ngFor="let feedback of feedbackQuestionList; let i = index">
         <div class="container border mb-5 pt-3">
             <div class="label mb-2">Question {{i + 1}}</div>
@@ -119,4 +115,20 @@
 </ng-template>
 <ng-template #tasksTemplate>
     <ngx-add-task></ngx-add-task>
+</ng-template>
+
+<!-- DIALOG -->
+
+<ng-template #importFeedbackFormDialog let-ref="dialogRef">
+    <nb-card>
+        <nb-card-header>Add Feedback</nb-card-header>
+        <nb-card-body>
+            <button class="btn btn-outline-primary d-flex w-100 justify-content-center" (click)="addQuestion()">+ Add manually</button>
+            <div class="d-flex justify-content-center my-2">or</div>
+            <ngx-excel-importer
+                sampleData="https://docs.google.com/spreadsheets/d/1zyKopWzyAkoPdjrvlGcrFcY3pX5TR2gdVLS6pP9FrMY/edit?usp=sharing"
+                (importFromExcel)="importFeedbackFromExcel($event)"></ngx-excel-importer>
+        </nb-card-body>
+    </nb-card>
+    
 </ng-template>

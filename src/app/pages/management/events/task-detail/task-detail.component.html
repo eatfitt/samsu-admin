@@ -1,12 +1,12 @@
 <div class="task-detail container border pt-3">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-lg-6 my-4">
             <label for="title" class="label">Title</label>
             <input class="mb-3" nbInput fullWidth id="title" placeholder="Title" [(ngModel)]="task.title">
             <label for="content" class="label">Description</label>
             <textarea type="text" nbInput fullWidth id="content" placeholder="Description" [(ngModel)]="task.content"></textarea>
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-6">
             <nb-select [(selected)]="task.status">
                 <nb-option *ngFor="let status of mockStatusList" [value]="status">{{ status }}</nb-option>
             </nb-select>
@@ -19,7 +19,7 @@
                     </div>
                     <div class="row">
                         <div class="col-3">Criteria</div>
-                        <div class="col-9">
+                        <div class="col-9 px-0">
                             <ngx-custom-autoselect
                                 [arr]="mockGradeSubCriterias"
                                 [property]="'content'"
