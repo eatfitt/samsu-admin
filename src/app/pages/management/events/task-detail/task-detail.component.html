@@ -13,19 +13,23 @@
             <nb-card class="mt-2">
                 <nb-card-header>Details</nb-card-header>
                 <nb-card-body>
-                    <div class="row mb-2">
-                        <div class="col-3">Assignee</div>
-                        <input nbInput class="col-9" [(ngModel)]="mockAssignee.name">
+                    <div class="row mb-2 align-items-baseline">
+                        <div class="col-4">Assignee</div>
+                        <input nbInput class="col-8" [(ngModel)]="mockAssignee.name">
                     </div>
-                    <div class="row">
-                        <div class="col-3">Criteria</div>
-                        <div class="col-9 px-0">
+                    <div class="row mb-2 align-items-baseline">
+                        <div class="col-4">Criteria</div>
+                        <div class="col-8 px-0">
                             <ngx-custom-autoselect
                                 [arr]="mockGradeSubCriterias"
                                 [property]="'content'"
                                 (selectItem)="this.task.gradeSubCriteriasId = $event"
                             ></ngx-custom-autoselect>
                         </div>
+                    </div>
+                    <div class="row mb-2 align-items-baseline">
+                        <div class="col-4">Score</div>
+                        <input type="number" min="0" nbInput class="col-8" [(ngModel)]="task.score">
                     </div>
                 </nb-card-body>
             </nb-card>

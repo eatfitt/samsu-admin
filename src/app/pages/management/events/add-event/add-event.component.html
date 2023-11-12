@@ -80,7 +80,7 @@
 </ng-template>
 <ng-template #feedbackFormTemplate>
     <!-- <ngx-excel-importer (importFromExcel)="importFeedbackFromExcel($event)"></ngx-excel-importer> -->
-    <button class="d-block mb-3 btn btn-outline-primary" (click)="openDialog(importFeedbackFormDialog)">+ Add feedback</button>
+    <button class="d-block mb-3 btn btn-outline-primary btn-sm" (click)="openDialog(importFeedbackFormDialog)">+ Add feedback</button>
     <div class="d-flex" *ngFor="let feedback of feedbackQuestionList; let i = index">
         <div class="container border mb-5 pt-3">
             <div class="label mb-2">Question {{i + 1}}</div>

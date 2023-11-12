@@ -76,7 +76,6 @@ export class AddEventComponent implements OnInit {
     private uploadService: FileUploadService,
     private dialogService: NbDialogService,
     private cdr: ChangeDetectorRef,
-
   ) {
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
   }
