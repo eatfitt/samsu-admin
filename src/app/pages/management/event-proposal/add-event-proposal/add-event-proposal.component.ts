@@ -23,6 +23,7 @@ export class AddEventProposalComponent {
   title: string;
   constructor(private uploadService: FileUploadService, private eventProposalService: EventProposalService, private toastrService: NbToastrService,
   ) { }
+
   onFileChange(event: any) {
     const input = event.target;
     if (input.files && input.files.length > 0) {

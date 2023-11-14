@@ -40,6 +40,7 @@ export class FileUploadService {
             })
         );
     }
+
     uploadFiles(files: File[]): Observable<string[]> {
         // Use forkJoin to handle multiple file uploads in parallel
         return forkJoin(

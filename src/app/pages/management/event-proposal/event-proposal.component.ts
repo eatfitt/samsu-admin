@@ -69,14 +69,18 @@ export class EventProposalComponent implements OnInit {
         return 'gray'; // Set a default color for unknown statuses
     }
   }
+
   onTabChange(event: any) {
     const selectedStatus = EventProposalStatus[(event.tabTitle as string).toUpperCase()];
+    this.currentPage = 1;
     this.onStatusFilterChange(selectedStatus);
   }
+
   onStatusFilterChange(status: EventProposalStatus) {
     this.selectedStatus = status;
     this.applyFilters(); // Call applyFilters to update the totalItems and trigger sorting/pagination
   }
+
   applyFilters() {
     // Filter by search query and status
     this.filteredEventProposals = this.myEventProposals.filter(proposal => {
@@ -116,6 +120,7 @@ export class EventProposalComponent implements OnInit {
   getFilteredByStatus(status: EventProposalStatus): EventProposal[] {
     return this.filteredEventProposals?.filter(proposal => proposal.status === status);
   }
+
   sortFilteredEventProposals() {
     switch (this.selectedSortingOption) {
       case 'titleAsc':
