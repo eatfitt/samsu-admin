@@ -14,6 +14,7 @@ import { AllStudentsComponent } from './management/students/all-students/all-stu
 import { UserComponent } from './management/user/user.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { PagesComponent } from './pages.component';
+import { DepartmentsComponent } from './management/departments/departments.component';
 
 const routes: Routes = [{
   path: '',
@@ -54,6 +55,10 @@ const routes: Routes = [{
     {
       path: 'groups',
       component: AllGroupsComponent,
+    },
+    {
+      path: 'departments',
+      component: DepartmentsComponent,
     },
     {
       path: 'user/:username',

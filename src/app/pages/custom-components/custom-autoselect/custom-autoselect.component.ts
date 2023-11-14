@@ -12,6 +12,7 @@ export class CustomAutoselectComponent {
   @Input() property = '';
   @Input() label = '';
   @Output() selectItem = new EventEmitter<any>();
+  @Output() filteredResult = new EventEmitter<any[]>();
   filteredArr = [];
 
   ngOnChanges(changes: SimpleChanges) {
@@ -26,6 +27,7 @@ export class CustomAutoselectComponent {
 
   onChange() {
     this.filteredArr = this.getFilteredOptions(this.input.nativeElement.value);
+    this.filteredResult.emit(this.filteredArr);
   }
 
   handleSelect(event) {

@@ -60,6 +60,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/my-event-proposal',
     home: true,
   },
+  {
+    title: 'Departments',
+    icon: 'pantone',
+    link: '/pages/departments',
+    home: true,
+  },
   // {
   //   title: 'Layout',
   //   icon: 'layout-outline',

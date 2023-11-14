@@ -1,0 +1,73 @@
+<div class="container">
+    <div class="row">
+        <!-- DEPARTMENT LIST -->
+        <div class="col-md-7">
+            <nb-card>
+                <nb-card-header>
+                    <div class="d-flex justify-content-between">
+                        <h5>Departments</h5>
+                        <button class="btn btn-outline-primary" (click)="openDialog(createDepartmentDialog)">
+                            <nb-icon [icon]="'plus-round'" pack="ion"></nb-icon>
+                        </button>
+                    </div>
+                </nb-card-header>
+                <nb-card-body class="p-0">
+                    <nb-list>
+                        <nb-list-item *ngFor="let department of departments" (click)="selectedDepartment = department">
+                            <div class="row w-100 ">
+                                <div class="col-6 pl-4">
+                                    <div class="font-weight-bold">{{ department.name }}</div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="font-weight-bold fs-12">12</div>
+                                    <div class="small">Collabs</div>
+                                </div>
+                                <div class="col-2 border-left border-right">
+                                    <div class="font-weight-bold fs-12">30</div>
+                                    <div class="small">People</div>
+                                </div>
+                                <div class="col-2">
+                                    <a class="small" href="#">View Department</a>
+                                </div>
+                            </div>
+                           
+                        </nb-list-item>
+                    </nb-list>
+                </nb-card-body>
+            </nb-card>
+        </div>
+        <!-- DEPARTMENT COLLAB EVENTS -->
+        <div class="col-md-5">
+            <nb-card>
+                <nb-card-header>{{ selectedDepartment?.name }}</nb-card-header>
+                <nb-card-body>
+                    <nb-card size="small">
+                        <nb-card-header>Upcoming Collaboration</nb-card-header>
+                        <nb-list>
+                          <nb-list-item *ngFor="let event of mockEvents">{{ event }}</nb-list-item>
+                        </nb-list>
+                    </nb-card>
+                    <nb-card size="small">
+                        <nb-card-header>Past Collaboration</nb-card-header>
+                        <nb-list>
+                          <nb-list-item  *ngFor="let event of mockEvents">{{ event }}</nb-list-item>
+                        </nb-list>
+                    </nb-card>
+                </nb-card-body>
+            </nb-card>
+        </div>
+    </div>
+</div>
+
+<ng-template #createDepartmentDialog let-data let-ref="dialogRef">
+    <nb-card>
+      <nb-card-header>Create department</nb-card-header>
+      <nb-card-body>
+        <input type="text" nbInput placeholder="Department name" [(ngModel)]="newDepartmentName">
+      </nb-card-body>
+      <nb-card-footer>
+        <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
+        <button nbButton class="bg-primary text-light ml-3" (click)="createDepartment()">Create</button>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
