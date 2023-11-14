@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { NbGlobalPhysicalPosition, NbToastRef, NbToastrService } from '@nebular/theme';
 import { Observable, catchError, switchMap, throwError } from 'rxjs';
-import { EventProposalService } from '../../../../../services/event-propsal.service';
+import { EventProposal, EventProposalService } from '../../../../../services/event-propsal.service';
 import { FILE_URL_SEPARATOR, FileUploadService } from '../../../../../services/file-upload.service';
 
 @Component({
@@ -21,7 +22,7 @@ export class AddEventProposalComponent {
   };
   selectedFiles: File[] = [];
   title: string;
-  constructor(private uploadService: FileUploadService, private eventProposalService: EventProposalService, private toastrService: NbToastrService,
+  constructor(private uploadService: FileUploadService, private eventProposalService: EventProposalService, private toastrService: NbToastrService, private router: Router
   ) { }
 
   onFileChange(event: any) {
@@ -83,7 +84,7 @@ export class AddEventProposalComponent {
 
         return throwError(error);
       }),
-    ).subscribe(() => {
+    ).subscribe((createdProposal: EventProposal) => {
       // Hide loading indicator on success
       toastRef.close();
 
@@ -93,9 +94,11 @@ export class AddEventProposalComponent {
         position: NbGlobalPhysicalPosition.TOP_RIGHT,
         status: 'success',
       });
+      this.router.navigate(['/pages/event-proposal/view', createdProposal.id]);
 
       // Reset the form or navigate to another page as needed
       this.resetForm();
+
     });
   }
   updateFileInputLabel() {

@@ -5,6 +5,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { AddEventProposalComponent } from './management/event-proposal/add-event-proposal/add-event-proposal.component';
 import { EventProposalComponent } from './management/event-proposal/event-proposal.component';
+import { ViewProposalComponent } from './management/event-proposal/view-proposal/view-proposal.component';
 import { AddEventComponent } from './management/events/add-event/add-event.component';
 import { AllEventsComponent } from './management/events/all-events/all-events.component';
 import { AllGroupsComponent } from './management/groups/all-groups/all-groups.component';
@@ -29,6 +30,10 @@ const routes: Routes = [{
     {
       path: 'event-proposal/add',
       component: AddEventProposalComponent,
+    },
+    {
+      path: 'event-proposal/view/:id',
+      component: ViewProposalComponent,
     },
     {
       path: 'iot-dashboard',

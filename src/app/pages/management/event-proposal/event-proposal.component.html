@@ -68,9 +68,10 @@
                         [status]="getStatusColor(proposal.status)"></nb-tag>
                 </nb-card-header>
                 <nb-card-body>
-                    <h6 onclick="navigateTo('/pages/event-proposal/add')">{{ proposal.title }}</h6>
+                    <h6>{{ proposal.title }}</h6>
                     <div><strong>Create at: </strong>{{ proposal.createAt | date:"MMM dd yyyy, hh:mm a" }}</div>
                     <div><strong>Last modify at: </strong>{{ proposal.modifyAt | date:"MMM dd yyyy, hh:mm a" }}</div>
+                    <button nbButton size="small" (click)="viewDetails(proposal.id)">View Details</button>
                 </nb-card-body>
             </nb-card>
             <!-- Pagination controls -->

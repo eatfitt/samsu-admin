@@ -95,6 +95,11 @@ export class EventProposalComponent implements OnInit {
     this.sortAndPaginateEventProposals();
   }
 
+  viewDetails(proposalId: number) {
+    // Navigate to the details view using the proposalId
+    this.router.navigate(['/pages/event-proposal/view', proposalId]);
+  }
+
   sortAndPaginateEventProposals() {
     // Sort the filtered event proposals based on the selected sorting option
     this.sortFilteredEventProposals();

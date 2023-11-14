@@ -48,6 +48,7 @@ import { PagesRoutingModule } from "./pages-routing.module";
 import { PagesComponent } from "./pages.component";
 import { TablesRoutingModule } from "./tables/tables-routing.module";
 import { AddEventProposalComponent } from './management/event-proposal/add-event-proposal/add-event-proposal.component';
+import { ViewProposalComponent } from './management/event-proposal/view-proposal/view-proposal.component';
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 
 @NgModule({
@@ -103,6 +104,7 @@ import { AddEventProposalComponent } from './management/event-proposal/add-event
     AddTaskComponent,
     EventProposalComponent,
     AddEventProposalComponent,
+    ViewProposalComponent,
     // TasksComponent,
   ],
 })

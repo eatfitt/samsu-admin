@@ -59,6 +59,13 @@ export class EventProposalService {
         );
     }
 
+    getEventProposalById(id: string): Observable<EventProposal> {
+        const url = `${this.apiEndPoint}/event/proposals/${id}`;
+        return this.http.get<EventProposal>(url).pipe(
+            catchError(this.handleError)
+        );
+    }
+
     putEventProposalManager(proposalId: string, updatedProposal: any): Observable<any> {
         //content, title, fileURls, default status = PROCESSING
         const url = `${this.apiEndPoint}/api/event/proposals/${proposalId}`;
