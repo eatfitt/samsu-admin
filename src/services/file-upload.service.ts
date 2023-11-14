@@ -2,12 +2,12 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map, switchMap } from 'rxjs';
+import { Observable, forkJoin, map, switchMap } from 'rxjs';
 import { SKIP_JWT_AUTHENTICATION_INJECTION } from '../utils/jwt-interceptor';
 
 
 export const PRESIGNED_URL_ENDPOINT = 'https://upload.samsu-fpt.software/presigned-url';
-
+export const FILE_URL_SEPARATOR = '$$$';
 
 @Injectable({
     providedIn: 'root',
@@ -38,6 +38,12 @@ export class FileUploadService {
                     })
                 );
             })
+        );
+    }
+    uploadFiles(files: File[]): Observable<string[]> {
+        // Use forkJoin to handle multiple file uploads in parallel
+        return forkJoin(
+            files.map(file => this.uploadFile(file))
         );
     }
 }

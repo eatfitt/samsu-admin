@@ -1,11 +1,11 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { NbIconLibraries } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { UserService } from '../../../../@core/mock/users.service';
-import { UserState } from '../../../../app-state/user';
-import { NbDialogService, NbIconLibraries } from '@nebular/theme';
 import { Event } from '../../../../@core/services/event/event.service';
 import { getRandomDate } from '../../../../@core/utils/mock-data';
-import { Router } from '@angular/router';
+import { UserState } from '../../../../app-state/user';
 
 @Component({
   selector: 'ngx-all-events',

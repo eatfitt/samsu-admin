@@ -3,14 +3,16 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
+import { AddEventProposalComponent } from './management/event-proposal/add-event-proposal/add-event-proposal.component';
+import { EventProposalComponent } from './management/event-proposal/event-proposal.component';
+import { AddEventComponent } from './management/events/add-event/add-event.component';
+import { AllEventsComponent } from './management/events/all-events/all-events.component';
+import { AllGroupsComponent } from './management/groups/all-groups/all-groups.component';
+import { SingleGroupComponent } from './management/groups/single-group/single-group.component';
+import { AllStudentsComponent } from './management/students/all-students/all-students.component';
+import { UserComponent } from './management/user/user.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { PagesComponent } from './pages.component';
-import { AllStudentsComponent } from './management/students/all-students/all-students.component';
-import { AllGroupsComponent } from './management/groups/all-groups/all-groups.component';
-import { UserComponent } from './management/user/user.component';
-import { SingleGroupComponent } from './management/groups/single-group/single-group.component';
-import { AllEventsComponent } from './management/events/all-events/all-events.component';
-import { AddEventComponent } from './management/events/add-event/add-event.component';
 
 const routes: Routes = [{
   path: '',
@@ -19,6 +21,14 @@ const routes: Routes = [{
     {
       path: 'dashboard',
       component: ECommerceComponent,
+    },
+    {
+      path: 'my-event-proposal',
+      component: EventProposalComponent,
+    },
+    {
+      path: 'event-proposal/add',
+      component: AddEventProposalComponent,
     },
     {
       path: 'iot-dashboard',
