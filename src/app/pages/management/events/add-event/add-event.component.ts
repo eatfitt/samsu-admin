@@ -26,12 +26,11 @@ interface Feedback {
 export class AddEventComponent implements OnInit {
   @ViewChild("importFeedbackFormDialog", { static: true }) importFeedbackFormDialog: TemplateRef<any>;
 
-  proposals: string[] = ['Proposal 1', 'Proposal 2', 'Proposal 3'];
+  proposals: string[] = [];  // TODO: Implement proposals - Duc
   options: string[];
   filteredOptions$: Observable<string[]>;
   inputFormControl: FormControl;
   myForm: FormGroup;
-  editorContent: string;
   editorConfig = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -39,6 +38,17 @@ export class AddEventComponent implements OnInit {
       ['link'],
     ],
   };
+
+  // FORM DATA - ngModel
+  title = '';
+  editorContent = '';
+  bannerImg: any = null;
+  fileUrls: any = null;
+  semester = 'FA23';
+  proposalId = '14';
+  startTime: Date = new Date();
+  duration: number;
+
   event: Event = {
       semestersName: '',
       title: '',
@@ -59,7 +69,7 @@ export class AddEventComponent implements OnInit {
   private contentTemplateRef: NbDialogRef<AddEventComponent>;
 
   ngOnInit(): void {
-    this.options = ['Proposal 1', 'Proposal 2', 'Proposal 3', 'Proposal 4'];
+    this.options = ['14'];
     this.filteredOptions$ = of(this.options);
 
     this.inputFormControl = new FormControl();

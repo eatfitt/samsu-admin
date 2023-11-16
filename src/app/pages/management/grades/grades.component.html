@@ -1,0 +1,40 @@
+<div class="container">
+    <div class="row">
+        <!-- POLICY DOCUMENT -->
+        <div class="col-md-4">
+            <nb-card>
+                <nb-card-header>
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <h5>Policy Document</h5>
+                        <button class="btn btn-outline-primary">
+                            <!-- (click)="openDialog(createGorupDialog)" -->
+                            <nb-icon [icon]="'plus-round'" pack="ion"></nb-icon>
+                        </button>
+                    </div>
+                </nb-card-header>
+                <nb-card-body class="p-0">
+                    <nb-list>
+                        <nb-list-item class="d-block"
+                            *ngFor="let policyDocument of policyDocuments">
+                            <h6>{{ policyDocument.name }}</h6>
+                            <a class="text-decoration-none text-black-50 font-italic"
+                                [href]="policyDocument.fileUrls">Attached File</a>
+                        </nb-list-item>
+                    </nb-list>
+                </nb-card-body>
+            </nb-card>
+        </div>
+        <div class="col-md-8">
+            <nb-card>
+                <nb-card-body>
+                    <nb-tabset>
+                        <nb-tab tabTitle="Criteria">
+                            
+                        </nb-tab>
+                        <nb-tab tabTitle="Sub Criteria"></nb-tab>
+                    </nb-tabset>
+                </nb-card-body>
+            </nb-card>
+        </div>
+    </div>
+</div>

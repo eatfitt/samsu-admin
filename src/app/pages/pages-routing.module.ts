@@ -15,6 +15,7 @@ import { UserComponent } from './management/user/user.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { PagesComponent } from './pages.component';
 import { DepartmentsComponent } from './management/departments/departments.component';
+import { GradesComponent } from './management/grades/grades.component';
 
 const routes: Routes = [{
   path: '',
@@ -59,6 +60,10 @@ const routes: Routes = [{
     {
       path: 'departments',
       component: DepartmentsComponent,
+    },
+    {
+      path: 'grades',
+      component: GradesComponent,
     },
     {
       path: 'user/:username',

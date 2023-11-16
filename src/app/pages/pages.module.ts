@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import {
+  NbAccordionModule,
   NbAlertModule,
   NbAutocompleteModule,
   NbButtonModule,
@@ -50,6 +51,7 @@ import { TablesRoutingModule } from "./tables/tables-routing.module";
 import { AddEventProposalComponent } from './management/event-proposal/add-event-proposal/add-event-proposal.component';
 import { ViewProposalComponent } from './management/event-proposal/view-proposal/view-proposal.component';
 import { DepartmentsComponent } from './management/departments/departments.component';
+import { GradesComponent } from './management/grades/grades.component';
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 
@@ -87,7 +89,8 @@ import { DepartmentsComponent } from './management/departments/departments.compo
     NbAutocompleteModule,
     ReactiveFormsModule,
     QuillModule.forRoot(),
-    NbListModule  
+    NbListModule,
+    NbAccordionModule
   ],
   declarations: [
     PagesComponent,
@@ -108,6 +111,7 @@ import { DepartmentsComponent } from './management/departments/departments.compo
     AddEventProposalComponent,
     ViewProposalComponent,
     DepartmentsComponent,
+    GradesComponent,
     // TasksComponent,
   ],
 })

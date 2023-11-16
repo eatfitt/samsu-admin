@@ -38,17 +38,40 @@
     <nb-card-body class="example-items-col">
         <div class="form-group">
             <label for="title" class="font-weight-bold">Title</label>
-            <input type="text" nbInput fullWidth id="title" placeholder="Title">
+            <input type="text" [(ngModel)]="title" nbInput fullWidth id="title" placeholder="Title">
         </div>
-        <div class="form-group">
-            <label for="proposal" class="font-weight-bold" style="margin-top: 1rem;">Proposal</label>
-            <input [formControl]="inputFormControl" nbInput fullWidth type="text" placeholder="Search proposal"
-                [nbAutocomplete]="auto" id="proposal" />
-            <nb-autocomplete #auto [activeFirst]="true">
-                <nb-option *ngFor="let option of filteredOptions$ | async" [value]="option">
-                    {{ option }}
-                </nb-option>
-            </nb-autocomplete>
+        <div class="form-group row">
+            <div class="col-md-6">
+                <label for="proposal" class="font-weight-bold" style="margin-top: 1rem;">Proposal</label>
+                <input [(ngModel)]="proposalId" nbInput fullWidth type="text" placeholder="Search proposal"
+                    [nbAutocomplete]="auto" id="proposal" />
+                <nb-autocomplete #auto [activeFirst]="true">
+                    <nb-option *ngFor="let option of filteredOptions$ | async" [value]="option">
+                        {{ option }}
+                    </nb-option>
+                </nb-autocomplete>
+            </div>
+            <div class="col-md-6">
+                <label for="semester" class="font-weight-bold" style="margin-top: 1rem;">Semester</label>
+                <input type="text" [(ngModel)]="semester" disabled nbInput fullWidth id="semester" placeholder="Title">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="startTime" class="font-weight-bold" style="margin-top: 1rem;">Start time</label>
+                <div class="d-flex">
+                    <input class="w-75" type="datetime" [(ngModel)]="startTime" nbInput id="startTime" placeholder="Start time"  [nbDatepicker]="dateTimePicker">
+                    <nb-datepicker #dateTimePicker></nb-datepicker>
+                    <!-- TODO: time -->
+                    <input class="w-25" nbInput [(ngModel)]="startTime" [nbTimepicker]="timepicker">
+                    <nb-timepicker #timepicker></nb-timepicker>
+                </div>
+                
+            </div>
+            <div class="col-md-6">
+                <label for="duration" class="font-weight-bold" style="margin-top: 1rem;">Duration</label>
+                <input type="number" [(ngModel)]="duration" nbInput fullWidth id="duration" placeholder="Duration">
+            </div>
         </div>
         <div class="form-group">
             <label for="description" class="font-weight-bold" style="margin-top: 1rem;">Content</label>
@@ -57,7 +80,7 @@
 
         </div>
         <div class="form-group">
-            <nb-card>
+            <nb-card class="size-sm">
                 <nb-card-body class="bg-white">
                     <label for="bannerImg" class="font-weight-bold" style="margin-top: 1rem;">Banner image</label> <br>
                     <div class="input-group">
@@ -66,12 +89,25 @@
                         </div> -->
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="inputGroupFile01"
-                                aria-describedby="inputGroupFileAddon01" (change)="onFileChange($event)">
+                                aria-describedby="inputGroupFileAddon01" [(ngModel)]="bannerImg">
+                                <!-- (change)="onFileChange($event)" -->
                             <label class="custom-file-label" for="inputGroupFile01">Choose image</label>
                         </div>
                     </div>
                     <!-- <input id="bannerImg" type="file" (change)="onFileChange($event)" multiple="false"
                         accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" /> -->
+                </nb-card-body>
+            </nb-card>
+            <nb-card class="size-sm">
+                <nb-card-body class="bg-white">
+                    <label for="bannerImg" class="font-weight-bold" style="margin-top: 1rem;">Banner image</label> <br>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                aria-describedby="inputGroupFileAddon01" [(ngModel)]="fileUrls">
+                            <label class="custom-file-label" for="inputGroupFile01">Choose image</label>
+                        </div>
+                    </div>
                 </nb-card-body>
             </nb-card>
         </div>

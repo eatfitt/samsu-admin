@@ -56,8 +56,14 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'My Event Proposal',
-    icon: 'cast-outline',
+    icon: 'bulb',
     link: '/pages/my-event-proposal',
+    home: true,
+  },
+  {
+    title: 'Grades',
+    icon: 'bar-chart',
+    link: '/pages/grades',
     home: true,
   },
   {

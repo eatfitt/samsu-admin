@@ -41,14 +41,20 @@
             <nb-card>
                 <nb-card-header>{{ selectedDepartment?.name }}</nb-card-header>
                 <nb-card-body>
-                    <nb-card size="small">
+                    <nb-card size="tiny">
                         <nb-card-header>Upcoming Collaboration</nb-card-header>
                         <nb-list>
                           <nb-list-item *ngFor="let event of mockEvents">{{ event }}</nb-list-item>
                         </nb-list>
                     </nb-card>
-                    <nb-card size="small">
+                    <nb-card size="tiny">
                         <nb-card-header>Past Collaboration</nb-card-header>
+                        <nb-list>
+                          <nb-list-item  *ngFor="let event of mockEvents">{{ event }}</nb-list-item>
+                        </nb-list>
+                    </nb-card>
+                    <nb-card size="tiny">
+                        <nb-card-header>People</nb-card-header>
                         <nb-list>
                           <nb-list-item  *ngFor="let event of mockEvents">{{ event }}</nb-list-item>
                         </nb-list>
