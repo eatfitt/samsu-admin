@@ -1,19 +1,30 @@
 import { Injectable } from '@angular/core';
-
+import { environment } from '../../../../environments/environment';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { Department, GetAllUsersListResponse } from '../user/user.service';
+import { Semester } from '../semester/semester.service';
+import { EventProposal } from '../../../../services/event-propsal.service';
 export interface Event {
-  creatorUsersId?: number;
-  eventProposalsId?: number;
-  eventLeaderUsersId?: number;
+  id?: number;
   semestersName: string;
   title: string;
   content?: string;
-  status: string;
+  status: number;
   createAt?: Date;
   startTime: Date;
   duration: string;
   bannerUrls: string;
   fileUrls?: string;
-  attendances?: number;
+  attendances?: number; // k cos nay
+  attendScore?: number;
+  creatorUser?: GetAllUsersListResponse;
+  eventLeaderUser?: GetAllUsersListResponse;
+  departments?: Department[];
+  semester?: Semester;
+  eventProposal?: EventProposal;
 }
 
 interface FeedbackQuestionRequest {
@@ -59,8 +70,23 @@ interface CreateEventRequest {
 })
 export class EventService {
 
-  constructor() { }
+  apiEndPoint: string = "";
+  constructor(
+    private http: HttpClient,
+    protected router: Router,
+  ) {
+    this.apiEndPoint = environment.apiEndPoint;
+  }
   public createEvent(event: CreateEventRequest) {
     
+  }
+
+  public getAllEvents() {
+    return this.http.get(`${this.apiEndPoint}/events`).pipe(
+      catchError((error) => {
+        console.error("Error in getAllEvents:", error);
+        return throwError(error);
+      })
+    );
   }
 }

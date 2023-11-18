@@ -4,3 +4,31 @@
   background-position: center;
   background-size: cover; /* or 'contain' */
 }
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  > * {
+    flex: 1;
+  }
+
+  &:first-child {
+    border-top: none;
+  }
+  span {
+    &:first-child,
+    &:last-child {
+      max-width: 3rem !important;
+    }
+    &:nth-child(2) {
+      flex: 2 !important;
+    }
+  }
+}
+
+::ng-deep nb-select button {
+  padding-left: .5rem !important;
+  padding-right: 0 !important;
+  min-width: 5.8rem !important;
+}

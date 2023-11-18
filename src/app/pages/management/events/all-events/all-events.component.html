@@ -1,4 +1,3 @@
-<div class="container"></div>
 <div class="row">
     <div class="col-md-9">
         <nb-card>
@@ -12,11 +11,14 @@
             </nb-card-header>
             <nb-card-body>
                 <nb-tabset>
+                    <nb-tab tabTitle="List" class="p-0">
+                        <ng-container [ngTemplateOutlet]="listView"
+                            [ngTemplateOutletContext]="{events: filteredEvents}"></ng-container>
+                    </nb-tab>
                     <nb-tab tabTitle="Grid">
                         <ng-container [ngTemplateOutlet]="gridView"
                             [ngTemplateOutletContext]="{events: mockEvents}"></ng-container>
                     </nb-tab>
-                    <nb-tab tabTitle="List"></nb-tab>
                 </nb-tabset>
             </nb-card-body>
         </nb-card>
@@ -36,13 +38,24 @@
             <nb-card-body>
                 <div class="row">
                     <div class="col-6">
-                        <div class="subtitle">Events</div>
-                        <div class="h4">15</div>
+                        <div class="label">Events</div>
+                        <div class="h4 text-primary">15</div>
                     </div>
                     <div class="col-6">
-                        <div class="subtitle">Attendees</div>
-                        <div class="h4">300</div>
+                        <div class="label">Attendees</div>
+                        <div class="h4 text-primary">300</div>
                     </div>
+                </div>
+            </nb-card-body>
+        </nb-card>
+        <nb-card>
+            <nb-card-header>Filter</nb-card-header>
+            <nb-card-body>
+                <label for="title" class="label">Title</label>
+                <input type="text" [(ngModel)]="filterValue.title" nbInput fullWidth id="title" placeholder="Title" class="mb-2">
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-outline-primary" (click)="filter()">Filter</button>
+                    <button class="btn btn-outline-info" (click)="filteredEvents = events">Reset</button>
                 </div>
             </nb-card-body>
         </nb-card>
@@ -64,4 +77,34 @@
             </nb-card>
         </div>
     </div>
+</ng-template>
+
+<ng-template #listView let-events="events">
+    <nb-list>
+        <nb-list-item class="item small">
+            <span>Id</span>
+            <span>Title</span>
+            <span>Creator</span>
+            <span>Event Leader</span>
+            <span>Status</span>
+            <span>Time</span>
+            <span>Score</span>
+        </nb-list-item>
+        <nb-list-item class="item small" *ngFor="let event of events">
+            <span>{{ event.id }}</span>
+            <span>{{ event.title }}</span>
+            <span>{{ event.creatorUser.name }}</span>
+            <span>{{ event.eventLeaderUser.name }}</span>
+            <span>
+                <!-- <nb-tag status="primary" appearance="filled" [text]="event.status" size="tiny"></nb-tag> -->
+                <nb-select [(selected)]="event.status" size="tiny" class="type-select">
+                    <nb-option [value]="1">Upcoming</nb-option>
+                    <nb-option [value]="2">Canceled</nb-option>
+                    <nb-option [value]="3">Completed</nb-option>
+                </nb-select>
+            </span>
+            <span>{{ event.startTime | date }}</span>
+            <span>{{ event.attendScore }}</span>
+        </nb-list-item>
+    </nb-list>
 </ng-template>

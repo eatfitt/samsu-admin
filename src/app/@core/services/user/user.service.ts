@@ -24,7 +24,7 @@ export interface InitUserRequest {
 }
 
 export interface GetAllUsersListResponse {
-  created_at?: string;
+  createdAt?: Date;
   id?: number;
   name: string;
   username: string;

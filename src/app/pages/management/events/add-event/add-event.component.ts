@@ -53,7 +53,7 @@ export class AddEventComponent implements OnInit {
       semestersName: '',
       title: '',
       content: '',
-      status: '',
+      status: 1,
       startTime: getRandomDate(),
       duration: '',
       bannerUrls: '',
