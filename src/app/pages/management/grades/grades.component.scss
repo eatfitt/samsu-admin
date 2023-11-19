@@ -1,0 +1,17 @@
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    > * {
+      flex: 1;
+      &:not(:first-child) {
+        display: flex;
+        justify-content: center;
+      }
+    }
+  
+    &:first-child {
+      border-top: none;
+    }
+  }

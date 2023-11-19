@@ -1,40 +1,55 @@
-<div class="container">
-    <div class="row">
-        <!-- POLICY DOCUMENT -->
-        <div class="col-md-4">
-            <nb-card>
-                <nb-card-header>
-                    <div class="d-flex justify-content-between align-items-baseline">
-                        <h5>Policy Document</h5>
-                        <button class="btn btn-outline-primary">
-                            <!-- (click)="openDialog(createGorupDialog)" -->
-                            <nb-icon [icon]="'plus-round'" pack="ion"></nb-icon>
-                        </button>
-                    </div>
-                </nb-card-header>
-                <nb-card-body class="p-0">
-                    <nb-list>
-                        <nb-list-item class="d-block"
-                            *ngFor="let policyDocument of policyDocuments">
-                            <h6>{{ policyDocument.name }}</h6>
-                            <a class="text-decoration-none text-black-50 font-italic"
-                                [href]="policyDocument.fileUrls">Attached File</a>
-                        </nb-list-item>
-                    </nb-list>
-                </nb-card-body>
-            </nb-card>
+<nb-card>
+    <nb-card-header>Grades</nb-card-header>
+    <nb-card-body>
+        <div class="row">
+            <div class="col-3">
+                <ng-container [ngTemplateOutlet]="gradeCriteriaList"
+                    [ngTemplateOutletContext]="{gradeCriterias: filteredGradeCriterias}"></ng-container>
+            </div>
+            <div class="col-6">
+                <ng-container [ngTemplateOutlet]="gradeSubCriteriaList"
+                    [ngTemplateOutletContext]="{gradeSubCriterias: filteredGradeSubCriterias}"></ng-container>
+            </div>
+            <div class="col-3">
+                <ng-container [ngTemplateOutlet]="selectedPolicyDocumentTemplate"></ng-container>
+            </div>
         </div>
-        <div class="col-md-8">
-            <nb-card>
-                <nb-card-body>
-                    <nb-tabset>
-                        <nb-tab tabTitle="Criteria">
-                            
-                        </nb-tab>
-                        <nb-tab tabTitle="Sub Criteria"></nb-tab>
-                    </nb-tabset>
-                </nb-card-body>
-            </nb-card>
-        </div>
-    </div>
-</div>
+    </nb-card-body>
+</nb-card>
+
+<!-- GRADE CRITERIA -->
+<!-- TODO: CHO CASI MUI TEN -->
+<ng-template #gradeCriteriaList let-gradeCriterias="gradeCriterias">
+    <div class="font-weight-bold mb-1">Criterias</div>
+    <input nbInput fullWidth (keyup)="filterGradeCriteria($event)">
+    <nb-list>
+        <nb-list-item class="item small">All</nb-list-item>
+        <nb-list-item class="item small" *ngFor="let gradeCriteria of gradeCriterias">
+            {{ gradeCriteria.content }}
+        </nb-list-item>
+    </nb-list>
+</ng-template>
+
+<!-- GRADE SUB CRITERIA -->
+<ng-template #gradeSubCriteriaList let-gradeSubCriterias="gradeSubCriterias">
+    <div class="font-weight-bold mb-1">Sub-criterias</div>
+    <input nbInput fullWidth (keyup)="filterGradeSubCriteria($event)">
+    <nb-list>
+        <nb-list-item class="item small bg-light mt-3">
+            <span class="label">Content</span>
+            <span class="label">Min Score</span>
+            <span class="label">Max Score</span>
+        </nb-list-item>
+        <nb-list-item class="item small" *ngFor="let gradeSubCriteria of gradeSubCriterias">
+            <span>{{ gradeSubCriteria.content }}</span>
+            <span>{{ gradeSubCriteria.minScore }}</span>
+            <span>{{ gradeSubCriteria.maxScore }}</span>
+        </nb-list-item>
+    </nb-list>
+</ng-template>
+
+<!-- GRADE SUB CRITERIA -->
+<ng-template #selectedPolicyDocumentTemplate let-gradeSubCriterias="gradeSubCriterias">
+    <div class="font-weight-bold mb-1">Policy Documents</div>
+    <div>No criteria selected</div>
+</ng-template>
