@@ -3,19 +3,20 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
+import { DepartmentsComponent } from './management/departments/departments.component';
 import { AddEventProposalComponent } from './management/event-proposal/add-event-proposal/add-event-proposal.component';
+import { EditEventProposalComponent } from './management/event-proposal/edit-event-proposal/edit-event-proposal.component';
 import { EventProposalComponent } from './management/event-proposal/event-proposal.component';
 import { ViewProposalComponent } from './management/event-proposal/view-proposal/view-proposal.component';
 import { AddEventComponent } from './management/events/add-event/add-event.component';
 import { AllEventsComponent } from './management/events/all-events/all-events.component';
+import { GradesComponent } from './management/grades/grades.component';
 import { AllGroupsComponent } from './management/groups/all-groups/all-groups.component';
 import { SingleGroupComponent } from './management/groups/single-group/single-group.component';
 import { AllStudentsComponent } from './management/students/all-students/all-students.component';
 import { UserComponent } from './management/user/user.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { PagesComponent } from './pages.component';
-import { DepartmentsComponent } from './management/departments/departments.component';
-import { GradesComponent } from './management/grades/grades.component';
 
 const routes: Routes = [{
   path: '',
@@ -36,6 +37,10 @@ const routes: Routes = [{
     {
       path: 'event-proposal/view/:id',
       component: ViewProposalComponent,
+    },
+    {
+      path: 'event-proposal/edit/:id',
+      component: EditEventProposalComponent,
     },
     {
       path: 'iot-dashboard',

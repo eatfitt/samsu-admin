@@ -52,6 +52,7 @@ import { AddEventProposalComponent } from './management/event-proposal/add-event
 import { ViewProposalComponent } from './management/event-proposal/view-proposal/view-proposal.component';
 import { DepartmentsComponent } from './management/departments/departments.component';
 import { GradesComponent } from './management/grades/grades.component';
+import { EditEventProposalComponent } from './management/event-proposal/edit-event-proposal/edit-event-proposal.component';
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 
@@ -112,6 +113,7 @@ import { GradesComponent } from './management/grades/grades.component';
     ViewProposalComponent,
     DepartmentsComponent,
     GradesComponent,
+    EditEventProposalComponent,
     // TasksComponent,
   ],
 })

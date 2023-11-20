@@ -5,5 +5,5 @@
  */
 export const environment = {
   production: true,
-  apiEndPoint:"https://api.samsu-fpt.software/api"
+  apiEndPoint: "http://localhost:8081/api"
 };

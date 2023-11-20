@@ -451,6 +451,6 @@ export class AllStudentsComponent {
   }
 
   ngOnDestroy() {
-    this.test.unsubscribe();
+    this.test?.unsubscribe();
   }
 }

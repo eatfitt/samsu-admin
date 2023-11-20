@@ -83,7 +83,7 @@ export class EventProposalComponent implements OnInit {
 
   applyFilters() {
     // Filter by search query and status
-    this.filteredEventProposals = this.myEventProposals.filter(proposal => {
+    this.filteredEventProposals = this.myEventProposals?.filter(proposal => {
       const titleMatch = proposal.title.toLowerCase().includes(this.searchQuery.toLowerCase());
       const statusMatch = this.selectedStatus ? proposal.status === this.selectedStatus : true;
 
