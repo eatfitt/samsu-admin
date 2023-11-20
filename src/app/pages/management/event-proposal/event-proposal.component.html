@@ -71,13 +71,18 @@
                     <h6>{{ proposal.title }}</h6>
                     <div><strong>Create at: </strong>{{ proposal.createAt | date:"MMM dd yyyy, hh:mm a" }}</div>
                     <div><strong>Last modify at: </strong>{{ proposal.modifyAt | date:"MMM dd yyyy, hh:mm a" }}</div>
-                    <button nbButton size="small" (click)="viewDetails(proposal.id)">View Details</button>
+                    <div><strong>Created by: </strong>{{ proposal.creator.name}}</div>
+                    <button class="mt-2" nbButton size="small" (click)="viewDetails(proposal.id)">View Details</button>
                 </nb-card-body>
             </nb-card>
             <!-- Pagination controls -->
         </div>
+        <!-- Show empty template when there are no proposals -->
+        <div *ngIf="eventProposals?.length === 0" class="col-md-12">
+            <div class="alert alert-info">No proposals available.</div>
+        </div>
         <div class="col-md-12">
-            <div class="d-flex justify-content-center align-items-center">
+            <div *ngIf="eventProposals?.length !== 0" class="d-flex justify-content-center align-items-center">
                 <pagination-controls (pageChange)="onPageChange($event)" [maxSize]="6"></pagination-controls>
 
             </div>

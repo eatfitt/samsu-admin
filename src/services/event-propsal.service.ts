@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable, catchError, throwError } from "rxjs";
@@ -68,8 +68,12 @@ export class EventProposalService {
 
     putEventProposalManager(proposalId: string, updatedProposal: any): Observable<any> {
         //content, title, fileURls, default status = PROCESSING
-        const url = `${this.apiEndPoint}/api/event/proposals/${proposalId}`;
-        return this.http.put(url, JSON.stringify(updatedProposal)).pipe(
+        const url = `${this.apiEndPoint}/event/proposals/${proposalId}`;
+        const headers = new HttpHeaders()
+            .set("Content-Type", "application/json")
+        const options = { headers: headers };
+
+        return this.http.put(url, JSON.stringify(updatedProposal), options).pipe(
             catchError(this.handleError)
         );
     }

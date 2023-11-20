@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
-import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 import { GetAllUsersListResponse } from '../user/user.service';
 
 
@@ -82,7 +82,6 @@ export class GroupService {
   public putUpdateGroup(bearerToken: string, group: PutUpdateGroupRequest) {
     const headers = new HttpHeaders()
       .set("Content-Type", "application/json")
-      .set("Authorization", bearerToken);
     const options = { headers: headers };
     return this.http.put(`${this.apiEndPoint}/groups/${group.id}`, JSON.stringify(group), options).pipe(
       catchError((error) => {

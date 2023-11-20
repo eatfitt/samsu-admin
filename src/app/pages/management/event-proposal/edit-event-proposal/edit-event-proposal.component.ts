@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NbGlobalPhysicalPosition, NbToastRef, NbToastrService } from '@nebular/theme';
-import { Observable, catchError, throwError } from 'rxjs';
-import { EventProposal, EventProposalService } from '../../../../../services/event-propsal.service';
-import { FileUploadService } from '../../../../../services/file-upload.service';
+import { Observable, catchError, switchMap, throwError } from 'rxjs';
+import { EventProposal, EventProposalService, EventProposalStatus } from '../../../../../services/event-propsal.service';
+import { FILE_URL_SEPARATOR, FileUploadService } from '../../../../../services/file-upload.service';
 
 @Component({
   selector: 'ngx-edit-event-proposal',
@@ -82,23 +82,20 @@ export class EditEventProposalComponent implements OnInit {
     });
 
     // Upload files first and then submit the event proposal
-    // this.uploadFiles().pipe(
-    //   switchMap(fileUrls => {
-    //     // Build the proposal body
-    //     const files = fileUrls.join(FILE_URL_SEPARATOR);
-    //     const proposalBody = {
-    //       title: this.title,
-    //       content: this.editorContent,
-    //       fileUrls: files,
-    //     };
+    this.uploadFiles().pipe(
+      switchMap(fileUrls => {
+        // Build the proposal body
+        const files = fileUrls.join(FILE_URL_SEPARATOR);
+        const proposalBody = {
+          title: this.title,
+          content: this.editorContent,
+          fileUrls: files,
+          status: EventProposalStatus.PROCESSING
+        };
 
-    //     // Submit the event proposal
-    //     return this.eventProposalService.putEventProposalManager(this.eventProposalId, proposalBody);
-    //   }),
-    this.eventProposalService.putEventProposalManager(this.eventProposalId, {
-      title: this.title,
-      content: this.editorContent, fileUrls: this.eventProposal.fileUrls
-    }).pipe(
+        // Submit the event proposal
+        return this.eventProposalService.putEventProposalManager(this.eventProposalId, proposalBody);
+      }),
       catchError(error => {
         // Handle error and show toastr
         toastRef.close();
@@ -127,6 +124,7 @@ export class EditEventProposalComponent implements OnInit {
 
     });
   }
+
   updateFileInputLabel() {
     // Update the label text with the names of the selected files
     const label = document.querySelector('.custom-file-label');
@@ -134,7 +132,10 @@ export class EditEventProposalComponent implements OnInit {
       label.textContent = this.getSelectedFileNames();
     }
   }
-
+  goBack() {
+    // Navigate back to the previous page
+    this.router.navigate(['/pages/event-proposal/view', this.eventProposalId]);
+  }
   uploadFiles(): Observable<string[]> {
     // Use the FileUploadService to upload files
     // Assuming the FileUploadService returns an observable with the file URLs
