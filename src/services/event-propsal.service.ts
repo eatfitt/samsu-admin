@@ -80,8 +80,11 @@ export class EventProposalService {
 
     putEventProposalAdmin(proposalId: string, updatedProposal: any): Observable<any> {
         //status and feedback
+        const headers = new HttpHeaders()
+            .set("Content-Type", "application/json")
+        const options = { headers: headers };
         const url = `${this.apiEndPoint}/event/proposals/evaluate/${proposalId}`;
-        return this.http.put(url, JSON.stringify(updatedProposal)).pipe(
+        return this.http.put(url, JSON.stringify(updatedProposal), options).pipe(
             catchError(this.handleError)
         );
     }
