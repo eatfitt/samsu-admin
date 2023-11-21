@@ -99,7 +99,7 @@ constructor(
 }
 
 ngOnInit(): void {
-  this.userService.checkLoggedIn();
+  super.ngOnInit();
   this.fetchData();
   this.settings = {
     pager: this.pager,

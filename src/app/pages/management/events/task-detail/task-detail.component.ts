@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { GradeSubCriteriaService } from '../../../../@core/services/grade-sub-criteria/grade-sub-criteria.service';
+import { GetAllUsersResponse, UserService } from '../../../../@core/services/user/user.service';
 
 interface GradeSubCriterias {
   id?: number;
@@ -9,7 +11,7 @@ interface GradeSubCriterias {
 }
 export interface Task {
   id?: number;
-  gradeSubCriteriasId?: number;
+  gradeSubCriteriaId?: number;
   eventsId?: number;
   creatorUsersId?: number;
   title: string;
@@ -17,12 +19,15 @@ export interface Task {
   score: number;
   status: TaskStatus;
   createdAt?: Date;
+  assignees: Assignee[];
 }
-interface Assignee {
-  tasksId: number;
-  usersId: number;
-  status: AssigneeStatus;
+
+export interface Assignee {
+  status: number;
+  rollnumber: string;
+  name?: string;
 }
+
 export enum TaskStatus {
   Pending = 'Pending',
   OnGoing = 'OnGoing',
@@ -42,26 +47,41 @@ enum AssigneeStatus {
 export class TaskDetailComponent {
   @Input() task: Task = {
     id: 1,
-    title: 'Mock Title',
-    content: 'Mock Title',
+    title: 'Task Title',
+    content: 'Task Content',
     score: 0,
     status: TaskStatus.Pending,
-    gradeSubCriteriasId: 1,
+    gradeSubCriteriaId: 1,
+    assignees: [],
   }
-  mockGradeSubCriterias: GradeSubCriterias[] = [
-    {
-      id: 1,
-      content: 'Check in students',
-      minScore: 0,
-      maxScore: 5
-    },
-    {
-      id: 2,
-      content: 'Prepare avenue',
-      minScore: 3,
-      maxScore: 10,
-    }
-  ]
+  @Output() taskChange = new EventEmitter<Task>();
+  gradeSubCriterias: GradeSubCriterias[] = [];
+  assignees: Assignee[] = [];
+
+  constructor(
+    private subCrit: GradeSubCriteriaService,
+    private userService: UserService,
+  ) {}
+
+  ngOnInit() {
+    this.subCrit.getAllGradeSubCriterias()
+      .subscribe((data: any) => this.gradeSubCriterias = data.content);
+    this.userService.getAllUsers()
+      .subscribe((data: GetAllUsersResponse) => {
+        this.assignees = data.content.map((c) => {
+          return {
+            status: 0,
+            rollnumber: c.rollnumber,
+            name: c.name,
+          }
+        })
+      })
+  }
+
+  addAssignee(event) { // đang cho chọn 1 assignee thôi, không thì xài push -> chưa UI
+    this.task.assignees[0] = event;
+  }
+
   mockStatusList: TaskStatus[] = [
     TaskStatus.Pending,
     TaskStatus.OnGoing,

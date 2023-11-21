@@ -18,6 +18,8 @@ import { AllStudentsComponent } from './management/students/all-students/all-stu
 import { UserComponent } from './management/user/user.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { PagesComponent } from './pages.component';
+import { SingleEventComponent } from './management/events/single-event/single-event.component';
+import { EventComponent } from './management/events/event/event.component';
 
 const routes: Routes = [{
   path: '',
@@ -82,6 +84,10 @@ const routes: Routes = [{
     {
       path: 'group/:id',
       component: SingleGroupComponent,
+    }, 
+    {
+      path: 'event/:id',
+      component: SingleEventComponent,
     },
     {
       path: 'layout',

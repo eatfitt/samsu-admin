@@ -1,0 +1,28 @@
+<nb-card *ngIf="event">
+    <nb-card-body>
+        <div class="row">
+            <div class="col small mb-4">Event {{ event.id }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 scrollable">
+                <h5 style="font-weight: 600;">{{ event.title }}</h5>
+                <div class="d-flex pb-4 border-bottom">
+                    <button nbButton size="small" class="text-capitalize mr-2">Update Banners</button>
+                    <button nbButton size="small" class="text-capitalize mr-2">Update File Urls</button>
+                    <button nbButton size="small" class="text-capitalize mr-2">Add Tasks</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col my-3">
+                    <div class="font-weight-bold">Content</div>
+                    <div [innerHTML]="event.content"></div>
+                </div>
+                <div class="col my-3">
+                    <div class="font-weight-bold">Attachments</div>
+                    <!-- <div [innerHTML]="event.content"></div> -->
+                </div>
+            </div>
+            <div class="col-md-4 scrollable"></div>
+        </div>
+    </nb-card-body>
+</nb-card>

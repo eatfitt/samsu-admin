@@ -16,7 +16,8 @@ export class AddTaskComponent {
       content: 'Contact Sponsors',
       score: 4,
       status: TaskStatus.Pending,
-      gradeSubCriteriasId: 1,
+      gradeSubCriteriaId: 1,
+      assignees: [],
     },
     {
       id: 1,
@@ -24,7 +25,8 @@ export class AddTaskComponent {
       content: 'Design/Media',
       score: 3,
       status: TaskStatus.Pending,
-      gradeSubCriteriasId: 1,
+      gradeSubCriteriaId: 1,
+      assignees: [],
     },
   ]
 
@@ -45,7 +47,8 @@ export class AddTaskComponent {
       content: '',
       score: 0,
       status: TaskStatus.Pending,
-      gradeSubCriteriasId: 1,
+      gradeSubCriteriaId: 1,
+      assignees: []
     }
     this.mockTaskList.push(sampleTask);
     this.selectedTask = this.mockTaskList[this.mockTaskList.length - 1];

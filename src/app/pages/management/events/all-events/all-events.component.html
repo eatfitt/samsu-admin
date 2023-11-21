@@ -16,8 +16,8 @@
                             [ngTemplateOutletContext]="{events: filteredEvents}"></ng-container>
                     </nb-tab>
                     <nb-tab tabTitle="Grid">
-                        <ng-container [ngTemplateOutlet]="gridView"
-                            [ngTemplateOutletContext]="{events: mockEvents}"></ng-container>
+                        <!-- <ng-container [ngTemplateOutlet]="gridView"
+                            [ngTemplateOutletContext]="{events: mockEvents}"></ng-container> -->
                     </nb-tab>
                 </nb-tabset>
             </nb-card-body>
@@ -61,7 +61,7 @@
         </nb-card>
     </div>
 </div>
-<ng-template #gridView let-events="events">
+<!-- <ng-template #gridView let-events="events">
     <div class="row">
         <div class="col-lg-4 col-md-6" *ngFor="let event of events">
             <nb-card>
@@ -77,7 +77,7 @@
             </nb-card>
         </div>
     </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #listView let-events="events">
     <nb-list>
@@ -92,9 +92,9 @@
         </nb-list-item>
         <nb-list-item class="item small" *ngFor="let event of events">
             <span>{{ event.id }}</span>
-            <span>{{ event.title }}</span>
-            <span>{{ event.creatorUser.name }}</span>
-            <span>{{ event.eventLeaderUser.name }}</span>
+            <span class="hover-pointer" [routerLink]="['..', 'event', event.id]" >{{ event.title }}</span>
+            <span>{{ event.creator.name }}</span>
+            <span>{{ event.eventLeader.name }}</span>
             <span>
                 <!-- <nb-tag status="primary" appearance="filled" [text]="event.status" size="tiny"></nb-tag> -->
                 <nb-select [(selected)]="event.status" size="tiny" class="type-select">

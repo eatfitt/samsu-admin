@@ -55,6 +55,8 @@ import { GradesComponent } from './management/grades/grades.component';
 import { EditEventProposalComponent } from './management/event-proposal/edit-event-proposal/edit-event-proposal.component';
 import { AllEventProposalComponent } from './management/event-proposal/admin/all-event-proposal/all-event-proposal.component';
 import { FeedbackEventProposalComponent } from './management/event-proposal/admin/feedback-event-proposal/feedback-event-proposal.component';
+import { SingleEventComponent } from "./management/events/single-event/single-event.component";
+import { EventComponent } from "./management/events/event/event.component";
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 
@@ -118,6 +120,8 @@ import { FeedbackEventProposalComponent } from './management/event-proposal/admi
     EditEventProposalComponent,
     AllEventProposalComponent,
     FeedbackEventProposalComponent,
+    SingleEventComponent,
+    EventComponent,
     // TasksComponent,
   ],
 })

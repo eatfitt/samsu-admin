@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Department, GetAllUsersListResponse } from '../user/user.service';
@@ -20,14 +20,14 @@ export interface Event {
   fileUrls?: string;
   attendances?: number; // k cos nay
   attendScore?: number;
-  creatorUser?: GetAllUsersListResponse;
-  eventLeaderUser?: GetAllUsersListResponse;
+  creator?: GetAllUsersListResponse;
+  eventLeader?: GetAllUsersListResponse;
   departments?: Department[];
   semester?: Semester;
   eventProposal?: EventProposal;
 }
 
-interface FeedbackQuestionRequest {
+export interface FeedbackQuestionRequest {
   type: number;
   question: string;
   answer: string;
@@ -47,7 +47,7 @@ interface TaskRequests {
   assignee: string[];
 }
 
-interface CreateEventRequest {
+export interface CreateEventRequest {
   status: number;
   duration: number;
   attendScore: number;
@@ -60,7 +60,7 @@ interface CreateEventRequest {
   fileUrls: string;
   startTime: Date;
   feedbackQuestionRequestList: FeedbackQuestionRequest[];
-  departmentIds: string[];
+  departmentIds?: string[];
   rollnumbers: string[];
   taskRequests?: TaskRequests[];
 }
@@ -78,13 +78,32 @@ export class EventService {
     this.apiEndPoint = environment.apiEndPoint;
   }
   public createEvent(event: CreateEventRequest) {
-    
+    const headers = new HttpHeaders()
+      .set("Content-Type", "application/json")
+    const options = { headers: headers };
+    return this.http
+      .post(`${this.apiEndPoint}/events`, JSON.stringify(event), options)
+      .pipe(
+        catchError((error) => {
+          console.error("Error in getAllUsers:", error);
+          return throwError(error);
+        })
+      );
   }
 
   public getAllEvents() {
     return this.http.get(`${this.apiEndPoint}/events`).pipe(
       catchError((error) => {
         console.error("Error in getAllEvents:", error);
+        return throwError(error);
+      })
+    );
+  }
+
+  public getEvent(id: number) {
+    return this.http.get(`${this.apiEndPoint}/events/${id}`).pipe(
+      catchError((error) => {
+        console.error("Error in getEvent:", error);
         return throwError(error);
       })
     );

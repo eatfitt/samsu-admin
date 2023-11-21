@@ -130,12 +130,12 @@ export class UserService {
     );
   }
 
-  public getAllUsers(bearerToken: string, page = 0, size = 30) {
-    const headers = new HttpHeaders()
-      .set("Content-Type", "application/json")
-      .set("Authorization", bearerToken);
-    const options = { headers: headers };
-    return this.http.get(`${this.apiEndPoint}/users?page=${page}&size=${size}`, options).pipe(
+  public getAllUsers(bearerToken?: string, page = 0, size = 30) {
+    // const headers = new HttpHeaders()
+    //   .set("Content-Type", "application/json")
+    //   .set("Authorization", bearerToken);
+    // const options = { headers: headers };
+    return this.http.get(`${this.apiEndPoint}/users?page=${page}&size=${size}`).pipe(
       catchError((error) => {
         console.error("Error in getAllUsers:", error);
         return throwError(error);

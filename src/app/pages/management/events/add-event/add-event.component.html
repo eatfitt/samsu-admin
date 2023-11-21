@@ -23,12 +23,12 @@
                 <h5>Tasks</h5>
                 <ng-container [ngTemplateOutlet]="tasksTemplate"></ng-container>
                 <button nbButton nbStepperPrevious>prev</button>
-                <button class="float-right" nbButton nbStepperNext>next</button>
+                <button class="float-right" nbButton nbStepperNext (click)="review()">next</button>
             </nb-step>
             <nb-step label="Review">
                 <h3>Review</h3>
                 <button nbButton nbStepperPrevious>prev</button>
-                <button class="float-right" nbButton disabled nbStepperNext>next</button>
+                <button class="float-right" nbButton status="primary" (click)="createEvent()">Create</button>
             </nb-step>
         </nb-stepper>
     </nb-card-body>
@@ -62,7 +62,6 @@
                 <div class="d-flex">
                     <input class="w-75" type="datetime" [(ngModel)]="startTime" nbInput id="startTime" placeholder="Start time"  [nbDatepicker]="dateTimePicker">
                     <nb-datepicker #dateTimePicker></nb-datepicker>
-                    <!-- TODO: time -->
                     <input class="w-25" nbInput [(ngModel)]="startTime" [nbTimepicker]="timepicker">
                     <nb-timepicker #timepicker></nb-timepicker>
                 </div>
@@ -70,13 +69,46 @@
             </div>
             <div class="col-md-6">
                 <label for="duration" class="font-weight-bold" style="margin-top: 1rem;">Duration</label>
-                <input type="number" [(ngModel)]="duration" nbInput fullWidth id="duration" placeholder="Duration">
+                <div class="d-flex align-items-baseline">
+                    <nb-select (selectedChange)="changeDuration($event, 'hour')" class="mr-2">
+                        <nb-option *ngFor="let hour of hours" [value]="hour"> {{ hour }}</nb-option>
+                    </nb-select> hours
+                    <nb-select (selectedChange)="changeDuration($event, 'minute')" class="mx-2">
+                        <nb-option *ngFor="let minute of minutes" [value]="minute"> {{ minute }}</nb-option>
+                    </nb-select> minutes
+                </div>
+            
+                <!-- <input type="number" [(ngModel)]="duration" nbInput fullWidth id="duration" placeholder="Duration">  -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="status" class="font-weight-bold" style="margin-top: 1rem;">Status</label>
+                <nb-select [(selected)]="status" fullWidth class="d-block">
+                    <nb-option value="0">Non Public</nb-option>
+                    <nb-option value="1">Public</nb-option>
+                    <nb-option value="2">Draft</nb-option>
+                </nb-select>
+            </div>
+            <div class="col-md-6">
+                <label for="attendScore" class="font-weight-bold" style="margin-top: 1rem;">Attend Score</label>
+                <input type="number" min="0" onkeydown="return event.key !== '-'" [(ngModel)]="attendScore" nbInput fullWidth id="attendScore" placeholder="Attend Score">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="font-weight-bold" style="margin-top: 1rem;">Event Leader</label>
+                <ngx-custom-autoselect
+                    [arr]="managerList"
+                    [property]="'name'"
+                    (selectItem)="setEventLeaderRollnumber($event)"
+                ></ngx-custom-autoselect>
             </div>
         </div>
         <div class="form-group">
             <label for="description" class="font-weight-bold" style="margin-top: 1rem;">Content</label>
             <!-- <textarea nbInput fullWidth id="description" placeholder="Textarea"></textarea> -->
-            <quill-editor [(ngModel)]="editorContent" [config]="editorConfig"></quill-editor>
+            <quill-editor [(ngModel)]="content" [config]="editorConfig"></quill-editor>
 
         </div>
         <div class="form-group">
@@ -89,9 +121,10 @@
                         </div> -->
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="inputGroupFile01"
-                                aria-describedby="inputGroupFileAddon01" [(ngModel)]="bannerImg">
+                                aria-describedby="inputGroupFileAddon01" [(ngModel)]="bannerUrl" >
                                 <!-- (change)="onFileChange($event)" -->
                             <label class="custom-file-label" for="inputGroupFile01">Choose image</label>
+                            <img *ngIf="imageSrc" [src]="imageSrc">
                         </div>
                     </div>
                     <!-- <input id="bannerImg" type="file" (change)="onFileChange($event)" multiple="false"
@@ -100,12 +133,12 @@
             </nb-card>
             <nb-card class="size-sm">
                 <nb-card-body class="bg-white">
-                    <label for="bannerImg" class="font-weight-bold" style="margin-top: 1rem;">Banner image</label> <br>
+                    <label for="bannerImg" class="font-weight-bold" style="margin-top: 1rem;">File urls</label> <br>
                     <div class="input-group">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="inputGroupFile01"
                                 aria-describedby="inputGroupFileAddon01" [(ngModel)]="fileUrls">
-                            <label class="custom-file-label" for="inputGroupFile01">Choose image</label>
+                            <label class="custom-file-label" for="inputGroupFile01">File urls</label>
                         </div>
                     </div>
                 </nb-card-body>

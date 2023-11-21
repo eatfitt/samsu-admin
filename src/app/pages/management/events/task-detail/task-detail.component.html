@@ -7,7 +7,7 @@
             <textarea type="text" nbInput fullWidth id="content" placeholder="Description" [(ngModel)]="task.content"></textarea>
         </div>
         <div class="col-lg-6">
-            <nb-select [(selected)]="task.status">
+            <nb-select [(selected)]="task.status" (selectedChange)="taskChange.emit($event)">
                 <nb-option *ngFor="let status of mockStatusList" [value]="status">{{ status }}</nb-option>
             </nb-select>
             <nb-card class="mt-2">
@@ -15,15 +15,21 @@
                 <nb-card-body>
                     <div class="row mb-2 align-items-baseline">
                         <div class="col-4">Assignee</div>
-                        <input nbInput class="col-8" [(ngModel)]="mockAssignee.name">
+                        <div class="col-8 px-0">
+                            <ngx-custom-autoselect
+                                [arr]="assignees"
+                                [property]="'name'"
+                                (selectItem)="addAssignee($event)"
+                            ></ngx-custom-autoselect>
+                        </div>
                     </div>
                     <div class="row mb-2 align-items-baseline">
                         <div class="col-4">Criteria</div>
                         <div class="col-8 px-0">
                             <ngx-custom-autoselect
-                                [arr]="mockGradeSubCriterias"
+                                [arr]="gradeSubCriterias"
                                 [property]="'content'"
-                                (selectItem)="this.task.gradeSubCriteriasId = $event"
+                                (selectItem)="this.task.gradeSubCriteriaId = $event"
                             ></ngx-custom-autoselect>
                         </div>
                     </div>
