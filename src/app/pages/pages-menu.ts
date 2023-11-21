@@ -301,3 +301,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
   //   ],
   // },
 ];
+
+export const ADMIN_MENU_ITEMS: NbMenuItem[] = [
+  {
+    title: 'All Event Proposal',
+    icon: 'bulb',
+    link: '/pages/event-proposals',
+    home: true,
+  }
+]

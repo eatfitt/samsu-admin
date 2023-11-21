@@ -34,6 +34,33 @@
                     </div>
                 </div>
             </div>
+            <nb-card-body>
+                <h6>Feedback</h6>
+                <div *ngFor="let feedback of getFeedbackContent(mockFeedback)">
+                    <!-- Customize the feedback display as needed -->
+                    <div>
+                        <strong>{{ feedback.time | date:'medium' }}</strong>
+                        <div>{{ feedback.content }}</div>
+                        <div *ngIf="feedback.isResolved; else pending">
+                            <nb-icon icon="checkmark-circle-outline" status="success"></nb-icon>
+                            Resolved
+                        </div>
+                        <ng-template #pending>
+                            <nb-icon icon="clock-outline" status="info"></nb-icon>
+                            Pending
+                        </ng-template>
+                    </div>
+                </div>
+            </nb-card-body>
+            <!-- Feedback Input Section -->
+            <nb-card-body>
+                <div class="form-group">
+                    <label for="feedbackContent" class="font-weight-bold" style="">Give your feedback</label>
+                    <quill-editor [(ngModel)]="editorContent" style="width: 100%;"></quill-editor>
+                </div>
+            
+                <button nbButton size="small" (click)="submitFeedback()">Submit Feedback</button>
+            </nb-card-body>
         </ng-container>
 
         <div class="mt-3">

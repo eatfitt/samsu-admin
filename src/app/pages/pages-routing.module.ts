@@ -5,6 +5,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { DepartmentsComponent } from './management/departments/departments.component';
 import { AddEventProposalComponent } from './management/event-proposal/add-event-proposal/add-event-proposal.component';
+import { AllEventProposalComponent } from './management/event-proposal/admin/all-event-proposal/all-event-proposal.component';
 import { EditEventProposalComponent } from './management/event-proposal/edit-event-proposal/edit-event-proposal.component';
 import { EventProposalComponent } from './management/event-proposal/event-proposal.component';
 import { ViewProposalComponent } from './management/event-proposal/view-proposal/view-proposal.component';
@@ -29,6 +30,10 @@ const routes: Routes = [{
     {
       path: 'my-event-proposal',
       component: EventProposalComponent,
+    },
+    {
+      path: 'event-proposals',
+      component: AllEventProposalComponent,
     },
     {
       path: 'event-proposal/add',

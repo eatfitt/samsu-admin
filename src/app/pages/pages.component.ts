@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import { MENU_ITEMS } from './pages-menu';
+import { Store } from '@ngrx/store';
+import { UserState } from '../app-state/user';
+import { ADMIN_MENU_ITEMS, MENU_ITEMS } from './pages-menu';
 
 @Component({
   selector: 'ngx-pages',
@@ -12,7 +14,16 @@ import { MENU_ITEMS } from './pages-menu';
     </ngx-one-column-layout>
   `,
 })
-export class PagesComponent {
-
+export class PagesComponent implements OnInit {
+  constructor(private store: Store<{ user: UserState }>) { }
   menu = MENU_ITEMS;
+  isAdmin = false;
+  ngOnInit(): void {
+    this.store.select(state => state.user.userSummary).subscribe(userSummary => {
+      this.isAdmin = (userSummary.role === 'ROLE_ADMIN');
+      if (this.isAdmin) {
+        this.menu = [...MENU_ITEMS, ...ADMIN_MENU_ITEMS];
+      }
+    });
+  }
 }

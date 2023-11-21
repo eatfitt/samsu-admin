@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventProposal, EventProposalService, EventProposalStatus } from '../../../../../services/event-propsal.service';
 
+interface Feedback {
+  content: string;
+  time: number;
+  isResolved: boolean;
+}
 @Component({
   selector: 'ngx-view-proposal',
   templateUrl: './view-proposal.component.html',
@@ -9,7 +14,7 @@ import { EventProposal, EventProposalService, EventProposalStatus } from '../../
 })
 export class ViewProposalComponent implements OnInit {
   eventProposal: EventProposal;
-
+  mockFeedback = '1699927012002|Myfeedback$$$1699927012099|My content$$$1700502118009|My feedbacks ahhsdasj';
   constructor(private router: Router, private eventProposalService: EventProposalService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -19,7 +24,8 @@ export class ViewProposalComponent implements OnInit {
         this.eventProposalService.getEventProposalById(id).subscribe(
           proposal => {
             this.eventProposal = proposal;
-            console.log(proposal)
+            const myFeedback = this.getFeedbackContent(this.mockFeedback);
+            console.log(myFeedback);
             // You can now use this.eventProposal in your template or perform other actions.
           },
           error => {
@@ -29,6 +35,7 @@ export class ViewProposalComponent implements OnInit {
         );
       }
     });
+
   }
 
   getFileIcon(extension: string): string {
@@ -63,6 +70,19 @@ export class ViewProposalComponent implements OnInit {
       return { url, name, extension };
     });
   }
+
+  getFeedbackContent(feedback: string): Feedback[] {
+    return feedback.split('$$$').map((entry) => {
+      const [time, content] = entry.split('|');
+
+      return {
+        content,
+        time: Number(time),
+        isResolved: Number(time) < Number(this.eventProposal?.modifyAt),
+      };
+    });
+  }
+
   handleOnClick() {
     this.router.navigate(['/pages/event-proposal/edit', this.eventProposal.id]);
   }

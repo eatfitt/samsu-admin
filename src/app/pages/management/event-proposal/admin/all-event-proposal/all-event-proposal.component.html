@@ -1,0 +1,92 @@
+<div class="row">
+    <div class="col-md-12">
+        <nb-card>
+            <nb-card-header>
+                <div class="d-flex justify-content-between">
+                    <h5>Events</h5>
+
+                    <nb-form-field>
+                        <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+                        <input type="text" placeholder="Start typing..." nbInput fullWidth [(ngModel)]="searchQuery"
+                            (input)="onSearchChange()">
+                    </nb-form-field>
+                    <div class="col-md-6">
+                        Sort by:
+                        <nb-select [(ngModel)]="selectedSortingOption" (selectedChange)="onSortingChange()">
+                            <nb-option value="" disabled>Select Sorting</nb-option>
+                            <nb-option *ngFor="let option of sortingOptions" [value]="option.value">{{ option.label
+                                }}</nb-option>
+                        </nb-select>
+                    </div>
+                    <button class="btn btn-outline-primary" (click)="navigateTo('/pages/event-proposal/add')">
+                        <nb-icon [icon]="'plus-round'" pack="ion"></nb-icon>
+                    </button>
+                </div>
+            </nb-card-header>
+            <nb-card-body>
+                <nb-tabset (changeTab)="onTabChange($event)">
+                    <nb-tab tabTitle="All">
+                        <ng-container [ngTemplateOutlet]="gridView"
+                            [ngTemplateOutletContext]="{eventProposals: filteredEventProposals}"></ng-container>
+                    </nb-tab>
+
+                    <!-- Processing tab -->
+                    <nb-tab tabTitle="Processing">
+                        <ng-container [ngTemplateOutlet]="gridView"
+                            [ngTemplateOutletContext]="{eventProposals: getFilteredByStatus(EventProposalStatus.PROCESSING)}"></ng-container>
+                    </nb-tab>
+                    <nb-tab tabTitle="Reviewed">
+                        <ng-container [ngTemplateOutlet]="gridView"
+                            [ngTemplateOutletContext]="{eventProposals: getFilteredByStatus(EventProposalStatus.REVIEWED)}"></ng-container>
+                    </nb-tab>
+
+                    <!-- Approve tab -->
+                    <nb-tab tabTitle="Approved">
+                        <ng-container [ngTemplateOutlet]="gridView"
+                            [ngTemplateOutletContext]="{eventProposals: getFilteredByStatus(EventProposalStatus.APPROVED)}"></ng-container>
+                    </nb-tab>
+                    <!-- Rejected tab -->
+                    <nb-tab tabTitle="Rejected">
+                        <ng-container [ngTemplateOutlet]="gridView"
+                            [ngTemplateOutletContext]="{eventProposals: getFilteredByStatus(EventProposalStatus.REJECTED)}"></ng-container>
+                    </nb-tab>
+
+                </nb-tabset>
+            </nb-card-body>
+        </nb-card>
+    </div>
+
+</div>
+
+<ng-template #gridView let-eventProposals="eventProposals">
+    <div class="row">
+        <div class="col-lg-4 col-md-6"
+            *ngFor="let proposal of (eventProposals | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems })">
+            <nb-card>
+                <nb-card-header class="banner-url px-3">
+                    <nb-tag [text]="proposal.status" class="float-right"
+                        [status]="getStatusColor(proposal.status)"></nb-tag>
+                </nb-card-header>
+                <nb-card-body>
+                    <h6>{{ proposal.title }}</h6>
+                    <div><strong>Create at: </strong>{{ proposal.createAt | date:"MMM dd yyyy, hh:mm a" }}</div>
+                    <div><strong>Last modify at: </strong>{{ proposal.modifyAt | date:"MMM dd yyyy, hh:mm a" }}</div>
+                    <div><strong>Created by: </strong>{{ proposal.creator.name}}</div>
+                    <button class="mt-2" nbButton size="small" (click)="viewDetails(proposal.id)">View Details</button>
+                </nb-card-body>
+            </nb-card>
+            <!-- Pagination controls -->
+        </div>
+        <!-- Show empty template when there are no proposals -->
+        <div *ngIf="eventProposals?.length === 0" class="col-md-12">
+            <div class="alert alert-info">No proposals available.</div>
+        </div>
+        <div class="col-md-12">
+            <div *ngIf="eventProposals?.length !== 0" class="d-flex justify-content-center align-items-center">
+                <pagination-controls (pageChange)="onPageChange($event)" [maxSize]="6"></pagination-controls>
+
+            </div>
+        </div>
+    </div>
+
+</ng-template>
