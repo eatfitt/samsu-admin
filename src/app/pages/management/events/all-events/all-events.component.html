@@ -98,9 +98,9 @@
             <span>
                 <!-- <nb-tag status="primary" appearance="filled" [text]="event.status" size="tiny"></nb-tag> -->
                 <nb-select [(selected)]="event.status" size="tiny" class="type-select">
-                    <nb-option [value]="1">Upcoming</nb-option>
-                    <nb-option [value]="2">Canceled</nb-option>
-                    <nb-option [value]="3">Completed</nb-option>
+                    <nb-option [value]="0">Non Public</nb-option>
+                    <nb-option [value]="1">Public</nb-option>
+                    <nb-option [value]="2">Draft</nb-option>
                 </nb-select>
             </span>
             <span>{{ event.startTime | date }}</span>
