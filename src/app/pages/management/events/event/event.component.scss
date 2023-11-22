@@ -1,0 +1,13 @@
+::ng-deep .hover-pointer {
+    font-weight: 600;
+    &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+  }
+
+::ng-deep .event-attachments nb-card-header {
+    &:hover {
+        filter: brightness(50%);  
+    }
+  }

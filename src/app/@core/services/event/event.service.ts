@@ -16,7 +16,7 @@ export interface Event {
   createAt?: Date;
   startTime: Date;
   duration: string;
-  bannerUrls: string;
+  bannerUrl: string;
   fileUrls?: string;
   attendances?: number; // k cos nay
   attendScore?: number;
@@ -85,7 +85,7 @@ export class EventService {
       .post(`${this.apiEndPoint}/events`, JSON.stringify(event), options)
       .pipe(
         catchError((error) => {
-          console.error("Error in getAllUsers:", error);
+          console.error("Error in createEvent:", error);
           return throwError(error);
         })
       );
@@ -107,5 +107,19 @@ export class EventService {
         return throwError(error);
       })
     );
+  }
+
+  public updateEvent(event: CreateEventRequest, id: string) {
+    const headers = new HttpHeaders()
+      .set("Content-Type", "application/json")
+    const options = { headers: headers };
+    return this.http
+      .put(`${this.apiEndPoint}/events/${id}`, JSON.stringify(event), options)
+      .pipe(
+        catchError((error) => {
+          console.error("Error in updateEvent:", error);
+          return throwError(error);
+        })
+      );
   }
 }

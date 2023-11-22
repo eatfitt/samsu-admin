@@ -97,7 +97,7 @@
             <span>{{ event.eventLeader.name }}</span>
             <span>
                 <!-- <nb-tag status="primary" appearance="filled" [text]="event.status" size="tiny"></nb-tag> -->
-                <nb-select [(selected)]="event.status" size="tiny" class="type-select">
+                <nb-select [(selected)]="event.status" size="tiny" class="type-select"  filled="true" [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
                     <nb-option [value]="0">Non Public</nb-option>
                     <nb-option [value]="1">Public</nb-option>
                     <nb-option [value]="2">Draft</nb-option>

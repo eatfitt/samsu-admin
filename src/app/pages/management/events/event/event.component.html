@@ -4,25 +4,101 @@
             <div class="col small mb-4">Event {{ event.id }}</div>
         </div>
         <div class="row">
-            <div class="col-md-8 scrollable">
+            <div class="col-md-8 overflow-auto" style="max-height: 40rem;">
                 <h5 style="font-weight: 600;">{{ event.title }}</h5>
                 <div class="d-flex pb-4 border-bottom">
-                    <button nbButton size="small" class="text-capitalize mr-2">Update Banners</button>
-                    <button nbButton size="small" class="text-capitalize mr-2">Update File Urls</button>
+                    <button nbButton size="small" class="text-capitalize mr-2">Update
+                        Banners</button>
+                    <button nbButton size="small" class="text-capitalize mr-2">Update File
+                        Urls</button>
                     <button nbButton size="small" class="text-capitalize mr-2">Add Tasks</button>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col my-3">
-                    <div class="font-weight-bold">Content</div>
-                    <div [innerHTML]="event.content"></div>
+                <div class="event-content my-3">
+                    <div class="d-flex justify-content-between">
+                        <div class="font-weight-bold mb-1">Content</div>
+                        <nb-icon *ngIf="!isEditContent" icon="edit-2" pack="eva"
+                            (click)="isEditContent = true" class="hover-pointer"></nb-icon>
+                    </div>
+                    <div *ngIf="!isEditContent" [innerHTML]="event.content"></div>
+                    <quill-editor *ngIf="isEditContent" [(ngModel)]="event.content"
+                        [config]="editorConfig"></quill-editor>
+                    <div *ngIf="isEditContent" class="d-flex">
+                        <button nbButton outline size="tiny" status="primary" class=""
+                            (click)="editEvent('content'); isEditContent = false">Save</button>
+                        <button nbButton outline size="tiny" status="danger"
+                            (click)="isEditContent = false" class="ml-2">Cancel</button>
+                    </div>
                 </div>
-                <div class="col my-3">
-                    <div class="font-weight-bold">Attachments</div>
+                <div class="event-attachments my-3">
+                    <div class="font-weight-bold mb-1">Attachments</div>
+                    <div class="d-flex overflow-auto w-100">
+                        <div class="event-bannerurl hover-pointer"
+                            (click)="openDialog(eventBannerDialog, event.bannerUrl)">
+                            <nb-card style="max-width: 12rem;">
+                                <nb-card-header
+                                    class="p-0 d-flex justify-content-center align-items-center"
+                                    style="height: 6rem;">
+                                    <img class="mh-100 mw-100" [src]="event.bannerUrl">
+                                </nb-card-header>
+                                <nb-card-body class="p-2">
+                                    <div class="text-truncate small">{{ event.bannerUrl }}</div>
+                                </nb-card-body>
+                            </nb-card>
+                        </div>
+                        <div class="event-fileurls ml-2 hover-pointer"
+                            (click)="openDialog(eventBannerDialog, event.fileUrls)">
+                            <nb-card style="max-width: 12rem;">
+                                <nb-card-header
+                                    class="p-0 d-flex justify-content-center align-items-center"
+                                    style="height: 6rem;">
+                                    <img *ngIf="isImageFile(event.fileUrls)" class="mh-100 mw-100"
+                                        [src]="event.fileUrls">
+                                    <nb-icon *ngIf="!isImageFile(event.fileUrls)" icon="file-text"
+                                        pack="eva" class="w-50 h-50"></nb-icon>
+                                </nb-card-header>
+                                <nb-card-body class="p-2">
+                                    <div class="text-truncate small">{{ event.fileUrls }}</div>
+                                </nb-card-body>
+                            </nb-card>
+                        </div>
+                    </div>
                     <!-- <div [innerHTML]="event.content"></div> -->
                 </div>
             </div>
-            <div class="col-md-4 scrollable"></div>
+            <div class="col-md-4 overflow-auto" style="max-height: 40rem;">
+                <nb-select [(selected)]="event.status" class="d-block w-50 mb-2" filled="true" [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
+                    <nb-option [value]="0">Non Public</nb-option>
+                    <nb-option [value]="1">Public</nb-option>
+                    <nb-option [value]="2">Draft</nb-option>
+                </nb-select>
+                <nb-card>
+                    <nb-card-header>Details</nb-card-header>
+                    <nb-card-body>
+                        <div class="row">
+                            <div class="col-md-4 small">Creator</div>
+                            <div class="col-md-8 small">{{ event.creator.name }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 small">Leader</div>
+                            <div class="col-md-8 small">{{ event.eventLeader.name }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 small">Start time</div>
+                            <div class="col-md-8 small">{{ event.startTime | date }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 small">Duration</div>
+                            <div class="col-md-8 small">{{ event.duration }}</div>
+                        </div>
+                    </nb-card-body>
+                </nb-card>
+            </div>
         </div>
     </nb-card-body>
 </nb-card>
+<ng-template #eventBannerDialog let-data let-ref="dialogRef">
+    <img *ngIf="isImageFile(data)" [src]="data">
+    <iframe *ngIf="!isImageFile(data)"
+        [src]="'https://docs.google.com/viewer?url=https://sgp1.digitaloceanspaces.com/samsu/assets/6dd8844d-dfd9-4dbe-8fcd-a1ebf8075e4a_Phiếu-đăng-kí-đồ-án-1.docx&embedded=true' | safe:'resourceUrl'"
+        height="700" width="500"></iframe>
+</ng-template>

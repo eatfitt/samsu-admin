@@ -57,8 +57,12 @@ import { AllEventProposalComponent } from './management/event-proposal/admin/all
 import { FeedbackEventProposalComponent } from './management/event-proposal/admin/feedback-event-proposal/feedback-event-proposal.component';
 import { SingleEventComponent } from "./management/events/single-event/single-event.component";
 import { EventComponent } from "./management/events/event/event.component";
+import { SafePipe } from "./pipes/safe.pipe";
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
+const PIPES = [
+  SafePipe
+];
 
 @NgModule({
   imports: [NbFormFieldModule,
@@ -97,6 +101,7 @@ import { EventComponent } from "./management/events/event/event.component";
     NbListModule,
     NbAccordionModule
   ],
+  exports: [...PIPES],
   declarations: [
     PagesComponent,
     LoginComponent,
@@ -122,6 +127,7 @@ import { EventComponent } from "./management/events/event/event.component";
     FeedbackEventProposalComponent,
     SingleEventComponent,
     EventComponent,
+    ...PIPES
     // TasksComponent,
   ],
 })
