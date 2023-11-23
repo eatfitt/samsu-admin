@@ -168,7 +168,7 @@ export class UserService {
       .post(`${this.apiEndPoint}/users/list`, mappedUsers, options)
       .pipe(
         catchError((error) => {
-          console.error("Error in getAllUsers:", error);
+          console.error("Error in addListUser:", error);
           return throwError(error);
         })
       );
@@ -199,6 +199,17 @@ export class UserService {
       .pipe(
         catchError((error) => {
           console.error("Error in deleteUser:", error);
+          return throwError(error);
+        })
+      );
+  }
+
+  public findUserByRollnumber(rollnumber: string) {
+    return this.http
+      .get(`${this.apiEndPoint}/users/${rollnumber}/profile`)
+      .pipe(
+        catchError((error) => {
+          console.error("Error in findUserByRollnumber:", error);
           return throwError(error);
         })
       );

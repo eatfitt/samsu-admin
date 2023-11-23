@@ -11,6 +11,7 @@ export class CustomAutoselectComponent {
   @Input() arr: any[] = [];
   @Input() property = '';
   @Input() label = '';
+  @Input() placeholder = 'Enter value';
   @Output() selectItem = new EventEmitter<any>();
   @Output() filteredResult = new EventEmitter<any[]>();
   filteredArr = [];

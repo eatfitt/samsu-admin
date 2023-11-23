@@ -1,20 +1,46 @@
-<label class="label">Select Group to Import</label>
-<input #autoInput nbInput fullWidth="" type="text" (input)="onChange()" placeholder="Enter value"
-    [nbAutocomplete]="auto" />
-<nb-autocomplete #auto (selectedChange)="onSelectGroup($event)">
-    <nb-option *ngFor="let group of filterGroups" [value]="group.name"> {{ group.name }}
-    </nb-option>
-</nb-autocomplete>
+<button class="d-block mb-3 btn btn-sm btn-outline-secondary" (click)="openDialog(addAttendanceDialog)">+ Add attendance</button>
+
 <div class="my-3">
-    <ng2-smart-table [settings]="settings" [source]="attendanceList">
-    </ng2-smart-table>
+    <nb-list>
+        <nb-list-item class="item small" style="background-color: var(--menu-item-divider-color);">
+            <span>Roll number</span>
+            <span>Name</span>
+        </nb-list-item>
+        <nb-list-item class="item small"  *ngIf="attendanceList.length <= 0">No attendance added</nb-list-item>
+        <nb-list-item class="item small" *ngFor="let attendance of attendanceList">
+            <span>{{ attendance?.rollnumber }}</span>
+            <span>{{ attendance?.name }}</span>
+        </nb-list-item>
+    </nb-list>
 </div>
-<ng-template #confirmAddGroupDialog let-ref="dialogRef">
+
+<ng-template #addAttendanceDialog let-ref="dialogRef">
     <nb-card>
-        <nb-card-body> Do you want to add group {{ selectedGroup.name }} ? </nb-card-body>
+        <nb-card-header>Add attendance</nb-card-header>
+        <nb-card-body>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="rollnumberToSearch" class="label">Event Leader</label>
+                    <div class="d-flex align-items-center">
+                        <input id="rollnumberToSearch" [(ngModel)]="eventLeaderRollnumberToSearch" nbInput class="flex-grow-1" placeholder="Roll number">
+                        <nb-icon *ngIf="!isEditContent" icon="search" pack="eva"
+                            (click)="searchExistingUser(eventLeaderRollnumberToSearch)" class="hover-pointer ml-3"></nb-icon>
+                    </div>
+                </div>
+                <div class="col-md-6 border-left">
+                    <label class="label">Select Group to Import</label>
+                    <input #autoInput nbInput fullWidth="" type="text" (input)="onChange()" placeholder="Enter value"
+                        [nbAutocomplete]="auto" />
+                    <nb-autocomplete #auto (selectedChange)="onSelectGroup($event)">
+                        <nb-option *ngFor="let group of filterGroups" [value]="group.name"> {{ group.name }}
+                        </nb-option>
+                    </nb-autocomplete>
+                </div>
+            </div>
+        </nb-card-body>
         <nb-card-footer>
             <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
-            <button nbButton class="bg-primary text-light ml-3" (click)="addGroup()">Add</button>
+            <button nbButton class="bg-primary text-light ml-3" (click)="onSelectGroup($event)">Add</button>
         </nb-card-footer>
     </nb-card>
 </ng-template>

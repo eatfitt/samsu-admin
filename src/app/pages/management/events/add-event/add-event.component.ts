@@ -22,14 +22,13 @@ import {
 } from "../../../../@core/services/event/event.service";
 import {
   GradeSubCriteria,
-  GradeSubCriteriaService,
 } from "../../../../@core/services/grade-sub-criteria/grade-sub-criteria.service";
 import { UserService } from "../../../../@core/services/user/user.service";
-import {
-  GetAllUsersListResponse,
-  GetAllUsersResponse,
-} from "../../../../@core/services/user/user.service";
 import { Router } from "@angular/router";
+import { EventProposalService } from "../../../../../services/event-propsal.service";
+import { EventProposal } from "../../../../../services/event-propsal.service";
+import { SemesterService } from "../../../../@core/services/semester/semester.service";
+import _ from "lodash";
 
 enum FeedbackType {
   MultipleSelect = 0,
@@ -70,7 +69,10 @@ export class AddEventComponent implements OnInit {
   selectedMinute = 0;
   gradeSubCriterias: GradeSubCriteria[] = [];
   imageSrc: string | ArrayBuffer;
-  managerList: GetAllUsersListResponse[] = [];
+  myEventProposals$ = this.eventProposalService.getAllEventProposals().pipe(map(data => (data as any)?.content));
+  eventLeaderRollnumberToSearch: string;
+  eventLeader$: Observable<Object> = null;
+  semesters$: Observable<Object> = null;
 
   // FORM DATA - ngModel
   title = "";
@@ -98,16 +100,8 @@ export class AddEventComponent implements OnInit {
   private contentTemplateRef: NbDialogRef<AddEventComponent>;
 
   ngOnInit(): void {
-    this.options = ["14"];
-    this.filteredOptions$ = of(this.options);
-
-    this.inputFormControl = new FormControl();
-
-    this.filteredOptions$ = this.inputFormControl.valueChanges.pipe(
-      startWith(""),
-      map((filterString) => this.filter(filterString))
-    );
-    this.fetchData();
+    this.userService.checkLoggedIn();
+    this.semesters$ = this.semesterService.getAllSemesters().pipe(map((data: any) => data.content));
   }
 
   constructor(
@@ -119,17 +113,10 @@ export class AddEventComponent implements OnInit {
     public toastrService: NbToastrService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private gradeSubCriteriaService: GradeSubCriteriaService
+    private eventProposalService: EventProposalService,
+    private semesterService: SemesterService,
   ) {
     iconsLibrary.registerFontPack("ion", { iconClassPrefix: "ion" });
-  }
-
-  fetchData() {
-    // this.gradeSubCriteriaService.getAllGradeSubCriterias()
-    //   .subscribe((data: any) => this.gradeSubCriterias = data.content);
-    this.userService.getAllUsers().subscribe((data: GetAllUsersResponse) => {
-      this.managerList = data.content.filter((c) => c.role === 3).map((c) => c);
-    });
   }
 
   changeDuration(event, time: string) {
@@ -174,7 +161,9 @@ export class AddEventComponent implements OnInit {
     this.feedbackQuestionList.splice(i, 1);
   }
   addQuestion() {
-    this.feedbackQuestionList.push(this.sampleFeedbackQuestion);
+    let newQuestion = {...this.sampleFeedbackQuestion};
+    newQuestion.answer = Array.from(this.sampleFeedbackQuestion.answer);
+    this.feedbackQuestionList.push(newQuestion);
     this.cdr.detectChanges();
     this.contentTemplateRef.close();
   }
@@ -200,14 +189,51 @@ export class AddEventComponent implements OnInit {
     this.attendanceList = event;
   }
 
-  setEventLeaderRollnumber(event: GetAllUsersListResponse) {
-    this.eventLeaderRollnumber = event.rollnumber;
+  setEventProposalId(event: EventProposal) {
+    this.proposalId = event.id;
   }
 
   review() {
     this.uploadFile(this.banner, "bannerUrl");
     this.uploadFile(this.file, "fileUrls");
   }
+
+  checkIsValidBeforeNext(properties: string []): boolean {
+    return properties.every(property => {
+      if (this[property] instanceof File && this[property].size > 0) {
+        return true;
+      }
+      return !_.isEmpty(this[property]?.toString());
+    })
+  }
+
+  isFeedbackValid(): boolean {
+    if (this.feedbackQuestionList.length <= 0) return false;
+    for (let feedback of this.feedbackQuestionList) {
+      // Check if type is selected
+      if (!feedback.type) {
+        return false;
+      }
+  
+      // Check if question is not empty
+      if (!feedback.question || feedback.question.trim() === '') {
+        return false;
+      }
+  
+      // Check if answer is not null and not empty if it's an array of strings
+      if (Array.isArray(feedback.answer)) {
+        for (let answer of feedback.answer) {
+          if (!answer || answer.trim() === '') {
+            return false;
+          }
+        }
+      }
+    }
+  
+    // If all feedback objects pass the checks, return true
+    return true;
+  }
+  
 
   createEvent() {
     const feedbackPayload: FeedbackQuestionRequest[] =
@@ -250,11 +276,27 @@ export class AddEventComponent implements OnInit {
     );
   }
 
-  private filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.options.filter((optionValue) =>
-      optionValue.toLowerCase().includes(filterValue)
-    );
+  searchExistingUser(rollnumber: string) {
+    this.eventLeader$ = this.userService.findUserByRollnumber(rollnumber) || null;
+    this.eventLeader$.subscribe(
+        (success: any) => {
+          this.eventLeaderRollnumber = success.rollnumber;
+          this.toastrService.show(`Event leader: ${success.name}`, "User found", {
+            status: "success",
+          });
+          this.cdr.detectChanges();
+        },
+        (fail: any) => {
+          this.eventLeaderRollnumber = null;
+          this.toastrService.show(`User Not found`, "Not found", {
+            status: "danger",
+          });
+        }
+      );
+  }
+
+  trackByFn(index, item) {
+    return index; 
   }
 
   openDialog(dialog) {

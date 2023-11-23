@@ -2,19 +2,21 @@
     <nb-card-body>
         <nb-stepper orientation="horizontal">
             <nb-step label="Basic Information">
-                <h5>Basic Information</h5>
                 <ng-container [ngTemplateOutlet]="basicInformationTemplate"></ng-container>
                 <button nbButton disabled nbStepperNext>prev</button>
-                <button class="float-right" nbButton nbStepperNext>next</button>
+                <button class="float-right" nbButton nbStepperNext
+                [disabled]="!checkIsValidBeforeNext(['title', 'content', 'banner', 'file', 'semester', 'proposalId', 'startTime', 'duration', 'status', 'attendScore', 'eventLeaderRollnumber'])"
+                >next</button>
+                <!-- [disabled]="!checkIsValidBeforeNext(['title', 'content', 'banner', 'file', 'semester', 'proposalId', 'startTime', 'duration', 'status', 'attendScore', 'eventLeaderRollnumber'])" -->
             </nb-step>
             <nb-step label="Feedback Form">
-                <h5>Feedback Form</h5>
                 <ng-container [ngTemplateOutlet]="feedbackFormTemplate"></ng-container>
                 <button nbButton nbStepperPrevious>prev</button>
-                <button class="float-right" nbButton nbStepperNext>next</button>
+                <button class="float-right" nbButton nbStepperNext
+                    [disabled]="!isFeedbackValid()"
+                >next</button>
             </nb-step>
             <nb-step label="Attendance List">
-                <h5>Attendance List</h5>
                 <ng-container [ngTemplateOutlet]="attendanceListTemplate"></ng-container>
                 <button nbButton nbStepperPrevious>prev</button>
                 <button class="float-right" nbButton nbStepperNext>next</button>
@@ -37,45 +39,50 @@
 <nb-card>
     <nb-card-body class="example-items-col">
         <div class="form-group">
-            <label for="title" class="font-weight-bold">Title</label>
+            <label for="title" class="label">Title</label>
             <input type="text" [(ngModel)]="title" nbInput fullWidth id="title" placeholder="Title">
         </div>
         <div class="form-group row">
             <div class="col-md-6">
-                <label for="proposal" class="font-weight-bold" style="margin-top: 1rem;">Proposal</label>
-                <input [(ngModel)]="proposalId" nbInput fullWidth type="text" placeholder="Search proposal"
-                    [nbAutocomplete]="auto" id="proposal" />
-                <nb-autocomplete #auto [activeFirst]="true">
-                    <nb-option *ngFor="let option of filteredOptions$ | async" [value]="option">
-                        {{ option }}
-                    </nb-option>
-                </nb-autocomplete>
+                <label for="proposal" class="label" style="margin-top: 1rem;">Proposal</label>
+                <ng-container *ngIf="myEventProposals$ | async as myEventProposals">
+                    <ngx-custom-autoselect
+                        [arr]="myEventProposals" [placeholder]="'Proposal'"
+                        [property]="'title'"
+                        (selectItem)="setEventProposalId($event)"
+                    ></ngx-custom-autoselect>
+                </ng-container>
             </div>
             <div class="col-md-6">
-                <label for="semester" class="font-weight-bold" style="margin-top: 1rem;">Semester</label>
-                <input type="text" [(ngModel)]="semester" disabled nbInput fullWidth id="semester" placeholder="Title">
+                <label for="semester" class="label" style="margin-top: 1rem;">Semester</label>
+                <ng-container *ngIf="semesters$ | async as semesters">
+                    <nb-select [(selected)]="semester" class="d-block">
+                        <nb-option *ngFor="let sem of semesters" [value]="sem.name">{{ sem.name }}</nb-option>
+                    </nb-select>
+                </ng-container>
+                <!-- <input type="text" [(ngModel)]="semester" disabled nbInput fullWidth id="semester" placeholder="Title"> -->
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
-                <label for="startTime" class="font-weight-bold" style="margin-top: 1rem;">Start time</label>
+                <label for="startTime" class="label" style="margin-top: 1rem;">Start time</label>
                 <div class="d-flex">
-                    <input class="w-75" type="datetime" [(ngModel)]="startTime" nbInput id="startTime" placeholder="Start time"  [nbDatepicker]="dateTimePicker">
+                    <input class="w-75" type="datetime" [(ngModel)]="startTime" nbInput id="startTime" placeholder="Start time" [nbDatepicker]="dateTimePicker" style="border-radius: 0.25rem 0 0 0.25rem;">
                     <nb-datepicker #dateTimePicker></nb-datepicker>
-                    <input class="w-25" nbInput [(ngModel)]="startTime" [nbTimepicker]="timepicker">
+                    <input class="w-25" nbInput [(ngModel)]="startTime" [nbTimepicker]="timepicker" style="border-radius: 0 0.25rem 0.25rem 0;">
                     <nb-timepicker #timepicker></nb-timepicker>
                 </div>
                 
             </div>
             <div class="col-md-6">
-                <label for="duration" class="font-weight-bold" style="margin-top: 1rem;">Duration</label>
-                <div class="d-flex align-items-baseline">
+                <label for="duration" class="label" style="margin-top: 1rem;">Duration</label>
+                <div class="d-flex align-items-end">
                     <nb-select (selectedChange)="changeDuration($event, 'hour')" class="mr-2">
                         <nb-option *ngFor="let hour of hours" [value]="hour"> {{ hour }}</nb-option>
-                    </nb-select> hours
+                    </nb-select> <span class="small pb-2">hours</span> 
                     <nb-select (selectedChange)="changeDuration($event, 'minute')" class="mx-2">
                         <nb-option *ngFor="let minute of minutes" [value]="minute"> {{ minute }}</nb-option>
-                    </nb-select> minutes
+                    </nb-select> <span class="small pb-2">minutes</span>
                 </div>
             
                 <!-- <input type="number" [(ngModel)]="duration" nbInput fullWidth id="duration" placeholder="Duration">  -->
@@ -83,7 +90,7 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <label for="status" class="font-weight-bold" style="margin-top: 1rem;">Status</label>
+                <label for="status" class="label" style="margin-top: 1rem;">Status</label>
                 <nb-select [(selected)]="status" fullWidth class="d-block">
                     <nb-option value="0">Non Public</nb-option>
                     <nb-option value="1">Public</nb-option>
@@ -91,39 +98,42 @@
                 </nb-select>
             </div>
             <div class="col-md-6">
-                <label for="attendScore" class="font-weight-bold" style="margin-top: 1rem;">Attend Score</label>
+                <label for="attendScore" class="label" style="margin-top: 1rem;">Attend Score</label>
                 <input type="number" min="0" onkeydown="return event.key !== '-'" [(ngModel)]="attendScore" nbInput fullWidth id="attendScore" placeholder="Attend Score">
             </div>
         </div>
-        <div class="row">
+        <div class="row align-items-end">
             <div class="col-md-6">
-                <label class="font-weight-bold" style="margin-top: 1rem;">Event Leader</label>
-                <ngx-custom-autoselect
-                    [arr]="managerList"
-                    [property]="'name'"
-                    (selectItem)="setEventLeaderRollnumber($event)"
-                ></ngx-custom-autoselect>
+                <label for="eventLeaderRollnumberToSearch" class="label" style="margin-top: 1rem;">Event Leader</label>
+                <div class="d-flex align-items-center">
+                    <input id="eventLeaderRollnumberToSearch" [(ngModel)]="eventLeaderRollnumberToSearch" nbInput class="flex-grow-1" placeholder="Roll number">
+                    <nb-icon *ngIf="!isEditContent" icon="search" pack="eva"
+                        (click)="searchExistingUser(eventLeaderRollnumberToSearch)" class="hover-pointer ml-3"></nb-icon>
+                </div>
             </div>
+            <div class="col-md-6 pb-2 mb-1 pl-4 font-weight-bold" *ngIf="(eventLeader$ | async) as eventLeader; else noEventLeaderFound">
+                <span class="small">Event leader: </span>{{ eventLeader.name }}</div>
+            <ng-template #noEventLeaderFound>
+                <div class="col-md-6 pb-2 mb-1 pl-4 font-italic small" *ngIf="!eventLeader">No Event Leader</div>
+            </ng-template>
         </div>
         <div class="form-group">
-            <label for="description" class="font-weight-bold" style="margin-top: 1rem;">Content</label>
-            <!-- <textarea nbInput fullWidth id="description" placeholder="Textarea"></textarea> -->
+            <label for="description" class="label" style="margin-top: 1rem;">Content</label>
             <quill-editor [(ngModel)]="content" [config]="editorConfig"></quill-editor>
-
         </div>
         <div class="form-group">
             <nb-card class="size-sm">
                 <nb-card-body class="bg-white">
-                    <label for="bannerImg" class="font-weight-bold" style="margin-top: 1rem;">Banner image</label> <br>
+                    <label for="bannerImg" class="label">Banner image</label> <br>
                     <div class="input-group">
                         <!-- <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
                         </div> -->
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputGroupFile01"
+                            <input id="bannerImg" type="file" class="custom-file-input" 
                                 aria-describedby="inputGroupFileAddon01" [(ngModel)]="bannerUrl" (change)="onFileChange($event, 'banner')">
                                 <!-- (change)="onFileChange($event)" -->
-                            <label class="custom-file-label" for="inputGroupFile01">Choose image</label>
+                            <label class="custom-file-label" for="inputGroupFile01">{{ banner ? banner.name : 'Choose image' }}</label>
                             <img *ngIf="imageSrc" [src]="imageSrc">
                         </div>
                     </div>
@@ -133,12 +143,12 @@
             </nb-card>
             <nb-card class="size-sm">
                 <nb-card-body class="bg-white">
-                    <label for="bannerImg" class="font-weight-bold" style="margin-top: 1rem;">File urls</label> <br>
+                    <label for="bannerImg" class="label">Attachment</label> <br>
                     <div class="input-group">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="inputGroupFile01"
                                 aria-describedby="inputGroupFileAddon01" [(ngModel)]="fileUrls" (change)="onFileChange($event, 'file')">
-                            <label class="custom-file-label" for="inputGroupFile01">File urls</label>
+                            <label class="custom-file-label" for="inputGroupFile01">{{ file ? file.name : 'Choose attachment' }}</label>
                         </div>
                     </div>
                 </nb-card-body>
@@ -149,12 +159,12 @@
 </ng-template>
 <ng-template #feedbackFormTemplate>
     <!-- <ngx-excel-importer (importFromExcel)="importFeedbackFromExcel($event)"></ngx-excel-importer> -->
-    <button class="d-block mb-3 btn btn-outline-primary btn-sm" (click)="openDialog(importFeedbackFormDialog)">+ Add feedback</button>
+    <button class="d-block mb-3 btn btn-sm btn-outline-secondary" (click)="openDialog(importFeedbackFormDialog)">+ Add feedback question</button>
     <div class="d-flex" *ngFor="let feedback of feedbackQuestionList; let i = index">
         <div class="container border mb-5 pt-3">
             <div class="label mb-2">Question {{i + 1}}</div>
-            <div class="d-flex justify-content-between mb-3">
-                <input class="flex-grow-1 mw-100" nbInput [(ngModel)]="feedback.question">
+            <div class="feedback-question d-flex justify-content-between mb-3">
+                <input class="flex-grow-1 mw-100" nbInput [(ngModel)]="feedback.question" style="border-radius: 0.25rem 0 0 0.25rem;">
                 <nb-select [(selected)]="feedback.type">
                     <nb-option value="MultipleSelect">Multiple Select</nb-option>
                     <nb-option value="SingleSelect">Single Select</nb-option>
@@ -162,15 +172,13 @@
                 </nb-select>
             </div>
             <ng-container *ngIf="feedback.answer.length > 0">
-                <div class="d-flex mb-2 ml-5" *ngFor="let answer of feedback.answer; let j = index">
+                <div class="d-flex mb-2 ml-5 align-items-center" *ngFor="let answer of feedback.answer; let j = index; trackBy: trackByFn">
                     <input class="flex-grow-1 mw-100" nbInput [(ngModel)]="feedback.answer[j]">
-                    <button (click)="deleteAnswer(i, j)" class="btn input-group-text">
-                        <nb-icon class="small" [icon]="'close'" pack="ion"></nb-icon>
-                    </button>
+                    <nb-icon (click)="deleteAnswer(i, j)" class="small ml-3" [icon]="'close'" pack="ion"></nb-icon>
                 </div>
             </ng-container>
-            <button (click)="addAnswer(i)" class="btn btn-link ml-5">
-                <nb-icon status="primary" class="small mr-2" [icon]="'plus'" pack="ion"></nb-icon>
+            <button (click)="addAnswer(i)" class="btn btn-link ml-5 mb-3">
+                <nb-icon status="primary" class="small mr-2 hover-pointer" [icon]="'plus'" pack="ion"></nb-icon>
                 <span class="label">Add answer</span>
             </button>
         </div>

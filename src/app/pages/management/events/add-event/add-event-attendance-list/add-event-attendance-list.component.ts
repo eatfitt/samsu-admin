@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
-import { NbDialogRef, NbDialogService } from '@nebular/theme';
+import { NbDialogRef, NbDialogService, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Group, GroupService } from '../../../../../@core/services/group/group.service';
-import { UserService } from '../../../../../@core/services/user/user.service';
+import { GetAllUsersListResponse, UserService } from '../../../../../@core/services/user/user.service';
 import { UserState } from '../../../../../app-state/user';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'ngx-add-event-attendance-list',
@@ -12,39 +13,10 @@ import { UserState } from '../../../../../app-state/user';
 })
 export class AddEventAttendanceListComponent {
   @ViewChild('autoInput') groupInput;
-  @ViewChild('confirmAddGroupDialog') confirmAddGroupDialog: TemplateRef<any>;
+  @ViewChild('addAttendanceDialog') addAttendanceDialog: TemplateRef<any>;
   private contentTemplateRef: NbDialogRef<AddEventAttendanceListComponent>;
   @Output() addAttendanceList = new EventEmitter<Group[]>();
-
-  settings = {
-    actions: {
-      edit: false,
-    },
-    add: {
-      addButtonContent: '<i class="nb-plus"></i>',
-      createButtonContent: '<i class="nb-checkmark"></i>',
-      cancelButtonContent: '<i class="nb-close"></i>',
-    },
-    edit: { },
-    delete: {
-      deleteButtonContent: '<i class="nb-trash"></i>',
-      confirmDelete: true,
-    },
-    columns: {
-      rollnumber: {
-        title: "Roll Number",
-        type: "string",
-      },
-      name: {
-        title: "Name",
-        type: "string",
-      },
-      email: {
-        title: "Email",
-        type: "string",
-      },
-    },
-  };
+  eventLeader$: Observable<Object> = null;
 
   bearerToken = '';
   groups: Group[] = [];
@@ -57,10 +29,9 @@ export class AddEventAttendanceListComponent {
     private groupService: GroupService,
     private store: Store<{ user: UserState }>,
     private dialogService: NbDialogService,
-    // iconsLibrary: NbIconLibraries
-  ) {
-    // iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
-  }
+    public toastrService: NbToastrService,
+  ) {}
+
   ngOnInit() {
     this.userService.checkLoggedIn();
     this.fetchData();
@@ -88,12 +59,13 @@ export class AddEventAttendanceListComponent {
 
   onSelectGroup(event) {
     this.selectedGroup = this.groups.find(group => group.name === event);
-    this.contentTemplateRef = this.dialogService.open(this.confirmAddGroupDialog);
+    // this.contentTemplateRef = this.dialogService.open(this.confirmAddGroupDialog);
+    this.addGroup(this.selectedGroup.users);
   }
 
-  addGroup() {
+  addGroup(userList: GetAllUsersListResponse[]) {
     this.attendanceList = this.attendanceList
-      .concat(this.selectedGroup.users)
+      .concat(userList)
       .reduce((accumulator, current) => {
         if (!accumulator.some((item) => item.rollnumber === current.rollnumber)) {
           accumulator.push(current);
@@ -103,5 +75,28 @@ export class AddEventAttendanceListComponent {
 
     this.contentTemplateRef.close();
     this.addAttendanceList.emit(this.attendanceList);
+  }
+
+  openDialog(dialog) {
+    this.contentTemplateRef = this.dialogService.open(dialog);
+  }
+
+  searchExistingUser(rollnumber: string) {
+    this.eventLeader$ = this.userService.findUserByRollnumber(rollnumber) || null;
+    this.eventLeader$.subscribe(
+        (success: any) => {
+          this.addGroup([success])
+          this.toastrService.show(`User: ${success.name}`, "User found", {
+            status: "success",
+          });
+          this.addAttendanceList.emit(this.attendanceList);
+          this.contentTemplateRef.close();
+        },
+        (fail: any) => {
+          this.toastrService.show(`User Not found`, "Not found", {
+            status: "danger",
+          });
+        }
+      );
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+  import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -18,13 +18,20 @@ export interface Event {
   duration: string;
   bannerUrl: string;
   fileUrls?: string;
-  attendances?: number; // k cos nay
+  participants?: string[]; // k cos nay
   attendScore?: number;
   creator?: GetAllUsersListResponse;
   eventLeader?: GetAllUsersListResponse;
   departments?: Department[];
   semester?: Semester;
-  eventProposal?: EventProposal;
+  eventProposalId?: number;
+  feedbackQuestions: FeedbackQuestion[],
+  // tasks: 
+}
+
+export interface FeedbackQuestion extends FeedbackQuestionRequest {
+  createdAt: Date,
+  id: number,
 }
 
 export interface FeedbackQuestionRequest {

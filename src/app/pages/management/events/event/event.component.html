@@ -99,6 +99,6 @@
 <ng-template #eventBannerDialog let-data let-ref="dialogRef">
     <img *ngIf="isImageFile(data)" [src]="data">
     <iframe *ngIf="!isImageFile(data)"
-        [src]="'https://docs.google.com/viewer?url=https://sgp1.digitaloceanspaces.com/samsu/assets/6dd8844d-dfd9-4dbe-8fcd-a1ebf8075e4a_Phiếu-đăng-kí-đồ-án-1.docx&embedded=true' | safe:'resourceUrl'"
+        [src]="'https://docs.google.com/viewer?url=' + data + '&embedded=true' | safe:'resourceUrl'"
         height="700" width="500"></iframe>
 </ng-template>
