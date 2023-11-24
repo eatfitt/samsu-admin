@@ -7,6 +7,7 @@ import { throwError } from 'rxjs';
 import { Department, GetAllUsersListResponse } from '../user/user.service';
 import { Semester } from '../semester/semester.service';
 import { EventProposal } from '../../../../services/event-propsal.service';
+import { GradeSubCriteria } from '../grade-sub-criteria/grade-sub-criteria.service';
 export interface Event {
   id?: number;
   semestersName: string;
@@ -15,7 +16,7 @@ export interface Event {
   status: number;
   createAt?: Date;
   startTime: Date;
-  duration: string;
+  duration: number;
   bannerUrl: string;
   fileUrls?: string;
   participants?: string[]; // k cos nay
@@ -26,7 +27,7 @@ export interface Event {
   semester?: Semester;
   eventProposalId?: number;
   feedbackQuestions: FeedbackQuestion[],
-  // tasks: 
+  tasks: Task[];
 }
 
 export interface FeedbackQuestion extends FeedbackQuestionRequest {
@@ -43,6 +44,17 @@ export interface FeedbackQuestionRequest {
 export interface AssigneeRequest {
   status: number;
   rollnumber: string;
+}
+
+export interface Task {
+  id: number;
+  creator: GetAllUsersListResponse; 
+  title: string;
+  content: string;
+  status: number;
+  score: number;
+  eventId: number;
+  gradeSubCriteria: GradeSubCriteria;
 }
 
 export interface TaskRequests {
