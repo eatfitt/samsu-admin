@@ -1,23 +1,27 @@
-<div class="add-task">
+<div class="add-task mb-3">
     <div class="row">
-        <div [ngClass]="{'col-md-4': selectedTask, 'col-md-12': !selectedTask}">
+        <div [ngClass]="{'col-md-8 pl-0': selectedTask, 'pl-0 col-md-12': !selectedTask}">
             <nb-list>
-                <nb-list-item *ngFor="let task of mockTaskList; let i = index" class="container px-0"  (click)="selectedTask = task">
-                    <div class="d-flex w-100 justify-content-between">
-                        <div [ngClass]="{'text-primary font-weight-bold': task.id === selectedTask?.id}">{{ task.title }}</div>
-                        <div class="d-flex">
-                            <div class="badge badge-secondary fa-1x">{{ task.status }}</div>
-                            <button (click)="deleteTask(i)" class="btn p-0 pl-2">
-                                <nb-icon status="primary" class="" [icon]="'trash-a'" pack="ion"></nb-icon>
-                            </button>
-                        </div>       
-                    </div>
+                <nb-list-item class="small container py-2 pl-3 font-weight-bold border" style="background-color: var(--menu-item-divider-color);">Tasks ({{ taskList.length }})</nb-list-item>
+                <nb-list-item *ngFor="let task of taskList; let i = index" class="container py-2 pl-3 hover-pointer hover-row item small border border-bottom-0"
+                    [ngClass]="{'selected-row': i === selectedIndex}" (click)="selectedTask = task; selectedIndex = i">
+                    <span class="font-weight-bold">{{ task.title ? task.title : 'Task' }}</span>
+                    <span>
+                        <nb-tag [text]="task.status" size="tiny" appearance="outline"></nb-tag>
+                    </span>
+                    <span>
+                        {{ task.assignees[0] ? task.assignees[0].name : 'Unassigned' }}
+                    </span>
+                </nb-list-item>
+                <nb-list-item class="container border py-2 pl-3">
+                    <span class="btn-link hover-pointer" (click)="addTask()" style="font-size: .75rem;">+ Add task</span>
                 </nb-list-item>
             </nb-list>
-            <button class="btn btn-link px-0 pt-3 btn-sm" (click)="addTask()">+ Add task</button>
         </div>
-        <div class="col-md-8" *ngIf="selectedTask">
-            <ngx-task-detail [task]="selectedTask"></ngx-task-detail>
+        <div class="col-md-4 pr-0" *ngIf="selectedTask">
+            <ngx-task-detail [task]="selectedTask" [index]="selectedIndex"
+                (removeTask)="deleteTask($event)"
+            ></ngx-task-detail>
         </div>
     </div>
 </div>

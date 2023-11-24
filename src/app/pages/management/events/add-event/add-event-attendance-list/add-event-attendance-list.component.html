@@ -5,11 +5,15 @@
         <nb-list-item class="item small" style="background-color: var(--menu-item-divider-color);">
             <span>Roll number</span>
             <span>Name</span>
+            <span class="flex-grow-0"></span>
         </nb-list-item>
         <nb-list-item class="item small"  *ngIf="attendanceList.length <= 0">No attendance added</nb-list-item>
-        <nb-list-item class="item small" *ngFor="let attendance of attendanceList">
+        <nb-list-item class="item small" *ngFor="let attendance of attendanceList; let i = index">
             <span>{{ attendance?.rollnumber }}</span>
             <span>{{ attendance?.name }}</span>
+            <span class="flex-grow-0">
+                <nb-icon (click)="removeAttendance(i)" class="small ml-3 hover-pointer" [icon]="'close'" pack="ion"></nb-icon>
+            </span>
         </nb-list-item>
     </nb-list>
 </div>
@@ -38,9 +42,5 @@
                 </div>
             </div>
         </nb-card-body>
-        <nb-card-footer>
-            <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
-            <button nbButton class="bg-primary text-light ml-3" (click)="onSelectGroup($event)">Add</button>
-        </nb-card-footer>
     </nb-card>
 </ng-template>

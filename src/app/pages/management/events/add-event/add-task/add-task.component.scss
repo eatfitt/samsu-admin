@@ -1,0 +1,34 @@
+::ng-deep .hover-pointer {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+::ng-deep .hover-row {
+    &:hover {
+        background-color: var(--accordion-header-border-color);
+    }
+}
+
+::ng-deep .selected-row {
+    background-color: var(--color-info-200);
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    > * {
+      flex: 1;
+    }
+  
+    &:first-child {
+      border-top: none;
+    }
+    span {
+        &:first-child {
+            flex: 2 !important;
+        }
+    }
+  }

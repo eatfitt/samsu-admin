@@ -1,44 +1,45 @@
-<div class="task-detail container border pt-3">
-    <div class="row">
-        <div class="col-lg-6 my-4">
-            <label for="title" class="label">Title</label>
-            <input class="mb-3" nbInput fullWidth id="title" placeholder="Title" [(ngModel)]="task.title">
-            <label for="content" class="label">Description</label>
-            <textarea type="text" nbInput fullWidth id="content" placeholder="Description" [(ngModel)]="task.content"></textarea>
-        </div>
-        <div class="col-lg-6">
-            <nb-select [(selected)]="task.status" (selectedChange)="taskChange.emit($event)">
-                <nb-option *ngFor="let status of mockStatusList" [value]="status">{{ status }}</nb-option>
-            </nb-select>
-            <nb-card class="mt-2">
-                <nb-card-header>Details</nb-card-header>
-                <nb-card-body>
-                    <div class="row mb-2 align-items-baseline">
-                        <div class="col-4">Assignee</div>
-                        <div class="col-8 px-0">
-                            <ngx-custom-autoselect
-                                [arr]="assignees"
-                                [property]="'name'"
-                                (selectItem)="addAssignee($event)"
-                            ></ngx-custom-autoselect>
-                        </div>
-                    </div>
-                    <div class="row mb-2 align-items-baseline">
-                        <div class="col-4">Criteria</div>
-                        <div class="col-8 px-0">
-                            <ngx-custom-autoselect
-                                [arr]="gradeSubCriterias"
-                                [property]="'content'"
-                                (selectItem)="this.task.gradeSubCriteriaId = $event"
-                            ></ngx-custom-autoselect>
-                        </div>
-                    </div>
-                    <div class="row mb-2 align-items-baseline">
-                        <div class="col-4">Score</div>
-                        <input type="number" min="0" nbInput class="col-8" [(ngModel)]="task.score">
-                    </div>
-                </nb-card-body>
-            </nb-card>
-        </div>
+<div class="task-detail">
+    <h5 style="font-weight: 600;">{{ task.title }}</h5>
+    <div class="d-flex mb-3">
+        <button nbButton size="tiny" outline status="basic" (click)="removeTask.emit(index)" class="mr-1">Remove task</button>
     </div>
+    <nb-select [(selected)]="task.status" (selectedChange)="taskChange.emit($event)" size="small">
+        <nb-option *ngFor="let status of mockStatusList" [value]="status">{{ status }}</nb-option>
+    </nb-select><br/>
+    <label for="title" class="label">Title</label>
+    <input class="mb-3" nbInput fullWidth id="title" placeholder="Title" [(ngModel)]="task.title" fieldSize="small">
+    <label for="content" class="label">Description</label>
+    <textarea type="text" nbInput fullWidth id="content" placeholder="Description" [(ngModel)]="task.content" fieldSize="small"></textarea>
+    
+    <nb-card class="mt-2">
+        <nb-card-header class="px-3 py-2 small font-weight-bold">Details</nb-card-header>
+        <nb-card-body>
+            <div class="row mb-2 align-items-baseline">
+                <div class="col-4 small">Assignee</div>
+                <div class="col-8 px-0">
+                    <div class="d-flex align-items-center">
+                        <nb-tag-list (tagRemove)="onAssigneeRemove($event)" class="p-1">
+                            <nb-tag *ngFor="let assignee of task.assignees" [text]="assignee.name" removable size="tiny"></nb-tag>
+                            <input type="text" nbTagInput (tagAdd)="onAssigneeAdd($event)" fullWidth placeholder="Search rollnumber" fieldSize="small">
+                        </nb-tag-list>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2 align-items-baseline">
+                <div class="col-4 small">Criteria</div>
+                <div class="col-8 px-0">
+                    <ngx-custom-autoselect
+                        [fieldSize]="'small'"
+                        [arr]="gradeSubCriterias"
+                        [property]="'content'"
+                        (selectItem)="selectSubCriteriaId($event)"
+                    ></ngx-custom-autoselect>
+                </div>
+            </div>
+            <div class="row mb-2 align-items-baseline">
+                <div class="col-4 small">Score</div>
+                <input type="number" min="0" nbInput class="col-8" [(ngModel)]="task.score" fieldSize="small">
+            </div>
+        </nb-card-body>
+    </nb-card>
 </div>

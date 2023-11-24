@@ -40,18 +40,18 @@ export interface FeedbackQuestionRequest {
   answer: string;
 }
 
-interface AssigneeRequest {
+export interface AssigneeRequest {
   status: number;
   rollnumber: string;
 }
 
-interface TaskRequests {
+export interface TaskRequests {
   title: string;
   content: string;
   status: number;
   score: number;
+  gradeSubCriteriaId: number;
   assignees: AssigneeRequest[];
-  assignee: string[];
 }
 
 export interface CreateEventRequest {

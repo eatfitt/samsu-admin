@@ -13,8 +13,9 @@
                 <ng-container [ngTemplateOutlet]="feedbackFormTemplate"></ng-container>
                 <button nbButton nbStepperPrevious>prev</button>
                 <button class="float-right" nbButton nbStepperNext
-                    [disabled]="!isFeedbackValid()"
+                [disabled]="!isFeedbackValid()" 
                 >next</button>
+                <!-- [disabled]="!isFeedbackValid()" -->
             </nb-step>
             <nb-step label="Attendance List">
                 <ng-container [ngTemplateOutlet]="attendanceListTemplate"></ng-container>
@@ -22,7 +23,6 @@
                 <button class="float-right" nbButton nbStepperNext>next</button>
             </nb-step>
             <nb-step label="Tasks">
-                <h5>Tasks</h5>
                 <ng-container [ngTemplateOutlet]="tasksTemplate"></ng-container>
                 <button nbButton nbStepperPrevious>prev</button>
                 <button class="float-right" nbButton nbStepperNext (click)="review()">next</button>
@@ -69,10 +69,9 @@
                 <div class="d-flex">
                     <input class="w-75" type="datetime" [(ngModel)]="startTime" nbInput id="startTime" placeholder="Start time" [nbDatepicker]="dateTimePicker" style="border-radius: 0.25rem 0 0 0.25rem;">
                     <nb-datepicker #dateTimePicker></nb-datepicker>
-                    <input class="w-25" nbInput [(ngModel)]="startTime" [nbTimepicker]="timepicker" style="border-radius: 0 0.25rem 0.25rem 0;">
+                    <input class="w-50" nbInput [(ngModel)]="startTime" [nbTimepicker]="timepicker" style="border-radius: 0 0.25rem 0.25rem 0;">
                     <nb-timepicker #timepicker></nb-timepicker>
-                </div>
-                
+                </div>         
             </div>
             <div class="col-md-6">
                 <label for="duration" class="label" style="margin-top: 1rem;">Duration</label>
@@ -83,9 +82,7 @@
                     <nb-select (selectedChange)="changeDuration($event, 'minute')" class="mx-2">
                         <nb-option *ngFor="let minute of minutes" [value]="minute"> {{ minute }}</nb-option>
                     </nb-select> <span class="small pb-2">minutes</span>
-                </div>
-            
-                <!-- <input type="number" [(ngModel)]="duration" nbInput fullWidth id="duration" placeholder="Duration">  -->
+                </div>            
             </div>
         </div>
         <div class="row">
@@ -191,7 +188,7 @@
     <ngx-add-event-attendance-list (addAttendanceList)="addAttendanceList($event)"></ngx-add-event-attendance-list>
 </ng-template>
 <ng-template #tasksTemplate>
-    <ngx-add-task></ngx-add-task>
+    <ngx-add-task [taskList]="taskList"></ngx-add-task>
 </ng-template>
 
 <!-- DIALOG -->

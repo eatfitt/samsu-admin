@@ -13,12 +13,13 @@ import {
   NbIconLibraries,
   NbToastrService,
 } from "@nebular/theme";
-import { Observable, map, of, startWith } from "rxjs";
+import { Observable, map } from "rxjs";
 import { FileUploadService } from "../../../../../services/file-upload.service";
 import {
   CreateEventRequest,
   EventService,
   FeedbackQuestionRequest,
+  TaskRequests
 } from "../../../../@core/services/event/event.service";
 import {
   GradeSubCriteria,
@@ -29,6 +30,7 @@ import { EventProposalService } from "../../../../../services/event-propsal.serv
 import { EventProposal } from "../../../../../services/event-propsal.service";
 import { SemesterService } from "../../../../@core/services/semester/semester.service";
 import _ from "lodash";
+import { Task } from "../task-detail/task-detail.component";
 
 enum FeedbackType {
   MultipleSelect = 0,
@@ -39,6 +41,12 @@ interface Feedback {
   type: FeedbackType | string;
   question: string;
   answer: string[];
+}
+export const TaskStatusNumber = {
+  'Pending': 1,
+  'OnGoing': 2,
+  'Incompleted': 3,
+  'Completed': 4
 }
 
 @Component({
@@ -51,7 +59,7 @@ export class AddEventComponent implements OnInit {
   @ViewChild("importFeedbackFormDialog", { static: true })
   importFeedbackFormDialog: TemplateRef<any>;
 
-  proposals: string[] = []; // TODO: Implement proposals - Duc
+  proposals: string[] = [];
   options: string[];
   filteredOptions$: Observable<string[]>;
   inputFormControl: FormControl;
@@ -69,7 +77,9 @@ export class AddEventComponent implements OnInit {
   selectedMinute = 0;
   gradeSubCriterias: GradeSubCriteria[] = [];
   imageSrc: string | ArrayBuffer;
-  myEventProposals$ = this.eventProposalService.getAllEventProposals().pipe(map(data => (data as any)?.content));
+  myEventProposals$ = this.eventProposalService.getAllEventProposals().pipe(
+    map(data => (data as any)?.content.filter(content => content.status === "APPROVED")),
+  );
   eventLeaderRollnumberToSearch: string;
   eventLeader$: Observable<Object> = null;
   semesters$: Observable<Object> = null;
@@ -89,13 +99,17 @@ export class AddEventComponent implements OnInit {
   attendScore = 0;
   eventLeaderRollnumber: string;
 
+  // FEEDBACK TAB
   feedbackQuestionList: Feedback[] = [];
   sampleFeedbackQuestion: Feedback = {
     type: FeedbackType.OpenEnded,
     question: "",
     answer: [""],
   };
+  // ATTENDANCE TAB
   attendanceList: any = [];
+  // TASK TAB
+  taskList: Task[] = [];
 
   private contentTemplateRef: NbDialogRef<AddEventComponent>;
 
@@ -233,7 +247,6 @@ export class AddEventComponent implements OnInit {
     // If all feedback objects pass the checks, return true
     return true;
   }
-  
 
   createEvent() {
     const feedbackPayload: FeedbackQuestionRequest[] =
@@ -247,6 +260,21 @@ export class AddEventComponent implements OnInit {
     const rollnumbersPayload: string[] = this.attendanceList.map(
       (user) => user.rollnumber
     );
+    const taskPayload: TaskRequests[] = this.taskList.map(task => {
+      return {
+        title: task.title,
+        content: task.content,
+        status: TaskStatusNumber[task.status],
+        score: task.score,
+        gradeSubCriteriaId: task.gradeSubCriteriaId,
+        assignees: task.assignees.map(assignee => {
+          return {
+            status: 0,
+            rollnumber: assignee.rollnumber
+          }
+        })
+      }
+    })
     const createEventPayload: CreateEventRequest = {
       status: Number(this.status),
       duration: Number(this.duration),
@@ -261,6 +289,7 @@ export class AddEventComponent implements OnInit {
       startTime: this.startTime,
       feedbackQuestionRequestList: feedbackPayload,
       rollnumbers: rollnumbersPayload,
+      taskRequests: taskPayload,
     };
     console.log(createEventPayload);
     this.eventService.createEvent(createEventPayload).subscribe(

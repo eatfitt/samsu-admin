@@ -1,6 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { GradeSubCriteriaService } from '../../../../@core/services/grade-sub-criteria/grade-sub-criteria.service';
-import { GetAllUsersResponse, UserService } from '../../../../@core/services/user/user.service';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { GradeSubCriteria, GradeSubCriteriaService } from '../../../../@core/services/grade-sub-criteria/grade-sub-criteria.service';
+import { UserService } from '../../../../@core/services/user/user.service';
+import { NbTagComponent, NbTagInputAddEvent, NbToastrService } from '@nebular/theme';
+import { Observable } from 'rxjs';
 
 interface GradeSubCriterias {
   id?: number;
@@ -10,7 +12,6 @@ interface GradeSubCriterias {
   maxScore: number;
 }
 export interface Task {
-  id?: number;
   gradeSubCriteriaId?: number;
   eventsId?: number;
   creatorUsersId?: number;
@@ -34,10 +35,6 @@ export enum TaskStatus {
   Incompleted = 'Incompleted',
   Completed = 'Completed'
 }
-enum AssigneeStatus {
-  Available,
-  Quit
-}
 
 @Component({
   selector: 'ngx-task-detail',
@@ -46,7 +43,6 @@ enum AssigneeStatus {
 })
 export class TaskDetailComponent {
   @Input() task: Task = {
-    id: 1,
     title: 'Task Title',
     content: 'Task Content',
     score: 0,
@@ -54,32 +50,65 @@ export class TaskDetailComponent {
     gradeSubCriteriaId: 1,
     assignees: [],
   }
+  @Input() index: number;
   @Output() taskChange = new EventEmitter<Task>();
+  @Output() removeTask = new EventEmitter<number>();
+  existingUser$: Observable<Object> = null;
   gradeSubCriterias: GradeSubCriterias[] = [];
-  assignees: Assignee[] = [];
+  rollnumberToSearch: string;
+  assignees: Set<string> = new Set();
 
   constructor(
     private subCrit: GradeSubCriteriaService,
     private userService: UserService,
+    public toastrService: NbToastrService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
     this.subCrit.getAllGradeSubCriterias()
       .subscribe((data: any) => this.gradeSubCriterias = data.content);
-    this.userService.getAllUsers()
-      .subscribe((data: GetAllUsersResponse) => {
-        this.assignees = data.content.map((c) => {
-          return {
-            status: 0,
-            rollnumber: c.rollnumber,
-            name: c.name,
-          }
-        })
-      })
+  }
+
+  
+
+  onAssigneeRemove(tagToRemove: NbTagComponent): void {
+    this.task.assignees = this.task.assignees.filter(t => t.name !== tagToRemove.text);
+  }
+
+  onAssigneeAdd({ value, input }: NbTagInputAddEvent): void {
+    if (value) {
+      this.searchExistingUser(value);
+    }
+    input.nativeElement.value = '';
   }
 
   addAssignee(event) { // đang cho chọn 1 assignee thôi, không thì xài push -> chưa UI
     this.task.assignees[0] = event;
+  }
+
+  searchExistingUser(rollnumber: string) {
+    this.existingUser$ = this.userService.findUserByRollnumber(rollnumber) || null;
+    this.existingUser$.subscribe(
+        (success: any) => {
+          if (success !== undefined) {
+            this.task.assignees = [...this.task.assignees, success];
+            this.toastrService.show(`User: ${success.name}`, "User found", {
+              status: "success",
+            });
+            this.cdr.detectChanges();
+          }
+        },
+        (fail: any) => {
+          this.toastrService.show(`User Not found`, "Not found", {
+            status: "danger",
+          });
+        }
+      );
+  }
+
+  selectSubCriteriaId(event: GradeSubCriteria) {
+    this.task.gradeSubCriteriaId = event.id;
   }
 
   mockStatusList: TaskStatus[] = [
@@ -87,9 +116,5 @@ export class TaskDetailComponent {
     TaskStatus.OnGoing,
     TaskStatus.Incompleted,
     TaskStatus.Completed,
-]
-  mockAssignee = {
-    tasksId: 1,
-    name: 'Do Ngan Ha',
-  }
+  ]
 }

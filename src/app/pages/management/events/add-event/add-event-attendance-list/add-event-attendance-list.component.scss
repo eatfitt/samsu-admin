@@ -10,4 +10,10 @@
     &:first-child {
       border-top: none;
     }
-  }
+}
+
+::ng-deep .hover-pointer {
+    &:hover {
+        cursor: pointer;
+    }
+}

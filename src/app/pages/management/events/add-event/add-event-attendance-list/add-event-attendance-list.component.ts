@@ -99,4 +99,8 @@ export class AddEventAttendanceListComponent {
         }
       );
   }
+  removeAttendance(index: number) {
+    this.attendanceList.splice(index, 1);
+    this.addAttendanceList.emit(this.attendanceList);
+  }
 }
