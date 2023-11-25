@@ -5,19 +5,21 @@
         </div>
         <div class="row">
             <div class="col-md-8 overflow-auto" style="max-height: 40rem;">
-                <h5 class="hover-edit" style="font-weight: 600;" *ngIf="!isEditTitle" (click)="isEditTitle = true">{{ eventToEdit.title }}</h5>
+                <h5 class="hover-edit" style="font-weight: 600;" *ngIf="!isEditTitle"
+                    (click)="isEditTitle = true">{{ eventToEdit.title }}</h5>
                 <ng-container *ngIf="isEditTitle">
                     <input nbInput fieldSize="giant" fullWidth [(ngModel)]="eventToEdit.title">
                     <ng-container [ngTemplateOutlet]="saveEditTemplate"></ng-container>
                 </ng-container>
                 <div class="d-flex pb-4 border-bottom">
-                    <button nbButton size="small" class="text-capitalize mr-2">Update Banners <input class="testtt" (change)="uploadFile($event, 'bannerUrl')" type="file"/></button>
-                    <!-- <div class="fileUpload btn btn-primary">
-                        <span>Upload</span>
-                        <input type="file" class="upload" />
-                    </div> -->
-                    <button nbButton size="small" class="text-capitalize mr-2">Update Attachment</button>
-                    <button nbButton size="small" class="text-capitalize mr-2">Add Tasks</button>
+                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload">Update
+                        Banners <input class="upload" (change)="uploadFile($event, 'bannerUrl')"
+                            type="file" />
+                    </button>
+                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload"> Update
+                        Attachment <input class="upload" (change)="uploadFile($event, 'fileUrls')"
+                            type="file" />
+                    </button>
                 </div>
                 <div class="event-content my-3">
                     <div class="d-flex justify-content-between">
@@ -27,7 +29,7 @@
                     </div>
                     <div *ngIf="!isEditContent" [innerHTML]="eventToEdit.content"></div>
                     <ng-container *ngIf="isEditContent">
-                        <quill-editor  [(ngModel)]="eventToEdit.content"
+                        <quill-editor [(ngModel)]="eventToEdit.content"
                             [config]="editorConfig"></quill-editor>
                         <ng-container [ngTemplateOutlet]="saveEditTemplate"></ng-container>
                     </ng-container>
@@ -44,7 +46,8 @@
                                     <img class="mh-100 mw-100" [src]="eventToEdit.bannerUrl">
                                 </nb-card-header>
                                 <nb-card-body class="p-2">
-                                    <div class="text-truncate small">{{ eventToEdit.bannerUrl }}</div>
+                                    <div class="text-truncate small">{{ eventToEdit.bannerUrl }}
+                                    </div>
                                 </nb-card-body>
                             </nb-card>
                         </div>
@@ -54,22 +57,74 @@
                                 <nb-card-header
                                     class="p-0 d-flex justify-content-center align-items-center"
                                     style="height: 6rem;">
-                                    <img *ngIf="isImageFile(eventToEdit.fileUrls)" class="mh-100 mw-100"
-                                        [src]="event.fileUrls">
-                                    <nb-icon *ngIf="!isImageFile(eventToEdit.fileUrls)" icon="file-text"
-                                        pack="eva" class="w-50 h-50"></nb-icon>
+                                    <img *ngIf="isImageFile(eventToEdit.fileUrls)"
+                                        class="mh-100 mw-100" [src]="event.fileUrls">
+                                    <nb-icon *ngIf="!isImageFile(eventToEdit.fileUrls)"
+                                        icon="file-text" pack="eva" class="w-50 h-50"></nb-icon>
                                 </nb-card-header>
                                 <nb-card-body class="p-2">
-                                    <div class="text-truncate small">{{ eventToEdit.fileUrls }}</div>
+                                    <div class="text-truncate small">{{ eventToEdit.fileUrls }}
+                                    </div>
                                 </nb-card-body>
                             </nb-card>
                         </div>
                     </div>
-                    <!-- <div [innerHTML]="event.content"></div> -->
+                </div>
+                <div class="event-attendance-list">
+                    <nb-card size="small">
+                        <nb-card-header style="background-color: var(--menu-item-divider-color);" class="d-flex justify-content-between align-items-baseline">
+                            <div>Participants - đang mock ({{ eventToEdit.participants.length }})</div>
+                            <input class=" bg-white border" fieldSize="small" placeholder="Filter by rollnumber" nbInput (keyup)="filterParticipant($event)">
+                        </nb-card-header>
+                        <nb-card-body class="p-0">
+                            <nb-list>
+                                <nb-list-item class="small px-4 d-block"
+                                    *ngFor="let participant of filteredmockCheckInFlagParticipantList; let i = index">
+                                    <div class="d-flex justify-content-between">
+                                        <span>
+                                            <a class="text-basic font-weight-bold" [routerLink]="['../../user', participant]">{{participant.participant}}</a>
+                                        </span>
+                                        <span>
+                                            <button *ngIf="!participant.checkedIn" nbButton (click)="openDialog(checkInDialog, participant.participant); rollnumberToCheckIn = participant.participant" size="small">Check-in</button>
+                                            <button *ngIf="participant.checkedIn" nbButton (click)="participant.checkedIn = false" size="small">Un Check-in</button>
+                                        </span>
+                                    </div>
+                                    <div *ngIf="participant.checkedIn" class="font-italic">{{ participant.notes }}</div>
+                                </nb-list-item>
+                            </nb-list>
+                        </nb-card-body>
+                    </nb-card>
+                </div>
+                <div class="event-attendance-list">
+                    <nb-card size="small">
+                        <nb-card-header style="background-color: var(--menu-item-divider-color);">Tasks - đang mock assignee ({{ eventToEdit.tasks.length }})</nb-card-header>
+                        <nb-card-body class="p-0">
+                            <nb-list>
+                                <nb-list-item *ngFor="let task of eventToEdit.tasks; let i = index" class="container py-2 px-4 hover-pointer hover-row item small border border-bottom-0"
+                                    [ngClass]="{'selected-row': i === selectedTaskIndex}" (click)="selectedTask = task; selectedTaskIndex = i">
+                                    <span class="font-weight-bold">{{ task.title ? task.title : 'Task' }}</span>
+                                    <span>
+                                        <nb-tag [text]="task.status" size="tiny" appearance="outline"></nb-tag>
+                                    </span>
+                                    <span *ngIf="task.assignees?.length > 0">
+                                        {{ task.assignees[0] ? task.assignees[0].name : 'Unassigned' }}
+                                    </span>
+                                    <span *ngIf="task.assignees === undefined || task.assignees === null || task.assignees?.length <= 0">
+                                       {{randomName}}
+                                    </span>
+                                </nb-list-item>
+                                <nb-list-item class="container border py-2 pl-3">
+                                    <span class="btn-link hover-pointer" (click)="addTask()" style="font-size: .75rem;">+ Add task</span>
+                                </nb-list-item>
+                            </nb-list>
+                        </nb-card-body>
+                    </nb-card>
                 </div>
             </div>
             <div class="col-md-4 overflow-auto" style="max-height: 40rem;">
-                <nb-select [(selected)]="eventToEdit.status" (selectedChange)="editEvent()" size="small" class="d-block w-50 mb-2" filled="true" [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
+                <nb-select [(selected)]="eventToEdit.status" (selectedChange)="editEvent()"
+                    size="small" class="d-block w-50 mb-2" filled="true"
+                    [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
                     <nb-option [value]="0">Non Public</nb-option>
                     <nb-option [value]="1">Public</nb-option>
                     <nb-option [value]="2">Draft</nb-option>
@@ -87,7 +142,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4 small">Start time</div>
-                            <div class="col-md-8 small">{{ event.startTime | date:"MMM dd, yyyy 'at' hh:mm a" }}</div>
+                            <div class="col-md-8 small">{{ event.startTime | date:"MMM dd, yyyy 'at'hh:mm a" }}</div>
                         </div>
                         <div class="row">
                             <div class="col-md-4 small">Duration</div>
@@ -105,11 +160,42 @@
         [src]="'https://docs.google.com/viewer?url=' + data + '&embedded=true' | safe:'resourceUrl'"
         height="700" width="500"></iframe>
 </ng-template>
-
 <ng-template #saveEditTemplate>
     <div class="d-flex">
-        <nb-icon (click)="reset()" icon="close" pack="eva" class="border rounded hover-pointer"></nb-icon>
-        <nb-icon (click)="editEvent(); isEditContent = false" icon="checkmark" pack="eva" class="border rounded hover-pointer ml-1"></nb-icon>
+        <nb-icon (click)="reset()" icon="close" pack="eva"
+            class="border rounded hover-pointer"></nb-icon>
+        <nb-icon (click)="editEvent(); isEditContent = false" icon="checkmark" pack="eva"
+            class="border rounded hover-pointer ml-1"></nb-icon>
     </div>
-    
+</ng-template>
+
+<ng-template #checkInDialog let-ref="dialogRef">
+    <nb-card>
+        <nb-card-header>Manual Check-in</nb-card-header>
+        <nb-card-body>
+            <div class="reason-for-manual-checkin">
+                <div class="label mb-2">Reason</div>
+                <nb-radio-group [(ngModel)]="reasonForManualCheckin" class="d-flex" name="reasonForManualCheckin">
+                    <nb-radio class="border rounded py-2 pl-3 mr-2"
+                      *ngFor="let reason of reasons"
+                      [value]="reason">
+                      {{ reason }}
+                    </nb-radio>
+                </nb-radio-group>
+                <div class="label mb-2 mt-3">Check-in Method</div>
+                <nb-radio-group [(ngModel)]="checkInMethod" class="d-flex" name="checkInMethod">
+                    <nb-radio class="border rounded py-2 pl-3 mr-2"
+                    *ngFor="let checkInMethod of checkInMethods"
+                    [value]="checkInMethod">
+                    {{ checkInMethod }}
+                    </nb-radio>
+                </nb-radio-group>
+                <div class="label mb-2 mt-3">Notes</div>
+                <input nbInput size="small" fullWidth [(ngModel)]="checkInNotes">
+            </div>
+        </nb-card-body>
+        <nb-card-footer class="d-flex justify-content-center">
+            <button nbButton status="danger" (click)="checkInManually(data)">Check in</button>
+        </nb-card-footer>
+    </nb-card>
 </ng-template>

@@ -1,7 +1,7 @@
 import { Component, Input, TemplateRef, ViewChild, SimpleChanges } from '@angular/core';
 import { CreateEventRequest, Event, EventService } from '../../../../@core/services/event/event.service';
-import { NbDialogService, NbToastrService } from '@nebular/theme';
-import { isImageFile } from '../../../../@core/utils/data-util';
+import { NbDialogRef, NbDialogService, NbToastrService } from '@nebular/theme';
+import { getRandomName, isImageFile } from '../../../../@core/utils/data-util';
 import _ from 'lodash';
 import { FileUploadService } from '../../../../../services/file-upload.service';
 @Component({
@@ -10,7 +10,9 @@ import { FileUploadService } from '../../../../../services/file-upload.service';
   styleUrls: ['./event.component.scss']
 })
 export class EventComponent {
-  @ViewChild("eventBannerDialog", { static: true }) eventBannerDialog: TemplateRef<any>;;
+  @ViewChild("eventBannerDialog", { static: true }) eventBannerDialog: TemplateRef<any>;
+  @ViewChild('saveEditTemplate') saveEditTemplate: TemplateRef<any>;
+
   @Input() event: Event = null;
   eventToEdit: Event = null;
   editorConfig = {
@@ -31,6 +33,27 @@ export class EventComponent {
   isEditEventProposal = false;
   isEditSemester = false;
 
+  // PARTICIPANT MANAGEMENT
+  filteredParticipantList = [];
+  mockCheckInFlagParticipantList = [];
+  filteredmockCheckInFlagParticipantList = [];
+  reasonForManualCheckin = 'Student Card Unavailable';
+  reasons = ['Student Card Unavailable', 'Others'];
+  checkInMethod = 'National ID'
+  checkInMethods = ['National ID', 'Driving License'];
+  checkInNotes = 'N/A';
+  rollnumberToCheckIn: string;
+
+  // TASK MANAGEMENT
+  selectedTask: Task = null;
+  selectedTaskIndex: number;
+
+  // MOCK Names
+  randomNames = ["Do Ngan Ha", "Thai Van Man", "Nguyen Tran Thien Duc", "Truong Nguyen Anh Huy", "Do Dai Bach"];
+  randomName = 'Do Ngan Ha';
+
+  private contentTemplateRef: NbDialogRef<EventComponent>;
+
   constructor(
     private dialogService: NbDialogService,
     public toastrService: NbToastrService,
@@ -42,7 +65,14 @@ export class EventComponent {
     const { event } = changes;
     if (_.isObject(event)) {
       this.eventToEdit = { ...this.event };
+      this.filteredParticipantList = this.event.participants;
+      this.mockCheckInFlagParticipantList = this.filteredmockCheckInFlagParticipantList = this.event.participants.map(participant => {
+        return { participant: participant, checkedIn: false, notes: '' };
+      });
     }
+    console.log(this.filteredParticipantList)
+    console.log(this.eventToEdit)
+    this.randomName = this.getRandomName();
   }
 
   editEvent() {
@@ -133,7 +163,26 @@ export class EventComponent {
     return isImageFile(fileUrl);
   }
   openDialog(dialog, data?) {
-    this.dialogService.open(dialog,
+    this.contentTemplateRef = this.dialogService.open(dialog,
       { context: data });
+  }
+
+  getRandomName() {
+    return getRandomName(this.randomNames);
+  }
+
+  filterParticipant(event) {
+    this.filteredmockCheckInFlagParticipantList = this.mockCheckInFlagParticipantList.filter(participant => participant.participant.toLowerCase().includes(event.target.value.toLowerCase()));
+  }
+
+  checkInManually() {
+    this.toastrService.show("Checked in Successfully", "Checked in", {
+      status: "success",
+    });
+    const rollNoToCheckin = this.filteredmockCheckInFlagParticipantList.findIndex((participant) => participant.participant === this.rollnumberToCheckIn);
+    this.filteredmockCheckInFlagParticipantList[rollNoToCheckin].checkedIn = true;
+    this.filteredmockCheckInFlagParticipantList[rollNoToCheckin].notes = `Check in via ${this.checkInMethod} due to ${this.reasonForManualCheckin}. Notes: ${this.checkInNotes}`;
+    this.contentTemplateRef.close();
+    this.checkInMethod = this.reasonForManualCheckin = this.checkInNotes;
   }
 }

@@ -19,7 +19,7 @@ export interface Event {
   duration: number;
   bannerUrl: string;
   fileUrls?: string;
-  participants?: string[]; // k cos nay
+  participants?: string[];
   attendScore?: number;
   creator?: GetAllUsersListResponse;
   eventLeader?: GetAllUsersListResponse;

@@ -14,3 +14,12 @@ export function isImageFile(filename) {
     // Check if the file extension is in the list of image file extensions
     return extensions.includes(fileExtension);
 }
+
+export function getRandomName(names: string[]): string {
+    // Get the length of the array
+    let length = names.length;
+    // Generate a random index between 0 and length - 1
+    let index = Math.floor(Math.random() * length);
+    // Return the name at that index
+    return names[index];
+  }

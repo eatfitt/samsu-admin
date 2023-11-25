@@ -18,13 +18,21 @@
     }
 }
 
+::ng-deep .hover-row {
+    &:hover {
+        background-color: var(--accordion-header-border-color);
+    }
+}
+
+::ng-deep .selected-row {
+    background-color: var(--color-info-200);
+}
+
 .fileUpload {
     position: relative;
     overflow: hidden;
-    margin: 10px;
 }
-.fileUpload input.upload,
-.testtt {
+.fileUpload input.upload {
     position: absolute;
     top: 0;
     right: 0;
@@ -34,4 +42,28 @@
     cursor: pointer;
     opacity: 0;
     filter: alpha(opacity=0);
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    > * {
+      flex: 1;
+    }
+  
+    &:first-child {
+      border-top: none;
+    }
+    span {
+        &:first-child {
+            flex: 2 !important;
+        }
+    }
+  }
+
+::ng-deep nb-radio-group .outer-circle,
+::ng-deep nb-radio-group .inner-circle {
+    margin-left: 1rem !important;
 }

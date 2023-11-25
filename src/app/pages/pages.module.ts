@@ -15,6 +15,7 @@ import {
   NbListModule,
   NbMenuModule,
   NbPopoverModule,
+  NbRadioModule,
   NbSelectModule,
   NbStepperModule,
   NbTabsetModule,
@@ -99,7 +100,8 @@ const PIPES = [
     ReactiveFormsModule,
     QuillModule.forRoot(),
     NbListModule,
-    NbAccordionModule
+    NbAccordionModule,
+    NbRadioModule
   ],
   exports: [...PIPES],
   declarations: [

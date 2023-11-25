@@ -44,43 +44,7 @@ export class SingleGroupComponent extends AllStudentsComponent  {
         title: "Roll Number",
         type: "string",
         filter: false,
-        // addable: false,
       },
-      // name: {
-      //   title: "Name",
-      //   type: "string",
-      //   filter: false,
-      //   addable: false,
-      // },
-      // email: {
-      //   title: "Email",
-      //   type: "string",
-      //   filter: false,
-      //   addable: false,
-      // },
-      // username: {
-      //   title: "Username",
-      //   type: "string",
-      //   filter: false,
-      //   addable: false,
-      // },
-      // role: {
-      //   title: "Role",
-      //   type: "list",
-      //   addable: false,
-      //   filter: false,
-      //   editor: {
-      //     config: {
-      //       selectText: 'Select...',
-      //         list: [
-      //           { value: 'ROLE_ADMIN', title: 'Student' },
-      //           { value: 'ROLE_MANAGER', title: 'Student' },
-      //           { value: 'ROLE_STAFF', title: 'Student' },
-      //           { value: 'ROLE_STUDENT', title: 'Student' },
-      //         ],
-      //     }
-      //   }
-      // }
     },
   };
   
