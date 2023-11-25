@@ -65,7 +65,7 @@ export class EventComponent {
     const { event } = changes;
     if (_.isObject(event)) {
       this.eventToEdit = { ...this.event };
-      this.filteredParticipantList = this.event.participants;
+      this.filteredParticipantList = this.event?.participants;
       this.mockCheckInFlagParticipantList = this.filteredmockCheckInFlagParticipantList = this.event.participants.map(participant => {
         return { participant: participant, checkedIn: false, notes: '' };
       });

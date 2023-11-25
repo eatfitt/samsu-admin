@@ -10,16 +10,16 @@
                 </div>
             </nb-card-header>
             <nb-card-body>
-                <nb-tabset>
-                    <nb-tab tabTitle="List" class="p-0">
+                <!-- <nb-tabset>
+                    <nb-tab tabTitle="List" class="p-0"> -->
                         <ng-container [ngTemplateOutlet]="listView"
                             [ngTemplateOutletContext]="{events: filteredEvents}"></ng-container>
-                    </nb-tab>
-                    <nb-tab tabTitle="Grid">
+                    <!-- </nb-tab>
+                    <nb-tab tabTitle="Grid"> -->
                         <!-- <ng-container [ngTemplateOutlet]="gridView"
                             [ngTemplateOutletContext]="{events: mockEvents}"></ng-container> -->
-                    </nb-tab>
-                </nb-tabset>
+                    <!-- </nb-tab>
+                </nb-tabset> -->
             </nb-card-body>
         </nb-card>
     </div>

@@ -9,11 +9,16 @@
         cursor: pointer;
     }
 }
-::ng-deep ng2-smart-table .ng2-smart-actions ng2-st-tbody-custom a.ng2-smart-action {
-    font-size: 0.9rem !important;
-    height: 2rem;
+::ng-deep ng2-smart-table, 
+::ng-deep ng2-smart-table table tr th a {
+    font-size: small !important;
 }
 ::ng-deep ng2-smart-table .ng2-smart-actions ng2-st-tbody-edit-delete,
 ::ng-deep ng2-smart-table .ng2-smart-actions ng2-st-tbody-edit-delete a.ng2-smart-action {
     height: 2rem;
 }
+
+::ng-deep ng2-smart-table td {
+    border-left-width: 0;
+    border-right-width: 0;
+} 

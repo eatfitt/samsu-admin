@@ -207,12 +207,6 @@ export class AllStudentsComponent {
         add: false,
         edit: this.showAction,
         delete: this.showAction,
-        custom: [
-          {
-            name: 'View',
-            title: 'View Profile',
-          }
-        ],
       },
       add: {
         addButtonContent: '<i class="nb-plus"></i>',
