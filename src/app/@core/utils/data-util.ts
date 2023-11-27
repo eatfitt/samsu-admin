@@ -23,3 +23,16 @@ export function getRandomName(names: string[]): string {
     // Return the name at that index
     return names[index];
   }
+
+export function convertMillisToTime(millis) {
+    let totalSeconds = millis / 1000;
+    let totalMinutes = Math.floor(totalSeconds / 60);
+    let totalHours = Math.floor(totalMinutes / 60);
+  
+    let seconds = Math.floor(totalSeconds % 60);
+    let minutes = Math.floor(totalMinutes % 60);
+    let hours = totalHours;
+  
+    return { hours, minutes, seconds };
+  }
+  

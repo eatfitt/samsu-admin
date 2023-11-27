@@ -3,8 +3,11 @@
     <div class="d-flex mb-3">
         <button nbButton size="tiny" outline status="basic" (click)="removeTask.emit(index)" class="mr-1">Remove task</button>
     </div>
-    <nb-select [(selected)]="task.status" (selectedChange)="taskChange.emit($event)" size="small">
-        <nb-option *ngFor="let status of mockStatusList" [value]="status">{{ status }}</nb-option>
+    <nb-select [(selected)]="task.status" (selectedChange)="taskStatusChange.emit($event)" size="small">
+        <nb-option [value]="0">Pending</nb-option>
+        <nb-option [value]="1">OnGoing</nb-option>
+        <nb-option [value]="2">Incompleted</nb-option>
+        <nb-option [value]="3">Completed</nb-option>
     </nb-select><br/>
     <label for="title" class="label">Title</label>
     <input class="mb-3" nbInput fullWidth id="title" placeholder="Title" [(ngModel)]="task.title" fieldSize="small">

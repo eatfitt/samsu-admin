@@ -82,8 +82,9 @@
                                     *ngFor="let participant of filteredmockCheckInFlagParticipantList; let i = index">
                                     <div class="d-flex justify-content-between">
                                         <span>
-                                            <a class="text-basic font-weight-bold" [routerLink]="['../../user', participant]">{{participant.participant}}</a>
+                                            <a class="text-basic font-weight-bold" [routerLink]="['../../user', participant]">{{participant.participant.name}}</a>
                                         </span>
+                                        <span>{{ participant.participant.rollnumber }}</span>
                                         <span>
                                             <button *ngIf="!participant.checkedIn" nbButton (click)="openDialog(checkInDialog, participant.participant); rollnumberToCheckIn = participant.participant" size="small">Check-in</button>
                                             <button *ngIf="participant.checkedIn" nbButton (click)="participant.checkedIn = false" size="small">Un Check-in</button>
@@ -101,10 +102,10 @@
                         <nb-card-body class="p-0">
                             <nb-list>
                                 <nb-list-item *ngFor="let task of eventToEdit.tasks; let i = index" class="container py-2 px-4 hover-pointer hover-row item small border border-bottom-0"
-                                    [ngClass]="{'selected-row': i === selectedTaskIndex}" (click)="selectedTask = task; selectedTaskIndex = i">
+                                    [ngClass]="{'selected-row': i === selectedIndex}" (click)="selectedTask = task; selectedIndex = i">
                                     <span class="font-weight-bold">{{ task.title ? task.title : 'Task' }}</span>
                                     <span>
-                                        <nb-tag [text]="task.status" size="tiny" appearance="outline"></nb-tag>
+                                        <nb-tag [text]="getTaskStatus(task.status)" size="tiny" appearance="outline"></nb-tag>
                                     </span>
                                     <span *ngIf="task.assignees?.length > 0">
                                         {{ task.assignees[0] ? task.assignees[0].name : 'Unassigned' }}
@@ -122,34 +123,42 @@
                 </div>
             </div>
             <div class="col-md-4 overflow-auto" style="max-height: 40rem;">
-                <nb-select [(selected)]="eventToEdit.status" (selectedChange)="editEvent()"
-                    size="small" class="d-block w-50 mb-2" filled="true"
-                    [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
-                    <nb-option [value]="0">Non Public</nb-option>
-                    <nb-option [value]="1">Public</nb-option>
-                    <nb-option [value]="2">Draft</nb-option>
-                </nb-select>
-                <nb-card>
-                    <nb-card-header>Details</nb-card-header>
-                    <nb-card-body>
-                        <div class="row">
-                            <div class="col-md-4 small">Creator</div>
-                            <div class="col-md-8 small">{{ event.creator.name }}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 small">Leader</div>
-                            <div class="col-md-8 small">{{ event.eventLeader.name }}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 small">Start time</div>
-                            <div class="col-md-8 small">{{ event.startTime | date:"MMM dd, yyyy 'at'hh:mm a" }}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 small">Duration</div>
-                            <div class="col-md-8 small">{{ event.duration }}</div>
-                        </div>
-                    </nb-card-body>
-                </nb-card>
+                <ng-container *ngIf="selectedTask === null; else selectedTaskTemplate">
+                    <nb-select [(selected)]="eventToEdit.status" (selectedChange)="editEvent()"
+                        size="small" class="d-block w-50 mb-2" filled="true"
+                        [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
+                        <nb-option [value]="0">Non Public</nb-option>
+                        <nb-option [value]="1">Public</nb-option>
+                        <nb-option [value]="2">Draft</nb-option>
+                    </nb-select>
+                    <nb-card>
+                        <nb-card-header>Details</nb-card-header>
+                        <nb-card-body>
+                            <div class="row">
+                                <div class="col-md-4 small">Creator</div>
+                                <div class="col-md-8 small">{{ event.creator.name }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 small">Leader</div>
+                                <div class="col-md-8 small">{{ event.eventLeader.name }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 small">Start time</div>
+                                <div class="col-md-8 small">{{ event.startTime | date:"MMM dd, yyyy 'at'hh:mm a" }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 small">Duration</div>
+                                <div class="col-md-8 small">{{ durationObject.hours + ' hours ' + durationObject.minutes + ' minutes' }}</div>
+                            </div>
+                        </nb-card-body>
+                    </nb-card>
+                </ng-container>
+                <ng-template #selectedTaskTemplate>
+                    <ngx-task-detail [task]="selectedTask" [index]="selectedIndex"
+                        (removeTask)="deleteTask($event)" (taskStatusChange)="editTaskStatus($event)"
+            ></ngx-task-detail>
+                </ng-template>
+                
             </div>
         </div>
     </nb-card-body>

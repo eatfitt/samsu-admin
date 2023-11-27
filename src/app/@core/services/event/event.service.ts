@@ -19,7 +19,7 @@ export interface Event {
   duration: number;
   bannerUrl: string;
   fileUrls?: string;
-  participants?: string[];
+  participants?: GetAllUsersListResponse[];
   attendScore?: number;
   creator?: GetAllUsersListResponse;
   eventLeader?: GetAllUsersListResponse;
@@ -55,6 +55,7 @@ export interface Task {
   score: number;
   eventId: number;
   gradeSubCriteria: GradeSubCriteria;
+  assignees: AssigneeRequest[];
 }
 
 export interface TaskRequests {
@@ -140,5 +141,14 @@ export class EventService {
           return throwError(error);
         })
       );
+  }
+
+  public getEventParticipants(id: number) {
+    return this.http.get(`${this.apiEndPoint}/events/${id}/participants`).pipe(
+      catchError((error) => {
+        console.error("Error in getEventParticipants:", error);
+        return throwError(error);
+      })
+    );
   }
 }

@@ -1,7 +1,7 @@
 import { Component, Input, TemplateRef, ViewChild, SimpleChanges } from '@angular/core';
 import { CreateEventRequest, Event, EventService } from '../../../../@core/services/event/event.service';
 import { NbDialogRef, NbDialogService, NbToastrService } from '@nebular/theme';
-import { getRandomName, isImageFile } from '../../../../@core/utils/data-util';
+import { convertMillisToTime, getRandomName, isImageFile } from '../../../../@core/utils/data-util';
 import _ from 'lodash';
 import { FileUploadService } from '../../../../../services/file-upload.service';
 @Component({
@@ -14,6 +14,7 @@ export class EventComponent {
   @ViewChild('saveEditTemplate') saveEditTemplate: TemplateRef<any>;
 
   @Input() event: Event = null;
+  @Input()
   eventToEdit: Event = null;
   editorConfig = {
     toolbar: [
@@ -22,6 +23,7 @@ export class EventComponent {
       ['link'],
     ],
   };
+  durationObject = null;
   
   // CHECK FIELD IS EDITING
   isEditContent = false;
@@ -46,7 +48,7 @@ export class EventComponent {
 
   // TASK MANAGEMENT
   selectedTask: Task = null;
-  selectedTaskIndex: number;
+  selectedIndex: number;
 
   // MOCK Names
   randomNames = ["Do Ngan Ha", "Thai Van Man", "Nguyen Tran Thien Duc", "Truong Nguyen Anh Huy", "Do Dai Bach"];
@@ -69,6 +71,7 @@ export class EventComponent {
       this.mockCheckInFlagParticipantList = this.filteredmockCheckInFlagParticipantList = this.event.participants.map(participant => {
         return { participant: participant, checkedIn: false, notes: '' };
       });
+      this.getDuration();
     }
     console.log(this.filteredParticipantList)
     console.log(this.eventToEdit)
@@ -96,7 +99,7 @@ export class EventComponent {
         }
       }),
       // departmentIds: this.event.departments.map(department => department.name),  ---> không móc đc vì k có departmentId từ API
-      rollnumbers: this.eventToEdit.participants,
+      rollnumbers: this.eventToEdit.participants.map(participant => participant.rollnumber),
       taskRequests: this.eventToEdit.tasks.map(task => {
         return {
           title: task.title,
@@ -104,7 +107,12 @@ export class EventComponent {
           status: task.status,
           score: task.score,
           gradeSubCriteriaId: task.gradeSubCriteria.id,
-          assignees: [] // API đang thiếu k trả về assignees
+          assignees: task.assignees.map(assignee => {
+            return {
+              rollnumber: assignee.rollnumber,
+              status: assignee.status,
+            }
+          })
         }
       })
     }
@@ -171,6 +179,10 @@ export class EventComponent {
     return getRandomName(this.randomNames);
   }
 
+  getDuration() {
+    this.durationObject = convertMillisToTime(this.eventToEdit.duration);
+  }
+
   filterParticipant(event) {
     this.filteredmockCheckInFlagParticipantList = this.mockCheckInFlagParticipantList.filter(participant => participant.participant.toLowerCase().includes(event.target.value.toLowerCase()));
   }
@@ -184,5 +196,31 @@ export class EventComponent {
     this.filteredmockCheckInFlagParticipantList[rollNoToCheckin].notes = `Check in via ${this.checkInMethod} due to ${this.reasonForManualCheckin}. Notes: ${this.checkInNotes}`;
     this.contentTemplateRef.close();
     this.checkInMethod = this.reasonForManualCheckin = this.checkInNotes;
+  }
+
+  addTask() {
+
+  }
+
+  editTaskStatus(index: number) {
+    this.eventToEdit.tasks[this.selectedIndex].status = index;
+    this.editEvent();
+  }
+
+  deleteTask(i) {
+    this.eventToEdit.tasks.splice(i, 1);
+    this.editEvent();
+    this.selectedTask = null;
+  }
+
+  logger(event?) {
+    console.log('Logger', event);
+  }
+
+  getTaskStatus(status: number) {
+    if (status === 0) return 'Pending';
+    else if (status === 1) return 'OnGoing';
+    else if (status === 2) return 'Incompleted';
+    else if (status === 3) return 'Completed';
   }
 }

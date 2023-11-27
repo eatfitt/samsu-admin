@@ -18,7 +18,7 @@ export interface Task {
   title: string;
   content: string;
   score: number;
-  status: TaskStatus;
+  status: number;
   createdAt?: Date;
   assignees: Assignee[];
 }
@@ -46,12 +46,12 @@ export class TaskDetailComponent {
     title: 'Task Title',
     content: 'Task Content',
     score: 0,
-    status: TaskStatus.Pending,
+    status: 1,
     gradeSubCriteriaId: 1,
     assignees: [],
   }
   @Input() index: number;
-  @Output() taskChange = new EventEmitter<Task>();
+  @Output() taskStatusChange = new EventEmitter<number>();
   @Output() removeTask = new EventEmitter<number>();
   existingUser$: Observable<Object> = null;
   gradeSubCriterias: GradeSubCriterias[] = [];

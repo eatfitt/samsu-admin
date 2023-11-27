@@ -7,7 +7,7 @@
                     [ngClass]="{'selected-row': i === selectedIndex}" (click)="selectedTask = task; selectedIndex = i">
                     <span class="font-weight-bold">{{ task.title ? task.title : 'Task' }}</span>
                     <span>
-                        <nb-tag [text]="task.status" size="tiny" appearance="outline"></nb-tag>
+                        <nb-tag [text]="getStatus(task.status)" size="tiny" appearance="outline"></nb-tag>
                     </span>
                     <span>
                         {{ task.assignees[0] ? task.assignees[0].name : 'Unassigned' }}

@@ -14,7 +14,6 @@
       (deleteConfirm)="onDeleteConfirm($event)" (editConfirm)="onEditConfirm($event)" (custom)="onCustomAction($event)">
     </ng2-smart-table> -->
     <nb-tabset>
-
       <!-- STUDENTS -->
       <nb-tab tabTitle="Students">
         <nb-list>
@@ -60,7 +59,6 @@
           </div>
         </div>
       </nb-tab>
-
       <nb-tab tabTitle="Students">
         <nb-list>
           <nb-list-item class="item small">
@@ -105,9 +103,7 @@
           </div>
         </div>
       </nb-tab>
-
     </nb-tabset>
-    
   </nb-card-body>
 </nb-card>
 <ng-template #dialog let-data let-ref="dialogRef">
@@ -168,7 +164,9 @@
 <ng-template #updateUserDialog let-data let-ref="dialogRef">
   <nb-card>
     <nb-card-header>Update User</nb-card-header>
-    <nb-card-body> Do you want to update {{ selectedStudent.name }} </nb-card-body>
+    <nb-card-body> Do you want to update {{ selectedStudent.name }}
+      WIP
+    </nb-card-body>
     <nb-card-footer>
       <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
       <button nbButton class="bg-primary text-light ml-3" (click)="updateUser()">Update</button>

@@ -19,7 +19,7 @@ export class AddTaskComponent {
       title: 'New task',
       content: '',
       score: 0,
-      status: TaskStatus.Pending,
+      status: 0,
       gradeSubCriteriaId: 1,
       assignees: []
     }
@@ -30,5 +30,12 @@ export class AddTaskComponent {
   deleteTask(i) {
     this.taskList.splice(i, 1);
     this.selectedTask = null;
+  }
+
+  getStatus(status: number) {
+    if (status === 0) return 'Pending';
+    else if (status === 1) return 'OnGoing';
+    else if (status === 2) return 'Incompleted';
+    else if (status === 3) return 'Completed';
   }
 }

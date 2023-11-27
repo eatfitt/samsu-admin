@@ -163,9 +163,9 @@
             <div class="feedback-question d-flex justify-content-between mb-3">
                 <input class="flex-grow-1 mw-100" nbInput [(ngModel)]="feedback.question" style="border-radius: 0.25rem 0 0 0.25rem;">
                 <nb-select [(selected)]="feedback.type">
-                    <nb-option value="MultipleSelect">Multiple Select</nb-option>
-                    <nb-option value="SingleSelect">Single Select</nb-option>
-                    <nb-option value="OpenEnded">Open Ended</nb-option>
+                    <nb-option [value]="0">Multiple Select</nb-option>
+                    <nb-option [value]="1">Single Select</nb-option>
+                    <nb-option [value]="2">Open Ended</nb-option>
                 </nb-select>
             </div>
             <ng-container *ngIf="feedback.answer.length > 0">

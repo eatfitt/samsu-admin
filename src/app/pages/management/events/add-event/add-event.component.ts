@@ -38,7 +38,7 @@ enum FeedbackType {
   OpenEnded = 2,
 }
 interface Feedback {
-  type: FeedbackType | string;
+  type: number;
   question: string;
   answer: string[];
 }
@@ -253,7 +253,7 @@ export class AddEventComponent implements OnInit {
       this.feedbackQuestionList.map((question) => {
         return {
           ...question,
-          type: FeedbackType[question.type],
+          type: question.type,
           answer: question.answer.join("|"),
         };
       });
