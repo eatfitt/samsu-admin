@@ -69,8 +69,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AllGroupsComponent } from '../management/groups/all-groups/all-groups.component';
 import { GroupCardComponent } from '../management/groups/group-card/group-card.component';
 import { FormsModule } from '@angular/forms';
-import { EchartsMultipleXaxisComponent } from '../charts/echarts/echarts-multiple-xaxis.component';
 import { ChartsModule } from '../charts/charts.module';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   imports: [
@@ -100,7 +100,8 @@ import { ChartsModule } from '../charts/charts.module';
     FormsModule,
     NbContextMenuModule,
     NbCalendarModule,
-    ChartsModule
+    ChartsModule,
+    NgxPaginationModule
   ],
   declarations: [
     ECommerceComponent,

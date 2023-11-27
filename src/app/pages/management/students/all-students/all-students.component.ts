@@ -1,6 +1,11 @@
 import { Component, Input, TemplateRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { NbDialogRef, NbDialogService, NbMenuService, NbToastrService } from "@nebular/theme";
+import {
+  NbDialogRef,
+  NbDialogService,
+  NbMenuService,
+  NbToastrService,
+} from "@nebular/theme";
 import { Store } from "@ngrx/store";
 import { LocalDataSource } from "ng2-smart-table";
 import { Subscription } from "rxjs";
@@ -13,6 +18,7 @@ import {
   UserService,
 } from "../../../../@core/services/user/user.service";
 import { UserState } from "../../../../app-state/user";
+import { GetAllUsersListResponse } from "../../../../@core/services/user/user.service";
 
 @Component({
   selector: "ngx-all-students",
@@ -24,25 +30,36 @@ import { UserState } from "../../../../app-state/user";
 export class AllStudentsComponent {
   @Input() pager = {
     display: true,
-    perPage: 10
+    perPage: 10,
   };
   @Input() showAction = true;
   @Input() showImport = true;
   @ViewChild("dialog", { static: true }) contentTemplate: TemplateRef<any>;
-  @ViewChild("importResultDialog", { static: true }) importResultDialog: TemplateRef<any>;
-  @ViewChild("failedImportListDialog", { static: true }) failedImportListDialog: TemplateRef<any>;
-  @ViewChild("deleteUserDialog", { static: true }) deleteUserDialog: TemplateRef<any>;
-  @ViewChild("updateUserDialog", { static: true }) updateUserDialog: TemplateRef<any>;
-  @ViewChild("excelImporterDialog", { static: true }) excelImporterDialog: TemplateRef<any>;
+  @ViewChild("importResultDialog", { static: true })
+  importResultDialog: TemplateRef<any>;
+  @ViewChild("failedImportListDialog", { static: true })
+  failedImportListDialog: TemplateRef<any>;
+  @ViewChild("deleteUserDialog", { static: true })
+  deleteUserDialog: TemplateRef<any>;
+  @ViewChild("updateUserDialog", { static: true })
+  updateUserDialog: TemplateRef<any>;
+  @ViewChild("excelImporterDialog", { static: true })
+  excelImporterDialog: TemplateRef<any>;
+
+  // TODO: chia tab user, student tab rieng, dau tien - achievement + grade
+  studentList = [];
+  staffList = [];
+  managerList = [];
+  pageSize: number = 6; // Number of items per page
+  currentPage: number = 1; // Current page number
+  totalItems: number = 0; // Total number of items
 
   importAmount = 0;
   importSuccess = 0;
   importFailed = 0;
 
-  selectedK = '';
-  selectedMajor = '';
-
-  settings: any;
+  selectedK = "";
+  selectedMajor = "";
 
   importSetting: any = {
     add: {
@@ -83,27 +100,28 @@ export class AllStudentsComponent {
       role: {
         title: "Role",
         type: "list",
-        defaultValue: 'ROLE_STUDENT',
+        defaultValue: "ROLE_STUDENT",
         //addable: false,
         filter: false,
         editor: {
+          type: "list",
           config: {
-            selectText: 'Select...',
-              list: [
-                { value: 'ROLE_ADMIN', title: 'Student' },
-                { value: 'ROLE_MANAGER', title: 'Student' },
-                { value: 'ROLE_STAFF', title: 'Student' },
-                { value: 'ROLE_STUDENT', title: 'Student' },
-              ],
-          }
-        }
-      }
+            selectText: "Select...",
+            list: [
+              { value: "ROLE_ADMIN", title: "Admin" },
+              { value: "ROLE_MANAGER", title: "Manager" },
+              { value: "ROLE_STAFF", title: "Staff" },
+              { value: "ROLE_STUDENT", title: "Student" },
+            ],
+          },
+        },
+      },
     },
   };
 
   reimportFailSetting = {
     actions: {
-      add: false
+      add: false,
     },
     add: {
       addButtonContent: '<i class="nb-plus"></i>',
@@ -143,31 +161,32 @@ export class AllStudentsComponent {
       role: {
         title: "Role",
         type: "list",
-        defaultValue: 'ROLE_STUDENT',
+        defaultValue: "ROLE_STUDENT",
         //addable: false,
         filter: false,
         editor: {
+          type: "list",
           config: {
-            selectText: 'Select...',
-              list: [
-                { value: 'ROLE_ADMIN', title: 'Student' },
-                { value: 'ROLE_MANAGER', title: 'Student' },
-                { value: 'ROLE_STAFF', title: 'Student' },
-                { value: 'ROLE_STUDENT', title: 'Student' },
-              ],
-          }
-        }
+            selectText: "Select...",
+            list: [
+              { value: "ROLE_ADMIN", title: "Admin" },
+              { value: "ROLE_MANAGER", title: "Manager" },
+              { value: "ROLE_STAFF", title: "Staff" },
+              { value: "ROLE_STUDENT", title: "Student" },
+            ],
+          },
+        },
       },
       message: {
         title: "Reason Failed",
         type: "string",
         editable: false,
         filter: false,
-      }
+      },
     },
   };
 
-  data: any[] = [];
+  allUserList: GetAllUsersListResponse[] = [];
 
   addingData: Partial<AddListUserRequest>[] = [];
 
@@ -176,8 +195,10 @@ export class AllStudentsComponent {
 
   bearerToken = "";
   selectedStudent: Partial<AddListUserRequest> = null;
-  items = [{ title: 'Import List User' }, { title: 'Add User Manually' }];
+  items = [{ title: "Import List User" }, { title: "Add User Manually" }];
+  singleUserAction = [{ title: "Update" }, { title: "Delete" }];
   test: Subscription;
+  singleUserActionSubscription: Subscription;
   private contentTemplateRef: NbDialogRef<AllStudentsComponent>;
 
   constructor(
@@ -186,101 +207,110 @@ export class AllStudentsComponent {
     protected dialogService: NbDialogService,
     protected router: Router,
     protected toastrService: NbToastrService,
-    protected menuService: NbMenuService,
+    protected menuService: NbMenuService
   ) {
-    // this.source.load(this.data);
+    // this.source.load(this.allUserList);
     // this.source.setFilter([{field: 'rollnumber', search: '79'}, {field: 'name', search: 'ha'}, ])
   }
   ngOnInit() {
     this.userService.checkLoggedIn();
     this.fetchData();
     this.test = this.menuService.onItemClick().subscribe((event) => {
-      if (event.item.title === 'Import List User') {
+      if (event.item.title === "Import List User") {
         this.openDialog(this.excelImporterDialog);
-      } else if (event.item.title === 'Add User Manually') {
+      } else if (event.item.title === "Add User Manually") {
         this.importFromExcel([]);
       }
-    })
-    this.settings = {
-      pager: this.pager,
-      actions: {
-        add: false,
-        edit: this.showAction,
-        delete: this.showAction,
-      },
-      add: {
-        addButtonContent: '<i class="nb-plus"></i>',
-        createButtonContent: '<i class="nb-checkmark"></i>',
-        cancelButtonContent: '<i class="nb-close"></i>',
-      },
-      edit: {
-        editButtonContent: '<i class="nb-edit"></i>',
-        saveButtonContent: '<i class="nb-checkmark"></i>',
-        cancelButtonContent: '<i class="nb-close"></i>',
-        confirmSave: true,
-      },
-      delete: {
-        deleteButtonContent: '<i class="nb-trash"></i>',
-        confirmDelete: true,
-      },
-      columns: {
-        avatar: {
-          title: '',
-          type: 'html',
-          valuePrepareFunction: (images) => {
-            return `<img class='table-avatar-img' src="${images}"/>`
-          },
-          // editable: false,
-          filter: false,
-        },
-        rollnumber: {
-          title: "Roll Number",
-          type: "string",
-        },
-        name: {
-          title: "Name",
-          type: "string",
-        },
-        email: {
-          title: "Email",
-          type: "string",
-        },
-        username: {
-          title: "Username",
-          type: "string",
-        },
-        role: {
-          title: "Role",
-          type: "string",
-          defaultValue: 'ROLE_STUDENT',
-          //addable: false,
-          filter: {
-            type: 'list',
-            config: {
-              selectText: 'Select...',
-                list: [
-                  { value: 'ROLE_ADMIN', title: 'ROLE_ADMIN' },
-                  { value: 'ROLE_MANAGER', title: 'ROLE_MANAGER' },
-                  { value: 'ROLE_STAFF', title: 'ROLE_STAFF' },
-                  { value: 'ROLE_STUDENT', title: 'ROLE_STUDENT' },
-                ],
-            }
-          },
-          editor: {
-            type: 'list',
-            config: {
-              selectText: 'Select...',
-                list: [
-                  { value: 'ROLE_ADMIN', title: 'ROLE_ADMIN' },
-                  { value: 'ROLE_MANAGER', title: 'ROLE_MANAGER' },
-                  { value: 'ROLE_STAFF', title: 'ROLE_STAFF' },
-                  { value: 'ROLE_STUDENT', title: 'ROLE_STUDENT' },
-                ],
-            }
-          }
+    });
+    this.singleUserActionSubscription = this.menuService
+      .onItemClick()
+      .subscribe((event) => {
+        if (event.item.title === "Update") {
+          this.openDialog(this.updateUserDialog);
+        } else if (event.item.title === "Delete") {
+          this.openDialog(this.deleteUserDialog);
         }
-      },
-    };
+      });
+    //   this.settings = {
+    //     pager: this.pager,
+    //     actions: {
+    //       add: false,
+    //       edit: this.showAction,
+    //       delete: this.showAction,
+    //     },
+    //     add: {
+    //       addButtonContent: '<i class="nb-plus"></i>',
+    //       createButtonContent: '<i class="nb-checkmark"></i>',
+    //       cancelButtonContent: '<i class="nb-close"></i>',
+    //     },
+    //     edit: {
+    //       editButtonContent: '<i class="nb-edit"></i>',
+    //       saveButtonContent: '<i class="nb-checkmark"></i>',
+    //       cancelButtonContent: '<i class="nb-close"></i>',
+    //       confirmSave: true,
+    //     },
+    //     delete: {
+    //       deleteButtonContent: '<i class="nb-trash"></i>',
+    //       confirmDelete: true,
+    //     },
+    //     columns: {
+    //       avatar: {
+    //         title: '',
+    //         type: 'html',
+    //         valuePrepareFunction: (images) => {
+    //           return `<img class='table-avatar-img' src="${images}"/>`
+    //         },
+    //         // editable: false,
+    //         filter: false,
+    //       },
+    //       rollnumber: {
+    //         title: "Roll Number",
+    //         type: "string",
+    //       },
+    //       name: {
+    //         title: "Name",
+    //         type: "string",
+    //       },
+    //       email: {
+    //         title: "Email",
+    //         type: "string",
+    //       },
+    //       username: {
+    //         title: "Username",
+    //         type: "string",
+    //       },
+    //       role: {
+    //         title: "Role",
+    //         type: "string",
+    //         defaultValue: 'ROLE_STUDENT',
+    //         //addable: false,
+    //         filter: {
+    //           type: 'list',
+    //           config: {
+    //             selectText: 'Select...',
+    //               list: [
+    //                 { value: 'ROLE_ADMIN', title: 'ROLE_ADMIN' },
+    //                 { value: 'ROLE_MANAGER', title: 'ROLE_MANAGER' },
+    //                 { value: 'ROLE_STAFF', title: 'ROLE_STAFF' },
+    //                 { value: 'ROLE_STUDENT', title: 'ROLE_STUDENT' },
+    //               ],
+    //           }
+    //         },
+    //         editor: {
+    //           type: 'list',
+    //           config: {
+    //             selectText: 'Select...',
+    //               list: [
+    //                 { value: 'ROLE_ADMIN', title: 'ROLE_ADMIN' },
+    //                 { value: 'ROLE_MANAGER', title: 'ROLE_MANAGER' },
+    //                 { value: 'ROLE_STAFF', title: 'ROLE_STAFF' },
+    //                 { value: 'ROLE_STUDENT', title: 'ROLE_STUDENT' },
+    //               ],
+    //           }
+    //         }
+    //       }
+    //     },
+    //   };
   }
 
   importFromExcel(data: any[][]) {
@@ -305,18 +335,24 @@ export class AllStudentsComponent {
           .getAllUsers(`${token.tokenType} ${token.accessToken}`)
           .subscribe((users: GetAllUsersResponse) => {
             this.bearerToken = `${token.tokenType} ${token.accessToken}`;
-            this.data = users.content
-              .map((c) => {
-                return {
-                  avatar: c.avatar ?? '../../../../../assets/images/kitten-default.png',
-                  rollnumber: c.rollnumber,
-                  name: c.name,
-                  email: c.email,
-                  username: c.username,
-                  role: RoleEnum[c.role],
-                };
-              });
-            this.source.load(this.data);
+            this.allUserList = users.content;
+            this.pageSize = users.size;
+            this.currentPage = users.page;
+            this.totalItems = users.totalElements;
+            this.studentList = users.content.filter((user) => user.role === 3);
+            this.staffList = users.content.filter((user) => user.role === 3);
+            this.managerList = users.content.filter((user) => user.role === 2);
+            // .map((c) => {
+            //   return {
+            //     avatar: c.avatar ?? '../../../../../assets/images/kitten-default.png',
+            //     rollnumber: c.rollnumber,
+            //     name: c.name,
+            //     email: c.email,
+            //     username: c.username,
+            //     role: RoleEnum[c.role],
+            //   };
+            // });
+            // this.source.load(this.allUserList);
           });
       });
   }
@@ -328,11 +364,14 @@ export class AllStudentsComponent {
   }
 
   openFailedList() {
-    this.closeDialog()
+    this.closeDialog();
     this.sourceAddingStudents.load(this.addingData);
-    this.contentTemplateRef = this.dialogService.open(this.failedImportListDialog, {
-      context: "this is some additional data passed to dialog",
-    });
+    this.contentTemplateRef = this.dialogService.open(
+      this.failedImportListDialog,
+      {
+        context: "this is some additional data passed to dialog",
+      }
+    );
   }
 
   closeDialog() {
@@ -342,7 +381,7 @@ export class AllStudentsComponent {
   importStudent() {
     this.sourceAddingStudents.getAll().then((value) => {
       console.log(value);
-      this.closeDialog()
+      this.closeDialog();
       this.userService.addListUser(this.bearerToken, value).subscribe(
         (res: AddListUserResponse) => {
           this.importAmount = res.amount;
@@ -356,17 +395,20 @@ export class AllStudentsComponent {
               email: item.userImport.email,
               username: item.userImport.username,
               role: item.userImport.role,
-              message: item.message
+              message: item.message,
             };
           });
-          this.contentTemplateRef = this.dialogService.open(this.importResultDialog, {
-            context: 'Import Result'
-          });
+          this.contentTemplateRef = this.dialogService.open(
+            this.importResultDialog,
+            {
+              context: "Import Result",
+            }
+          );
           this.fetchData();
         },
         (error) => {
-          console.log(error)
-          alert(`Error: ${error.error.message}`)
+          console.log(error);
+          alert(`Error: ${error.error.message}`);
         }
       );
     });
@@ -378,68 +420,87 @@ export class AllStudentsComponent {
   }
 
   filterTable() {
-    this.source.setFilter([{field: 'rollnumber', search: this.selectedMajor + this.selectedK}])
+    this.source.setFilter([
+      { field: "rollnumber", search: this.selectedMajor + this.selectedK },
+    ]);
   }
 
   openDialog(dialog) {
     this.contentTemplateRef = this.dialogService.open(dialog);
   }
 
-  onDeleteConfirm(event) {
-    console.log(event);
-    this.selectedStudent = event.data;
-    this.openDialog(this.deleteUserDialog);
-  }
+  // onDeleteConfirm(event) {
+  //   console.log(event);
+  //   this.selectedStudent = event.data;
+  //   this.openDialog(this.deleteUserDialog);
+  // }
 
-  onEditConfirm(event) {
-    console.log(event);
-    this.selectedStudent = event.newData;
-    this.openDialog(this.updateUserDialog);
-  }
+  // onEditConfirm(event) {
+  //   console.log(event);
+  //   this.selectedStudent = event.newData;
+  //   this.openDialog(this.updateUserDialog);
+  // }
 
   deleteUser() {
-    this.deleteUserObservable()
-    .subscribe(
-      data => {
-        this.toastrService.show('Deleted Successfully', `Success`, { status: 'success'});
+    this.deleteUserObservable().subscribe(
+      (data) => {
+        this.toastrService.show("Deleted Successfully", `Success`, {
+          status: "success",
+        });
         this.closeDialog();
         this.fetchData();
       },
-      error => { // them error tu api
-        this.toastrService.show('Deleted Failed', `Failed`, { status: 'danger'});
+      (error) => {
+        // them error tu api
+        this.toastrService.show("Deleted Failed", `Failed`, {
+          status: "danger",
+        });
         this.closeDialog();
-      },
-    )
+      }
+    );
   }
 
   deleteUserObservable() {
-    return this.userService.deleteUser(this.bearerToken, this.selectedStudent.rollnumber);
+    return this.userService.deleteUser(
+      this.bearerToken,
+      this.selectedStudent.rollnumber
+    );
   }
 
   updateUser() {
     let studentPayload = this.selectedStudent;
     studentPayload.role = RoleEnum[studentPayload.role];
     studentPayload.status = 1;
-    this.userService.updateUser(this.bearerToken, this.selectedStudent.rollnumber, studentPayload as AddListUserRequest)
-    .subscribe(
-      data => {
-        this.toastrService.show('Update Successfully', `Success`, { status: 'success'});
-        this.closeDialog();
-        this.fetchData();
-      },
-      error => { // them error tu api
-        this.toastrService.show('Update Failed', `Failed`, { status: 'danger'});
-        this.closeDialog();
-      },
-    )
+    this.userService
+      .updateUser(
+        this.bearerToken,
+        this.selectedStudent.rollnumber,
+        studentPayload as AddListUserRequest
+      )
+      .subscribe(
+        (data) => {
+          this.toastrService.show("Update Successfully", `Success`, {
+            status: "success",
+          });
+          this.closeDialog();
+          this.fetchData();
+        },
+        (error) => {
+          // them error tu api
+          this.toastrService.show("Update Failed", `Failed`, {
+            status: "danger",
+          });
+          this.closeDialog();
+        }
+      );
   }
 
   onCustomAction(event) {
     const data = event.data;
-    console.log(event)
+    console.log(event);
     switch (event.action) {
-      case 'View':
-        this.router.navigateByUrl(`pages/user/${data.username}`)
+      case "View":
+        this.router.navigateByUrl(`pages/user/${data.username}`);
         break;
     }
   }

@@ -155,7 +155,7 @@ ngOnInit(): void {
           .subscribe((group: GetSingleGroupResponse) => {
             this.bearerToken = `${token.tokenType} ${token.accessToken}`;
             this.group = group
-            this.data = group.users
+            this.studentData = group.users
               .map((c) => {
                 return {
                   avatar: '../../../../../assets/images/kitten-default.png',
@@ -167,7 +167,7 @@ ngOnInit(): void {
                   role: RoleEnum[c.role],
                 };
               }) as GetAllUsersListResponse[];
-            this.source.load(this.data);
+            this.source.load(this.studentData);
           });
       });
   }

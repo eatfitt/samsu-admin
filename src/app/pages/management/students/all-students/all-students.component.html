@@ -2,7 +2,7 @@
   <nb-card-header>
     <div class="d-flex justify-content-between">
       <div class="d-flex">
-        <h5 class="hover-pointer" [routerLink]="['..', 'users']">Users</h5> 
+        <h5 class="hover-pointer" [routerLink]="['..', 'users']">Users</h5>
       </div>
       <button class="btn" [nbContextMenu]="items">
         <nb-icon icon="more-vertical"></nb-icon>
@@ -10,17 +10,111 @@
     </div>
   </nb-card-header>
   <nb-card-body>
-    <ng2-smart-table [settings]="settings" [source]="source"
+    <!-- <ng2-smart-table [settings]="settings" [source]="source"
       (deleteConfirm)="onDeleteConfirm($event)" (editConfirm)="onEditConfirm($event)" (custom)="onCustomAction($event)">
-    </ng2-smart-table>
+    </ng2-smart-table> -->
+    <nb-tabset>
+
+      <!-- STUDENTS -->
+      <nb-tab tabTitle="Students">
+        <nb-list>
+          <nb-list-item class="item small">
+            <span>Id</span>
+            <span>Avatar</span>
+            <span>Name</span>
+            <span>Roll number</span>
+            <span>Username</span>
+            <span>Email</span>
+            <span>DOB</span>
+            <span></span>
+          </nb-list-item>
+          <nb-list-item class="item small"
+            *ngFor="let student of (studentList | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems })">
+            <span>{{ student.id }}</span>
+            <span>
+              <img class="table-avatar-img" [src]="student.avatar" alt="N/A">
+            </span>
+            <span>{{ student.name }}</span>
+            <span>{{ student.rollnumber }}</span>
+            <span>{{ student.username }}</span>
+            <span>{{ student.email }}</span>
+            <span>{{ student.DOB ?? 'N/A' }}</span>
+            <span>
+              <button (click)="selectedStudent = student" class="btn"
+                [nbContextMenu]="singleUserAction">
+                <nb-icon icon="more-vertical"></nb-icon>
+              </button>
+            </span>
+            <!-- Pagination controls -->
+          </nb-list-item>
+          <!-- Show empty template when there are no proposals -->
+        </nb-list>
+        <div *ngIf="studentList?.length === 0" class="col-md-12">
+          <div class="alert alert-info">No student available.</div>
+        </div>
+        <div class="col-md-12">
+          <div *ngIf="studentList?.length !== 0"
+            class="d-flex justify-content-center align-items-center">
+            <pagination-controls (pageChange)="onPageChange($event)"
+              [maxSize]="6"></pagination-controls>
+          </div>
+        </div>
+      </nb-tab>
+
+      <nb-tab tabTitle="Students">
+        <nb-list>
+          <nb-list-item class="item small">
+            <span>Id</span>
+            <span>Avatar</span>
+            <span>Name</span>
+            <span>Roll number</span>
+            <span>Username</span>
+            <span>Email</span>
+            <span>DOB</span>
+            <span></span>
+          </nb-list-item>
+          <nb-list-item class="item small"
+            *ngFor="let student of (studentList | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems })">
+            <span>{{ student.id }}</span>
+            <span>
+              <img class="table-avatar-img" [src]="student.avatar" alt="N/A">
+            </span>
+            <span>{{ student.name }}</span>
+            <span>{{ student.rollnumber }}</span>
+            <span>{{ student.username }}</span>
+            <span>{{ student.email }}</span>
+            <span>{{ student.DOB ?? 'N/A' }}</span>
+            <span>
+              <button (click)="selectedStudent = student" class="btn"
+                [nbContextMenu]="singleUserAction">
+                <nb-icon icon="more-vertical"></nb-icon>
+              </button>
+            </span>
+            <!-- Pagination controls -->
+          </nb-list-item>
+          <!-- Show empty template when there are no proposals -->
+        </nb-list>
+        <div *ngIf="studentList?.length === 0" class="col-md-12">
+          <div class="alert alert-info">No student available.</div>
+        </div>
+        <div class="col-md-12">
+          <div *ngIf="studentList?.length !== 0"
+            class="d-flex justify-content-center align-items-center">
+            <pagination-controls (pageChange)="onPageChange($event)"
+              [maxSize]="6"></pagination-controls>
+          </div>
+        </div>
+      </nb-tab>
+
+    </nb-tabset>
+    
   </nb-card-body>
 </nb-card>
-
 <ng-template #dialog let-data let-ref="dialogRef">
   <nb-card>
     <nb-card-header>Import User</nb-card-header>
     <nb-card-body>
-      <ng2-smart-table [settings]="importSetting" [source]="sourceAddingStudents" >
+      <ng2-smart-table [settings]="importSetting" [source]="sourceAddingStudents">
       </ng2-smart-table>
     </nb-card-body>
     <nb-card-footer>
@@ -29,29 +123,29 @@
     </nb-card-footer>
   </nb-card>
 </ng-template>
-
 <ng-template #importResultDialog let-data let-ref="dialogRef">
   <nb-card>
     <nb-card-header>Import User</nb-card-header>
     <nb-card-body>
-      <div class="text-success"><strong>Successful</strong>: {{importSuccess}} / {{importAmount}} students</div>
-      <div class="text-danger"><strong>Failed</strong>: {{importFailed}} / {{importAmount}} students</div>
+      <div class="text-success"><strong>Successful</strong>: {{importSuccess}} / {{importAmount}}
+        students</div>
+      <div class="text-danger"><strong>Failed</strong>: {{importFailed}} / {{importAmount}} students
+      </div>
       <div class="failed-import-list">
-        
       </div>
     </nb-card-body>
     <nb-card-footer>
-      <button *ngIf="importFailed > 0" class="btn btn-danger size-small mt-2" (click)="openFailedList()">View Failed Data</button>
+      <button *ngIf="importFailed > 0" class="btn btn-danger size-small mt-2"
+        (click)="openFailedList()">View Failed Data</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>
-
 <ng-template #failedImportListDialog let-data let-ref="dialogRef">
   <nb-card>
     <nb-card-header>Update Failed Report</nb-card-header>
     <nb-card-body>
       <div class="failed-import-list">
-        <ng2-smart-table [settings]="reimportFailSetting" [source]="sourceAddingStudents" >
+        <ng2-smart-table [settings]="reimportFailSetting" [source]="sourceAddingStudents">
         </ng2-smart-table>
       </div>
     </nb-card-body>
@@ -61,33 +155,26 @@
     </nb-card-footer>
   </nb-card>
 </ng-template>
-
 <ng-template #deleteUserDialog let-data let-ref="dialogRef">
   <nb-card>
     <nb-card-header>Delete User</nb-card-header>
-    <nb-card-body>
-      Do you want to delete {{ selectedStudent.name }}
-    </nb-card-body>
+    <nb-card-body> Do you want to delete {{ selectedStudent.name }} </nb-card-body>
     <nb-card-footer>
       <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
       <button nbButton class="bg-primary text-light ml-3" (click)="deleteUser()">Delete</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>
-
 <ng-template #updateUserDialog let-data let-ref="dialogRef">
   <nb-card>
     <nb-card-header>Update User</nb-card-header>
-    <nb-card-body>
-      Do you want to update {{ selectedStudent.name }}
-    </nb-card-body>
+    <nb-card-body> Do you want to update {{ selectedStudent.name }} </nb-card-body>
     <nb-card-footer>
       <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
       <button nbButton class="bg-primary text-light ml-3" (click)="updateUser()">Update</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>
-
 <ng-template #excelImporterDialog let-data let-ref="dialogRef">
   <ngx-excel-importer (importFromExcel)="importFromExcel($event)"></ngx-excel-importer>
 </ng-template>
