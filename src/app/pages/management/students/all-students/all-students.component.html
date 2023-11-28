@@ -9,11 +9,12 @@
       </button>
     </div>
   </nb-card-header>
-  <nb-card-body>
+  <nb-card-body class="p-0">
     <!-- <ng2-smart-table [settings]="settings" [source]="source"
       (deleteConfirm)="onDeleteConfirm($event)" (editConfirm)="onEditConfirm($event)" (custom)="onCustomAction($event)">
     </ng2-smart-table> -->
     <nb-tabset>
+
       <!-- STUDENTS -->
       <nb-tab tabTitle="Students">
         <nb-list>
@@ -31,7 +32,8 @@
             *ngFor="let student of (studentList | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems })">
             <span>{{ student.id }}</span>
             <span>
-              <img class="table-avatar-img" [src]="student.avatar" alt="N/A">
+              <img *ngIf="student.avatar" class="table-avatar-img" [src]="student.avatar" alt="N/A">
+              <img *ngIf="!student.avatar" class="table-avatar-img" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="N/A">
             </span>
             <span>{{ student.name }}</span>
             <span>{{ student.rollnumber }}</span>
@@ -59,7 +61,9 @@
           </div>
         </div>
       </nb-tab>
-      <nb-tab tabTitle="Students">
+
+      <!-- MANAGERS -->
+      <nb-tab tabTitle="Managers">
         <nb-list>
           <nb-list-item class="item small">
             <span>Id</span>
@@ -72,16 +76,64 @@
             <span></span>
           </nb-list-item>
           <nb-list-item class="item small"
-            *ngFor="let student of (studentList | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems })">
-            <span>{{ student.id }}</span>
+            *ngFor="let manager of (managerList | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems })">
+            <span>{{ manager.id }}</span>
             <span>
-              <img class="table-avatar-img" [src]="student.avatar" alt="N/A">
+              <img *ngIf="manager.avatar" class="table-avatar-img" [src]="manager.avatar" alt="N/A">
+              <img *ngIf="!manager.avatar" class="table-avatar-img" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="N/A">
             </span>
-            <span>{{ student.name }}</span>
-            <span>{{ student.rollnumber }}</span>
-            <span>{{ student.username }}</span>
-            <span>{{ student.email }}</span>
-            <span>{{ student.DOB ?? 'N/A' }}</span>
+            <span>{{ manager.name }}</span>
+            <span>{{ manager.rollnumber }}</span>
+            <span>{{ manager.username }}</span>
+            <span>{{ manager.email }}</span>
+            <span>{{ manager.DOB ?? 'N/A' }}</span>
+            <span>
+              <button (click)="selectedStudent = student" class="btn"
+                [nbContextMenu]="singleUserAction">
+                <nb-icon icon="more-vertical"></nb-icon>
+              </button>
+            </span>
+            <!-- Pagination controls -->
+          </nb-list-item>
+          <!-- Show empty template when there are no proposals -->
+        </nb-list>
+        <div *ngIf="studentList?.length === 0" class="col-md-12">
+          <div class="alert alert-info">No student available.</div>
+        </div>
+        <div class="col-md-12">
+          <div *ngIf="studentList?.length !== 0"
+            class="d-flex justify-content-center align-items-center">
+            <pagination-controls (pageChange)="onPageChange($event)"
+              [maxSize]="6"></pagination-controls>
+          </div>
+        </div>
+      </nb-tab>
+
+      <!-- MANAGERS -->
+      <nb-tab tabTitle="Staffs">
+        <nb-list>
+          <nb-list-item class="item small">
+            <span>Id</span>
+            <span>Avatar</span>
+            <span>Name</span>
+            <span>Roll number</span>
+            <span>Username</span>
+            <span>Email</span>
+            <span>DOB</span>
+            <span></span>
+          </nb-list-item>
+          <nb-list-item class="item small"
+            *ngFor="let staff of (staffList | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems })">
+            <span>{{ staff.id }}</span>
+            <span>
+              <img *ngIf="staff.avatar" class="table-avatar-img" [src]="staff.avatar" alt="N/A">
+              <img *ngIf="!staff.avatar" class="table-avatar-img" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="N/A">
+            </span>
+            <span>{{ staff.name }}</span>
+            <span>{{ staff.rollnumber }}</span>
+            <span>{{ staff.username }}</span>
+            <span>{{ staff.email }}</span>
+            <span>{{ staff.DOB ?? 'N/A' }}</span>
             <span>
               <button (click)="selectedStudent = student" class="btn"
                 [nbContextMenu]="singleUserAction">
@@ -163,9 +215,22 @@
 </ng-template>
 <ng-template #updateUserDialog let-data let-ref="dialogRef">
   <nb-card>
-    <nb-card-header>Update User</nb-card-header>
-    <nb-card-body> Do you want to update {{ selectedStudent.name }}
-      WIP
+    <nb-card-header>Update User {{ selectedStudent.name }}</nb-card-header>
+    <nb-card-body>
+      <label for="title" class="label">Name</label>
+      <input type="text" [(ngModel)]="selectedStudent.name" nbInput fullWidth id="title" placeholder="Title">
+      <label for="title" class="label">Email</label>
+      <input type="text" [(ngModel)]="selectedStudent.email" nbInput fullWidth id="title" placeholder="Title">
+      <label for="title" class="label">Avatar</label>
+      <input type="text" [(ngModel)]="selectedStudent.avatar" nbInput fullWidth id="title" placeholder="Title">
+      <label for="title" class="label">DOB</label>
+      <input type="text" [(ngModel)]="selectedStudent.dob" nbInput fullWidth id="title" placeholder="Title">
+      <label for="title" class="label">Role</label>
+      <nb-select [(selected)]="selectedStudent.role" fullWidth class="d-block">
+        <nb-option value="1">Manager</nb-option>
+        <nb-option value="2">Staff</nb-option>
+        <nb-option value="3">Student</nb-option>
+      </nb-select>
     </nb-card-body>
     <nb-card-footer>
       <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>

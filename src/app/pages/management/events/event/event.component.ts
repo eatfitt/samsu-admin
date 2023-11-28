@@ -1,7 +1,7 @@
 import { Component, Input, TemplateRef, ViewChild, SimpleChanges } from '@angular/core';
-import { CreateEventRequest, Event, EventService } from '../../../../@core/services/event/event.service';
+import { CreateEventRequest, Event, EventParticipant, EventService } from '../../../../@core/services/event/event.service';
 import { NbDialogRef, NbDialogService, NbToastrService } from '@nebular/theme';
-import { convertMillisToTime, getRandomName, isImageFile } from '../../../../@core/utils/data-util';
+import { convertMilliToDate, convertMillisToTime, getRandomName, isImageFile } from '../../../../@core/utils/data-util';
 import _ from 'lodash';
 import { FileUploadService } from '../../../../../services/file-upload.service';
 @Component({
@@ -14,7 +14,7 @@ export class EventComponent {
   @ViewChild('saveEditTemplate') saveEditTemplate: TemplateRef<any>;
 
   @Input() event: Event = null;
-  @Input()
+  @Input() participants: EventParticipant[] = [];
   eventToEdit: Event = null;
   editorConfig = {
     toolbar: [
@@ -24,6 +24,7 @@ export class EventComponent {
     ],
   };
   durationObject = null;
+  isShowStatistic = false;
   
   // CHECK FIELD IS EDITING
   isEditContent = false;
@@ -37,8 +38,6 @@ export class EventComponent {
 
   // PARTICIPANT MANAGEMENT
   filteredParticipantList = [];
-  mockCheckInFlagParticipantList = [];
-  filteredmockCheckInFlagParticipantList = [];
   reasonForManualCheckin = 'Student Card Unavailable';
   reasons = ['Student Card Unavailable', 'Others'];
   checkInMethod = 'National ID'
@@ -50,10 +49,6 @@ export class EventComponent {
   selectedTask: Task = null;
   selectedIndex: number;
 
-  // MOCK Names
-  randomNames = ["Do Ngan Ha", "Thai Van Man", "Nguyen Tran Thien Duc", "Truong Nguyen Anh Huy", "Do Dai Bach"];
-  randomName = 'Do Ngan Ha';
-
   private contentTemplateRef: NbDialogRef<EventComponent>;
 
   constructor(
@@ -64,18 +59,12 @@ export class EventComponent {
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    const { event } = changes;
-    if (_.isObject(event)) {
+    const { event, participants } = changes;
+    if (_.isObject(event) || _.isObject(participants)) {
       this.eventToEdit = { ...this.event };
-      this.filteredParticipantList = this.event?.participants;
-      this.mockCheckInFlagParticipantList = this.filteredmockCheckInFlagParticipantList = this.event.participants.map(participant => {
-        return { participant: participant, checkedIn: false, notes: '' };
-      });
+      this.filteredParticipantList = this.participants;
       this.getDuration();
     }
-    console.log(this.filteredParticipantList)
-    console.log(this.eventToEdit)
-    this.randomName = this.getRandomName();
   }
 
   editEvent() {
@@ -90,7 +79,7 @@ export class EventComponent {
       semester: this.eventToEdit.semester.name,
       bannerUrl: this.eventToEdit.bannerUrl,
       fileUrls: this.eventToEdit.fileUrls,
-      startTime: this.eventToEdit.startTime,
+      startTime: convertMilliToDate(this.eventToEdit.startTime) ,
       feedbackQuestionRequestList: this.eventToEdit.feedbackQuestions.map(question => {
         return {
           type: question.type,
@@ -110,7 +99,7 @@ export class EventComponent {
           assignees: task.assignees.map(assignee => {
             return {
               rollnumber: assignee.rollnumber,
-              status: assignee.status,
+              status: assignee.status ?? 0,
             }
           })
         }
@@ -175,27 +164,36 @@ export class EventComponent {
       { context: data });
   }
 
-  getRandomName() {
-    return getRandomName(this.randomNames);
-  }
-
   getDuration() {
     this.durationObject = convertMillisToTime(this.eventToEdit.duration);
   }
 
   filterParticipant(event) {
-    this.filteredmockCheckInFlagParticipantList = this.mockCheckInFlagParticipantList.filter(participant => participant.participant.toLowerCase().includes(event.target.value.toLowerCase()));
+    this.filteredParticipantList = this.participants.filter(participant => participant.user.rollnumber.toLowerCase().includes(event.target.value.toLowerCase()));
   }
 
-  checkInManually() {
-    this.toastrService.show("Checked in Successfully", "Checked in", {
-      status: "success",
-    });
-    const rollNoToCheckin = this.filteredmockCheckInFlagParticipantList.findIndex((participant) => participant.participant === this.rollnumberToCheckIn);
-    this.filteredmockCheckInFlagParticipantList[rollNoToCheckin].checkedIn = true;
-    this.filteredmockCheckInFlagParticipantList[rollNoToCheckin].notes = `Check in via ${this.checkInMethod} due to ${this.reasonForManualCheckin}. Notes: ${this.checkInNotes}`;
+  checkInManually(data) {
+    console.log(data);
+    this.eventService.checkInUser(this.event.id, data)
+      .subscribe(
+        (sucess: any) => {
+          this.toastrService.show("Checked in Successfully", "Checked in", {
+            status: "success",
+          });
+        },
+        (failed: any) => {
+          this.toastrService.show("Checked in Failed", "Failed", {
+            status: "danger",
+          });
+        }
+      )
+
     this.contentTemplateRef.close();
-    this.checkInMethod = this.reasonForManualCheckin = this.checkInNotes;
+
+    // const rollNoToCheckin = this.filteredmockCheckInFlagParticipantList.findIndex((participant) => participant.participant === this.rollnumberToCheckIn);
+    // this.filteredmockCheckInFlagParticipantList[rollNoToCheckin].checkedIn = true;
+    // this.filteredmockCheckInFlagParticipantList[rollNoToCheckin].notes = `Check in via ${this.checkInMethod} due to ${this.reasonForManualCheckin}. Notes: ${this.checkInNotes}`;
+    // this.checkInMethod = this.reasonForManualCheckin = this.checkInNotes;
   }
 
   addTask() {

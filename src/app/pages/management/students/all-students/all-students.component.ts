@@ -19,6 +19,7 @@ import {
 } from "../../../../@core/services/user/user.service";
 import { UserState } from "../../../../app-state/user";
 import { GetAllUsersListResponse } from "../../../../@core/services/user/user.service";
+import { convertToDate } from "../../../../@core/utils/data-util";
 
 @Component({
   selector: "ngx-all-students",
@@ -74,7 +75,7 @@ export class AllStudentsComponent {
     },
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
-      confirmDelete: true,
+      // confirmDelete: true,
     },
     columns: {
       rollnumber: {
@@ -116,6 +117,16 @@ export class AllStudentsComponent {
           },
         },
       },
+      dob: {
+        title: "DOB",
+        defaultValue: '01/01/2001',
+        filter: false,
+      },
+      avatar: {
+        title: "Avatar",
+        defaultValue: 'https://cdn-icons-png.flaticon.com/512/3177/3177440.png',
+        filter: false,
+      }
     },
   };
 
@@ -176,6 +187,16 @@ export class AllStudentsComponent {
             ],
           },
         },
+      },
+      dob: {
+        title: "DOB",
+        defaultValue: '29/11/2001',
+        filter: false,
+      },
+      avatar: {
+        title: "Avatar",
+        defaultValue: 'https://cdn-icons-png.flaticon.com/512/3177/3177440.png',
+        filter: false,
       },
       message: {
         title: "Reason Failed",
@@ -321,6 +342,8 @@ export class AllStudentsComponent {
         email: item[2],
         username: item[3],
         role: item[4],
+        dob: item[5] ?? '01/01/2001',
+        avatar: item[6] ?? 'https://cdn-icons-png.flaticon.com/512/3177/3177440.png'
       };
     });
     this.sourceAddingStudents.load(this.addingData);
@@ -340,8 +363,8 @@ export class AllStudentsComponent {
             this.currentPage = users.page;
             this.totalItems = users.totalElements;
             this.studentList = users.content.filter((user) => user.role === 3);
-            this.staffList = users.content.filter((user) => user.role === 3);
-            this.managerList = users.content.filter((user) => user.role === 2);
+            this.staffList = users.content.filter((user) => user.role === 2);
+            this.managerList = users.content.filter((user) => user.role === 1);
             // .map((c) => {
             //   return {
             //     avatar: c.avatar ?? '../../../../../assets/images/kitten-default.png',
@@ -379,10 +402,18 @@ export class AllStudentsComponent {
   }
 
   importStudent() {
-    this.sourceAddingStudents.getAll().then((value) => {
-      console.log(value);
+    this.sourceAddingStudents.getAll()
+    .then((value) => {
+      const tmpValue = value.map(v => {
+        return {
+          ...v,
+          dob: convertToDate(v.dob),
+          role: v.role
+        }
+      })
+      console.log(tmpValue);
       this.closeDialog();
-      this.userService.addListUser(this.bearerToken, value).subscribe(
+      this.userService.addListUser(this.bearerToken, tmpValue).subscribe(
         (res: AddListUserResponse) => {
           this.importAmount = res.amount;
           this.importSuccess = res.success;
@@ -429,17 +460,17 @@ export class AllStudentsComponent {
     this.contentTemplateRef = this.dialogService.open(dialog);
   }
 
-  // onDeleteConfirm(event) {
-  //   console.log(event);
-  //   this.selectedStudent = event.data;
-  //   this.openDialog(this.deleteUserDialog);
-  // }
+  onDeleteConfirm(event) {
+    console.log(event);
+    this.selectedStudent = event.data;
+    this.openDialog(this.deleteUserDialog);
+  }
 
-  // onEditConfirm(event) {
-  //   console.log(event);
-  //   this.selectedStudent = event.newData;
-  //   this.openDialog(this.updateUserDialog);
-  // }
+  onEditConfirm(event) {
+    console.log(event);
+    this.selectedStudent = event.newData;
+    this.openDialog(this.updateUserDialog);
+  }
 
   deleteUser() {
     this.deleteUserObservable().subscribe(
@@ -469,8 +500,9 @@ export class AllStudentsComponent {
 
   updateUser() {
     let studentPayload = this.selectedStudent;
-    studentPayload.role = RoleEnum[studentPayload.role];
+    // studentPayload.role = RoleEnum[studentPayload.role];
     studentPayload.status = 1;
+    studentPayload.dob = convertToDate(this.selectedStudent.dob as string)
     this.userService
       .updateUser(
         this.bearerToken,
@@ -503,6 +535,13 @@ export class AllStudentsComponent {
         this.router.navigateByUrl(`pages/user/${data.username}`);
         break;
     }
+  }
+
+  getUserRole(role: string): number {
+    if (role === 'ROLE_ADMIN') return 0;
+    if (role === 'ROLE_MANAGER') return 1;
+    if (role === 'ROLE_STAFF') return 2;
+    if (role === 'ROLE_STUDENT') return 3;
   }
 
   ngOnDestroy() {

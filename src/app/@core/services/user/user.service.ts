@@ -52,7 +52,7 @@ export interface AddListUserRequest {
   rollnumber: string;
   email: string;
   role: string | number;
-  dob?: string;
+  dob?: string | Date;
   createAt?: Date;
   department?: Department;
   avatar?: string;
@@ -221,6 +221,9 @@ export class UserService {
     const loggedInUserSummary = JSON.parse(
       localStorage.getItem("userSummary")
     );
+    // if (loggedInUserSummary.role !== 'ROLE_ADMIN' || loggedInUserSummary.role !== 'ROLE_MANAGER') {
+    //   this.router.navigate(["/"]);
+    // }
     if (!!loggedInJwt) {
       this.store.dispatch(setUserSocialUser({ socialUser: loggedInUser }));
       this.store.dispatch(setUserJwt({ jwt: loggedInJwt }));

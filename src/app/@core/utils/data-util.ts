@@ -35,4 +35,12 @@ export function convertMillisToTime(millis) {
   
     return { hours, minutes, seconds };
   }
-  
+
+export function convertToDate(dateString: string) {
+  let dateParts = dateString.trim().split("/");
+  return new Date(+dateParts[2], +dateParts[1] - 1, +dateParts[0]);
+}
+
+export function convertMilliToDate(millis) {
+  return new Date(millis);
+}

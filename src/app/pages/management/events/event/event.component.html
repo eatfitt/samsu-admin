@@ -20,107 +20,108 @@
                         Attachment <input class="upload" (change)="uploadFile($event, 'fileUrls')"
                             type="file" />
                     </button>
+                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload"> {{ isShowStatistic ? 'Hide statistic' : 'View statistic'}}
+                    </button>
                 </div>
-                <div class="event-content my-3">
-                    <div class="d-flex justify-content-between">
-                        <div class="font-weight-bold mb-1">Content</div>
-                        <nb-icon *ngIf="!isEditContent" icon="edit-2" pack="eva"
-                            (click)="isEditContent = true" class="hover-pointer"></nb-icon>
-                    </div>
-                    <div *ngIf="!isEditContent" [innerHTML]="eventToEdit.content"></div>
-                    <ng-container *ngIf="isEditContent">
-                        <quill-editor [(ngModel)]="eventToEdit.content"
-                            [config]="editorConfig"></quill-editor>
-                        <ng-container [ngTemplateOutlet]="saveEditTemplate"></ng-container>
-                    </ng-container>
-                </div>
-                <div class="event-attachments my-3">
-                    <div class="font-weight-bold mb-1">Attachments</div>
-                    <div class="d-flex overflow-auto w-100">
-                        <div class="event-bannerurl hover-pointer"
-                            (click)="openDialog(eventBannerDialog, eventToEdit.bannerUrl)">
-                            <nb-card style="max-width: 12rem;">
-                                <nb-card-header
-                                    class="p-0 d-flex justify-content-center align-items-center"
-                                    style="height: 6rem;">
-                                    <img class="mh-100 mw-100" [src]="eventToEdit.bannerUrl">
-                                </nb-card-header>
-                                <nb-card-body class="p-2">
-                                    <div class="text-truncate small">{{ eventToEdit.bannerUrl }}
-                                    </div>
-                                </nb-card-body>
-                            </nb-card>
+                <ng-container>                
+                    <div class="event-content my-3">
+                        <div class="d-flex justify-content-between">
+                            <div class="font-weight-bold mb-1">Content</div>
+                            <nb-icon *ngIf="!isEditContent" icon="edit-2" pack="eva"
+                                (click)="isEditContent = true" class="hover-pointer"></nb-icon>
                         </div>
-                        <div class="event-fileurls ml-2 hover-pointer"
-                            (click)="openDialog(eventBannerDialog, eventToEdit.fileUrls)">
-                            <nb-card style="max-width: 12rem;">
-                                <nb-card-header
-                                    class="p-0 d-flex justify-content-center align-items-center"
-                                    style="height: 6rem;">
-                                    <img *ngIf="isImageFile(eventToEdit.fileUrls)"
-                                        class="mh-100 mw-100" [src]="event.fileUrls">
-                                    <nb-icon *ngIf="!isImageFile(eventToEdit.fileUrls)"
-                                        icon="file-text" pack="eva" class="w-50 h-50"></nb-icon>
-                                </nb-card-header>
-                                <nb-card-body class="p-2">
-                                    <div class="text-truncate small">{{ eventToEdit.fileUrls }}
-                                    </div>
-                                </nb-card-body>
-                            </nb-card>
+                        <div *ngIf="!isEditContent" [innerHTML]="eventToEdit.content"></div>
+                        <ng-container *ngIf="isEditContent">
+                            <quill-editor [(ngModel)]="eventToEdit.content"
+                                [config]="editorConfig"></quill-editor>
+                            <ng-container [ngTemplateOutlet]="saveEditTemplate"></ng-container>
+                        </ng-container>
+                    </div>
+                    <div class="event-attachments my-3">
+                        <div class="font-weight-bold mb-1">Attachments</div>
+                        <div class="d-flex overflow-auto w-100">
+                            <div class="event-bannerurl hover-pointer"
+                                (click)="openDialog(eventBannerDialog, eventToEdit.bannerUrl)">
+                                <nb-card style="max-width: 12rem;">
+                                    <nb-card-header
+                                        class="p-0 d-flex justify-content-center align-items-center"
+                                        style="height: 6rem;">
+                                        <img class="mh-100 mw-100" [src]="eventToEdit.bannerUrl">
+                                    </nb-card-header>
+                                    <nb-card-body class="p-2">
+                                        <div class="text-truncate small">{{ eventToEdit.bannerUrl }}
+                                        </div>
+                                    </nb-card-body>
+                                </nb-card>
+                            </div>
+                            <div class="event-fileurls ml-2 hover-pointer"
+                                (click)="openDialog(eventBannerDialog, eventToEdit.fileUrls)">
+                                <nb-card style="max-width: 12rem;">
+                                    <nb-card-header
+                                        class="p-0 d-flex justify-content-center align-items-center"
+                                        style="height: 6rem;">
+                                        <img *ngIf="isImageFile(eventToEdit.fileUrls)"
+                                            class="mh-100 mw-100" [src]="event.fileUrls">
+                                        <nb-icon *ngIf="!isImageFile(eventToEdit.fileUrls)"
+                                            icon="file-text" pack="eva" class="w-50 h-50"></nb-icon>
+                                    </nb-card-header>
+                                    <nb-card-body class="p-2">
+                                        <div class="text-truncate small">{{ eventToEdit.fileUrls }}
+                                        </div>
+                                    </nb-card-body>
+                                </nb-card>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="event-attendance-list">
-                    <nb-card size="small">
-                        <nb-card-header style="background-color: var(--menu-item-divider-color);" class="d-flex justify-content-between align-items-baseline">
-                            <div>Participants - đang mock ({{ eventToEdit.participants.length }})</div>
-                            <input class=" bg-white border" fieldSize="small" placeholder="Filter by rollnumber" nbInput (keyup)="filterParticipant($event)">
-                        </nb-card-header>
-                        <nb-card-body class="p-0">
-                            <nb-list>
-                                <nb-list-item class="small px-4 d-block"
-                                    *ngFor="let participant of filteredmockCheckInFlagParticipantList; let i = index">
-                                    <div class="d-flex justify-content-between">
+                    <div class="event-attendance-list">
+                        <nb-card size="small">
+                            <nb-card-header style="background-color: var(--menu-item-divider-color);" class="d-flex justify-content-between align-items-baseline">
+                                <div>Participants ({{ participants.length }})</div>
+                                <input class=" bg-white border" fieldSize="small" placeholder="Filter by rollnumber" nbInput (keyup)="filterParticipant($event)">
+                            </nb-card-header>
+                            <nb-card-body class="p-0">
+                                <nb-list>
+                                    <nb-list-item class="small px-4 d-block"
+                                        *ngFor="let participant of filteredParticipantList; let i = index">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>
+                                                <a class="text-basic font-weight-bold" [routerLink]="['../../user', participant.user.rollnumber]">{{participant.user.name}}</a>
+                                            </span>
+                                            <span>{{ participant.user.rollnumber }}</span>
+                                            <span>
+                                                <button [disabled]="participant.checkin" nbButton (click)="openDialog(checkInDialog, participant.user.rollnumber); rollnumberToCheckIn = participant.participant" size="small">{{ participant.checkin ? "Already Checked in" : "Check in" }}</button>
+                                            </span>
+                                        </div>
+                                        <div *ngIf="participant.checkedIn" class="font-italic">{{ participant.notes }}</div>
+                                    </nb-list-item>
+                                </nb-list>
+                            </nb-card-body>
+                        </nb-card>
+                    </div>
+                    <div class="event-attendance-list">
+                        <nb-card size="small">
+                            <nb-card-header style="background-color: var(--menu-item-divider-color);">Tasks - đang mock assignee ({{ eventToEdit.tasks.length }})</nb-card-header>
+                            <nb-card-body class="p-0">
+                                <nb-list>
+                                    <nb-list-item *ngFor="let task of eventToEdit.tasks; let i = index" class="container py-2 px-4 hover-pointer hover-row item small border border-bottom-0"
+                                        [ngClass]="{'selected-row': i === selectedIndex}" (click)="selectedTask = task; selectedIndex = i">
+                                        <span class="font-weight-bold">{{ task.title ? task.title : 'Task' }}</span>
                                         <span>
-                                            <a class="text-basic font-weight-bold" [routerLink]="['../../user', participant]">{{participant.participant.name}}</a>
+                                            <nb-tag [text]="getTaskStatus(task.status)" size="tiny" appearance="outline"></nb-tag>
                                         </span>
-                                        <span>{{ participant.participant.rollnumber }}</span>
-                                        <span>
-                                            <button *ngIf="!participant.checkedIn" nbButton (click)="openDialog(checkInDialog, participant.participant); rollnumberToCheckIn = participant.participant" size="small">Check-in</button>
-                                            <button *ngIf="participant.checkedIn" nbButton (click)="participant.checkedIn = false" size="small">Un Check-in</button>
+                                        <span *ngIf="task.assignees?.length > 0">
+                                            {{ task.assignees[0] ? task.assignees[0].name : 'Unassigned' }}
                                         </span>
-                                    </div>
-                                    <div *ngIf="participant.checkedIn" class="font-italic">{{ participant.notes }}</div>
-                                </nb-list-item>
-                            </nb-list>
-                        </nb-card-body>
-                    </nb-card>
-                </div>
-                <div class="event-attendance-list">
-                    <nb-card size="small">
-                        <nb-card-header style="background-color: var(--menu-item-divider-color);">Tasks - đang mock assignee ({{ eventToEdit.tasks.length }})</nb-card-header>
-                        <nb-card-body class="p-0">
-                            <nb-list>
-                                <nb-list-item *ngFor="let task of eventToEdit.tasks; let i = index" class="container py-2 px-4 hover-pointer hover-row item small border border-bottom-0"
-                                    [ngClass]="{'selected-row': i === selectedIndex}" (click)="selectedTask = task; selectedIndex = i">
-                                    <span class="font-weight-bold">{{ task.title ? task.title : 'Task' }}</span>
-                                    <span>
-                                        <nb-tag [text]="getTaskStatus(task.status)" size="tiny" appearance="outline"></nb-tag>
-                                    </span>
-                                    <span *ngIf="task.assignees?.length > 0">
-                                        {{ task.assignees[0] ? task.assignees[0].name : 'Unassigned' }}
-                                    </span>
-                                    <span *ngIf="task.assignees === undefined || task.assignees === null || task.assignees?.length <= 0">
-                                       {{randomName}}
-                                    </span>
-                                </nb-list-item>
-                                <nb-list-item class="container border py-2 pl-3">
-                                    <span class="btn-link hover-pointer" (click)="addTask()" style="font-size: .75rem;">+ Add task</span>
-                                </nb-list-item>
-                            </nb-list>
-                        </nb-card-body>
-                    </nb-card>
-                </div>
+                                        <span *ngIf="task.assignees === undefined || task.assignees === null || task.assignees?.length <= 0">N/A</span>
+                                    </nb-list-item>
+                                    <nb-list-item class="container border py-2 pl-3">
+                                        <span class="btn-link hover-pointer" (click)="addTask()" style="font-size: .75rem;">+ Add task</span>
+                                    </nb-list-item>
+                                </nb-list>
+                            </nb-card-body>
+                        </nb-card>
+                    </div>
+                </ng-container>
             </div>
             <div class="col-md-4 overflow-auto" style="max-height: 40rem;">
                 <ng-container *ngIf="selectedTask === null; else selectedTaskTemplate">
@@ -178,7 +179,7 @@
     </div>
 </ng-template>
 
-<ng-template #checkInDialog let-ref="dialogRef">
+<ng-template #checkInDialog let-ref="dialogRef" let-data>
     <nb-card>
         <nb-card-header>Manual Check-in</nb-card-header>
         <nb-card-body>

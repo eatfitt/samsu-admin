@@ -1,4 +1,4 @@
-  import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -6,7 +6,6 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Department, GetAllUsersListResponse } from '../user/user.service';
 import { Semester } from '../semester/semester.service';
-import { EventProposal } from '../../../../services/event-propsal.service';
 import { GradeSubCriteria } from '../grade-sub-criteria/grade-sub-criteria.service';
 export interface Event {
   id?: number;
@@ -85,6 +84,13 @@ export interface CreateEventRequest {
   taskRequests?: TaskRequests[];
 }
 
+export interface EventParticipant {
+  eventId: number;
+  user: GetAllUsersListResponse;
+  checkin: Date | number //conver lai thanh Date;
+  checkout: Date | number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -150,5 +156,19 @@ export class EventService {
         return throwError(error);
       })
     );
+  }
+
+  public checkInUser(eventid: number, rollnumber: string) {
+    const headers = new HttpHeaders()
+      .set("Content-Type", "application/json")
+    const options = { headers: headers };
+    return this.http
+      .post(`${this.apiEndPoint}/events/event/${eventid}/checkin/${rollnumber}`, JSON.stringify(event), options)
+      .pipe(
+        catchError((error) => {
+          console.error("Error in checkInUser:", error);
+          return throwError(error);
+        })
+      );
   }
 }

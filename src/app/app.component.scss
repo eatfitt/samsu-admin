@@ -15,6 +15,10 @@
   display: none !important;
 }
 
+::ng-deep nb-auth nb-card-body {
+  background-color: var(--button-hero-info-hover-left-background-color) !important;
+}
+
 ::ng-deep .ql-editor {
   min-height: 150px !important;
 }

@@ -3,7 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { UserState } from '../../../../app-state/user';
 import { UserService } from '../../../../@core/services/user/user.service';
-import { Event, EventService } from '../../../../@core/services/event/event.service';
+import { Event, EventParticipant, EventService } from '../../../../@core/services/event/event.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'ngx-single-event',
@@ -13,6 +14,9 @@ import { Event, EventService } from '../../../../@core/services/event/event.serv
 export class SingleEventComponent {
   id: number;
   event: Event = null;
+  participants: EventParticipant[] = [];
+  mySubscription: Subscription;
+
   constructor(
     private router: Router,
     protected userService: UserService,
@@ -24,6 +28,11 @@ export class SingleEventComponent {
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
+    // 5s gọi 1 lần
+
+    // this.mySubscription = interval(5000).subscribe((x =>{
+    //   this.fetchData();
+    // }));
     this.fetchData();
   }
 
@@ -31,5 +40,7 @@ export class SingleEventComponent {
     this.userService.checkLoggedIn();
     this.eventService.getEvent(this.id)
       .subscribe((data: Event) => this.event = data);
+    this.eventService.getEventParticipants(this.id)
+      .subscribe((data: any) => this.participants = data);
   }
 }

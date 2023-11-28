@@ -12,7 +12,7 @@
   <!-- (userRowSelect)="navigateUser($event)" -->
   <nb-card-body>
     <ng2-smart-table [settings]="settings" [source]="studentData"
-      (deleteConfirm)="openDialog(deleteUserDialog)" (editConfirm)="openDialog(updateUserDialog)">
+      (deleteConfirm)="onDeleteConfirm($event)" (editConfirm)="onEditConfirm($event)">
     </ng2-smart-table>
   </nb-card-body>
 </nb-card>
