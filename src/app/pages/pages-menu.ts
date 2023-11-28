@@ -72,6 +72,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/departments',
     home: true,
   },
+  {
+    title: 'Grade Tickets',
+    icon: 'paper-plane',
+    link: '/pages/grade-tickets',
+    home: true,
+  },
   // {
   //   title: 'Layout',
   //   icon: 'layout-outline',

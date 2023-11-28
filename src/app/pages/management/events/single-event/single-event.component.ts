@@ -28,11 +28,11 @@ export class SingleEventComponent {
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
-    // 5s gọi 1 lần
+    // 10s gọi 1 lần
 
-    // this.mySubscription = interval(5000).subscribe((x =>{
-    //   this.fetchData();
-    // }));
+    this.mySubscription = interval(10000).subscribe((x =>{
+      this.fetchData();
+    }));
     this.fetchData();
   }
 

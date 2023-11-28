@@ -1,0 +1,66 @@
+::ng-deep .hover-pointer {
+    font-weight: 600;
+    &:hover {
+        cursor: pointer;
+    }
+  }
+
+::ng-deep .event-attachments nb-card-header {
+    &:hover {
+        filter: brightness(50%);  
+    }
+  }
+
+  ::ng-deep .hover-edit {
+    &:hover {
+        cursor: text;
+        background-color: var(--accordion-header-border-color);
+    }
+}
+
+::ng-deep .hover-row {
+    &:hover {
+        background-color: var(--accordion-header-border-color);
+    }
+}
+
+::ng-deep .selected-row {
+    background-color: var(--color-info-200);
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    > * {
+      flex: 1;
+    }
+  
+    &:first-child {
+      border-top: none;
+    }
+    span {
+        &:first-child,
+        &:last-child {
+            max-width: 3rem !important;
+        }
+        &:nth-child(2), 
+        &:nth-child(7) {
+        flex: 2 !important;
+      }
+    }
+  }
+
+  ::ng-deep .hover-pointer {
+    font-weight: 600;
+    &:hover {
+        cursor: pointer;
+    }
+  }
+
+::ng-deep .event-attachments nb-card-header {
+    &:hover {
+        filter: brightness(50%);  
+    }
+  }

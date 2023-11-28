@@ -13,6 +13,7 @@ export class CustomAutoselectComponent {
   @Input() label = '';
   @Input() placeholder = 'Enter value';
   @Input() fieldSize = 'medium';
+  @Input() disabled = false;
   @Output() selectItem = new EventEmitter<any>();
   @Output() filteredResult = new EventEmitter<any[]>();
   filteredArr = [];

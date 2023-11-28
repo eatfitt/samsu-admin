@@ -39,7 +39,7 @@
             <span>{{ student.rollnumber }}</span>
             <span>{{ student.username }}</span>
             <span>{{ student.email }}</span>
-            <span>{{ student.DOB ?? 'N/A' }}</span>
+            <span>{{ (student.dob | date: 'd/M/yyyy') ?? 'N/A' }}</span>
             <span>
               <button (click)="selectedStudent = student" class="btn"
                 [nbContextMenu]="singleUserAction">

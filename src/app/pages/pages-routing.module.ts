@@ -20,6 +20,7 @@ import { NotFoundComponent } from './miscellaneous/not-found/not-found.component
 import { PagesComponent } from './pages.component';
 import { SingleEventComponent } from './management/events/single-event/single-event.component';
 import { EventComponent } from './management/events/event/event.component';
+import { InvokePointComponent } from './management/invoke-point/invoke-point.component';
 
 const routes: Routes = [{
   path: '',
@@ -76,6 +77,10 @@ const routes: Routes = [{
     {
       path: 'grades',
       component: GradesComponent,
+    },
+    {
+      path: 'grade-tickets',
+      component: InvokePointComponent,
     },
     {
       path: 'user/:username',

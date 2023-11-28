@@ -1,5 +1,5 @@
 <label class="label">{{ label }}</label>
-<input #autoInput nbInput fullWidth="" type="text" (input)="onChange()" placeholder="{{ placeholder }}"
+<input [disabled]="disabled" #autoInput nbInput fullWidth="" type="text" (input)="onChange()" placeholder="{{ placeholder }}"
     [nbAutocomplete]="auto"  [fieldSize]="fieldSize"/>
 <nb-autocomplete #auto (selectedChange)="handleSelect($event)">
     <nb-option *ngFor="let item of filteredArr" [value]="item[property]"> {{ item[property] }}

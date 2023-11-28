@@ -59,6 +59,7 @@ import { FeedbackEventProposalComponent } from './management/event-proposal/admi
 import { SingleEventComponent } from "./management/events/single-event/single-event.component";
 import { EventComponent } from "./management/events/event/event.component";
 import { SafePipe } from "./pipes/safe.pipe";
+import { InvokePointComponent } from './management/invoke-point/invoke-point.component';
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 const PIPES = [
@@ -129,7 +130,8 @@ const PIPES = [
     FeedbackEventProposalComponent,
     SingleEventComponent,
     EventComponent,
-    ...PIPES
+    ...PIPES,
+    InvokePointComponent
     // TasksComponent,
   ],
 })

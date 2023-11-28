@@ -1,0 +1,143 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <div>Grade Ticket Management</div>
+        <nb-select placeholder="Filter by Status" [(selected)]="statusToFilter"
+            size="small">
+            <nb-option [value]="-1">All</nb-option>
+            <nb-option [value]="0">Processing</nb-option>
+            <nb-option [value]="1">Approved</nb-option>
+            <nb-option [value]="2">Rejected</nb-option>
+        </nb-select>
+    </nb-card-header>
+    <nb-card-body>
+        <nb-list>
+            <nb-list-item class="item small">
+                <span>Id</span>
+                <span>Title</span>
+                <span>Creator</span>
+                <span>Accepter</span>
+                <span>Status</span>
+                <span class="d-flex justify-content-center">Score</span>
+                <span>Evidence</span>
+                <span></span>
+            </nb-list-item>
+            <nb-list-item class="item small"  *ngFor="let gradeTicket of (filterByStatus(gradeTickets) | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems })">
+                <span>{{ gradeTicket.id }}</span>
+                <span style="font-weight: 600;">{{ gradeTicket.title }}</span>
+                <span>{{ gradeTicket.creator?.name }}</span>
+                <span>{{ gradeTicket.accepter?.name ?? 'N/A' }}</span>
+                <span>
+                    <nb-tag [text]="getStatusText(gradeTicket?.status)"
+                        [status]="getStatusColor(gradeTicket?.status)" size="tiny"></nb-tag>
+                </span>
+                <span class="d-flex justify-content-center">{{ gradeTicket.score ?? 'N/A' }}</span>
+                <span class="text-truncate">{{ gradeTicket.evidenceUrls }}</span>
+                <span>
+                    <button (click)="selectedGradeTicket = gradeTicket; statusForSelectedGradeTicket = gradeTicket.status" class="btn" [nbContextMenu]="menu">
+                        <nb-icon icon="more-vertical"></nb-icon>
+                    </button>
+                </span>
+            </nb-list-item>
+        </nb-list>
+        <div *ngIf="gradeTickets?.length === 0" class="col-md-12">
+            <div class="alert alert-info">No grade tickets available.</div>
+          </div>
+          <div class="col-md-12">
+            <div *ngIf="gradeTickets?.length !== 0"
+              class="d-flex justify-content-center align-items-center">
+              <pagination-controls (pageChange)="onPageChange($event)"
+                [maxSize]="6"></pagination-controls>
+            </div>
+          </div>
+    </nb-card-body>
+</nb-card>
+
+<ng-template #viewSingleTicketTemplate let-data let-ref="dialogRef">
+    <nb-card>
+        <nb-card-header>
+            <span class="font-weight-bold h6">{{ selectedGradeTicket?.title }}</span>
+        </nb-card-header>
+        <nb-card-body style="max-width: 45rem;">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="label mb-1">Content</div>
+                    <div class="p-4 border">{{ selectedGradeTicket?.content }}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5 border-right">
+                    <div class="label mb-1">Creator</div>
+                    <div>{{ selectedGradeTicket?.creator?.name }} - {{ selectedGradeTicket?.creator?.rollnumber }}</div>
+                    <div class="label mt-4 mb-1">Approver</div>
+                    <div>{{ selectedGradeTicket?.accepter?.name  ?? 'N/A' }}</div>
+                    <div class="label mt-4 mb-1">Evidence</div>
+                    <div class="event-attachments">
+                        <div class="d-flex overflow-auto w-100">
+                            <div class="event-fileurls mr-2 hover-pointer"
+                                (click)="openDialog(eventBannerDialog, selectedGradeTicket.evidenceUrls)">
+                                <nb-card style="max-width: 12rem;">
+                                    <nb-card-header
+                                        class="p-0 d-flex justify-content-center align-items-center"
+                                        style="height: 6rem;">
+                                        <img *ngIf="isImageFile(selectedGradeTicket.evidenceUrls)"
+                                            class="mh-100 mw-100" [src]="selectedGradeTicket.evidenceUrls">
+                                        <nb-icon *ngIf="!isImageFile(selectedGradeTicket.evidenceUrls)"
+                                            icon="file-text" pack="eva" class="w-50 h-50"></nb-icon>
+                                    </nb-card-header>
+                                    <nb-card-body class="p-2">
+                                        <div class="text-truncate small">{{ selectedGradeTicket.evidenceUrls }}
+                                        </div>
+                                    </nb-card-body>
+                                </nb-card>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <ng-container *ngIf="selectedGradeTicket.status === 0; else resolvedTicketTemplate">
+                        <nb-select [disabled]="selectedGradeTicket.status !== 0" [(selected)]="statusForSelectedGradeTicket"
+                            size="small" class="d-block w-50 mb-2" filled="true"
+                            [status]="statusForSelectedGradeTicket === 0 ? 'basic' : statusForSelectedGradeTicket === 1 ? 'success' : 'danger'">
+                            <nb-option [value]="0">Processing</nb-option>
+                            <nb-option [value]="1">Approve</nb-option>
+                            <nb-option [value]="2">Reject</nb-option>
+                        </nb-select>
+                        <div class="label mt-3 mb-1">Criteria</div>
+                        <ngx-custom-autoselect
+                            [fieldSize]="'small'"
+                            [arr]="gradeSubCriterias"
+                            [property]="'content'"
+                            [disabled]="selectedGradeTicket.status !== 0"
+                            (selectItem)="selectSubCriteriaId($event)"
+                        ></ngx-custom-autoselect>
+                        <div class="label mt-3 mb-1">Score</div>
+                        <input [disabled]="selectedGradeTicket.status !== 0" type="number" min="0" nbInput fullWidth [(ngModel)]="scoreForSelectedGradeTicket" fieldSize="small">
+                        <div class="label mt-3 mb-1">Feedback</div>
+                        <textarea [disabled]="selectedGradeTicket.status !== 0" [(ngModel)]="feedbackForSelectedGradeTicket" rows="5" nbInput fullWidth fieldSize="small" placeholder="Feedback..."></textarea>
+                    </ng-container>
+                    <ng-template #resolvedTicketTemplate>
+                        <nb-tag [text]="selectedGradeTicket.status === 1 ? 'Approved' : 'Rejected'"
+                            [status]="selectedGradeTicket.status === 1 ? 'success' : 'danger'" size="small"></nb-tag>
+                        <div class="label mt-4 mb-1">Criteria</div>
+                        <div>{{ selectedGradeTicket.gradeSubCriteria.content }}</div>
+                        <div class="label mt-4 mb-1">Score</div>
+                        <div>{{ selectedGradeTicket.score }}</div>
+                        <div class="label mt-4 mb-1">Feedback</div>
+                        <div>{{ selectedGradeTicket.feedback }}</div>
+                    </ng-template>
+                </div>
+            </div>
+        </nb-card-body>
+        <nb-card-footer class="justify-content-between d-flex">
+            <button nbButton size="small" status="danger" (click)="ref.close()">Close</button>
+            <button *ngIf="selectedGradeTicket.status === 0" nbButton size="small" status="primary" (click)="resolveTicket()">Resolve</button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>
+
+<ng-template #eventBannerDialog let-data let-ref="dialogRef">
+    <img *ngIf="isImageFile(data)" [src]="data">
+    <iframe *ngIf="!isImageFile(data)"
+        [src]="'https://docs.google.com/viewer?url=' + data + '&embedded=true' | safe:'resourceUrl'"
+        height="700" width="500"></iframe>
+</ng-template>

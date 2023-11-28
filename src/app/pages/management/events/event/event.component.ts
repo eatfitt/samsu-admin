@@ -1,7 +1,7 @@
-import { Component, Input, TemplateRef, ViewChild, SimpleChanges } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { CreateEventRequest, Event, EventParticipant, EventService } from '../../../../@core/services/event/event.service';
 import { NbDialogRef, NbDialogService, NbToastrService } from '@nebular/theme';
-import { convertMilliToDate, convertMillisToTime, getRandomName, isImageFile } from '../../../../@core/utils/data-util';
+import { convertMilliToDate, convertMillisToTime, isImageFile } from '../../../../@core/utils/data-util';
 import _ from 'lodash';
 import { FileUploadService } from '../../../../../services/file-upload.service';
 @Component({
@@ -15,6 +15,7 @@ export class EventComponent {
 
   @Input() event: Event = null;
   @Input() participants: EventParticipant[] = [];
+  @Output() checkIn = new EventEmitter<void>();
   eventToEdit: Event = null;
   editorConfig = {
     toolbar: [
