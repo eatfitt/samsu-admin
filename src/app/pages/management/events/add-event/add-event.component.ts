@@ -252,7 +252,7 @@ export class AddEventComponent implements OnInit {
     const feedbackPayload: FeedbackQuestionRequest[] =
       this.feedbackQuestionList.map((question) => {
         return {
-          ...question,
+          question: question.question,
           type: question.type,
           answer: question.answer.join("|"),
         };
@@ -264,7 +264,7 @@ export class AddEventComponent implements OnInit {
       return {
         title: task.title,
         content: task.content,
-        status: TaskStatusNumber[task.status],
+        status: task.status,
         score: task.score,
         gradeSubCriteriaId: task.gradeSubCriteriaId,
         assignees: task.assignees.map(assignee => {
@@ -303,6 +303,12 @@ export class AddEventComponent implements OnInit {
         this.toastrService.show("Try again", "Failed", { status: "danger" });
       }
     );
+  }
+  
+  getQuestionType(string):number {
+    if (string === 'MultipleSelect') return 0;
+    if (string === 'SingleSelect') return 1;
+    if (string === 'OpenEnded') return 2;
   }
 
   searchExistingUser(rollnumber: string) {
