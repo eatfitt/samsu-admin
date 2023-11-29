@@ -30,8 +30,8 @@ export class SingleEventComponent {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
     // 10s gọi 1 lần
 
-    this.mySubscription = interval(10000).subscribe((x =>{
-      this.fetchData();
+    this.mySubscription = interval(20000).subscribe((x =>{
+      // this.fetchData();
     }));
     this.fetchData();
   }

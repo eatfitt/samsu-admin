@@ -1,0 +1,28 @@
+<nb-card>
+    <nb-card-body class="row d-flex">
+      <div class=" col-md-4 progress-info" *ngFor="let item of progressInfoData">
+        <div class="subtitle">{{ item.title }}</div>
+        <div class="h3">{{ item.value | ngxNumberWithCommas }}</div>
+        <nb-progress-bar [value]="item.activeProgress"></nb-progress-bar>
+        <div class="caption description">
+          <bdi>{{ item.description }}</bdi>
+        </div>
+      </div>
+    </nb-card-body>
+</nb-card>
+<nb-card>
+    <nb-card-header>Feedback</nb-card-header>
+    <nb-card-body>
+        <nb-accordion>
+            <nb-accordion-item *ngFor="let feedback of event.feedbackQuestions">
+                <nb-accordion-item-header>
+                    {{ feedback.question }}
+                </nb-accordion-item-header>
+                <nb-accordion-item-body>
+                    TBD
+                </nb-accordion-item-body>
+            </nb-accordion-item>
+        </nb-accordion>
+    </nb-card-body>
+</nb-card>
+  

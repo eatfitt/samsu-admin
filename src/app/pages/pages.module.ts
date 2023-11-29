@@ -15,6 +15,7 @@ import {
   NbListModule,
   NbMenuModule,
   NbPopoverModule,
+  NbProgressBarModule,
   NbRadioModule,
   NbSelectModule,
   NbStepperModule,
@@ -60,6 +61,7 @@ import { SingleEventComponent } from "./management/events/single-event/single-ev
 import { EventComponent } from "./management/events/event/event.component";
 import { SafePipe } from "./pipes/safe.pipe";
 import { InvokePointComponent } from './management/invoke-point/invoke-point.component';
+import { EventStatisticComponent } from './management/events/event-statistic/event-statistic.component';
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 const PIPES = [
@@ -102,7 +104,8 @@ const PIPES = [
     QuillModule.forRoot(),
     NbListModule,
     NbAccordionModule,
-    NbRadioModule
+    NbRadioModule,
+    NbProgressBarModule,
   ],
   exports: [...PIPES],
   declarations: [
@@ -131,7 +134,8 @@ const PIPES = [
     SingleEventComponent,
     EventComponent,
     ...PIPES,
-    InvokePointComponent
+    InvokePointComponent,
+    EventStatisticComponent
     // TasksComponent,
   ],
 })
