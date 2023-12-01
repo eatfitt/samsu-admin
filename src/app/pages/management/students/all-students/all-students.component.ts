@@ -246,10 +246,12 @@ export class AllStudentsComponent {
     this.singleUserActionSubscription = this.menuService
       .onItemClick()
       .subscribe((event) => {
-        if (event.item.title === "Update") {
-          this.openDialog(this.updateUserDialog);
-        } else if (event.item.title === "Delete") {
-          this.openDialog(this.deleteUserDialog);
+        if (this.selectedStudent !== undefined || this.selectedStudent !== null) {
+          if (event.item.title === "Update") {
+            this.openDialog(this.updateUserDialog);
+          } else if (event.item.title === "Delete") {
+            this.openDialog(this.deleteUserDialog);
+          }
         }
       });
     //   this.settings = {
@@ -501,6 +503,7 @@ export class AllStudentsComponent {
   updateUser() {
     let studentPayload = this.selectedStudent;
     // studentPayload.role = RoleEnum[studentPayload.role];
+    studentPayload.role = this.getUserRoleString(this.selectedStudent.role as number);
     studentPayload.status = 1;
     studentPayload.dob = convertToDate(this.selectedStudent.dob as string)
     this.userService
@@ -542,6 +545,12 @@ export class AllStudentsComponent {
     if (role === 'ROLE_MANAGER') return 1;
     if (role === 'ROLE_STAFF') return 2;
     if (role === 'ROLE_STUDENT') return 3;
+  }
+  getUserRoleString(role: number): string {
+    if (role === 0) return 'ROLE_ADMIN';
+    if (role === 1) return 'ROLE_MANAGER';
+    if (role === 2) return 'ROLE_STAFF';
+    if (role === 3) return 'ROLE_STUDENT';
   }
 
   ngOnDestroy() {

@@ -114,8 +114,7 @@ export class EventComponent {
           });
           this.event = success;
           this.eventToEdit = success;
-          this.setToViewMode();
-        },
+          this.setToViewMode();        },
         (failed) => {
           this.toastrService.show("Edit failed", "Failed", {
             status: "danger",
@@ -175,7 +174,7 @@ export class EventComponent {
 
   checkInManually(data) {
     console.log(data);
-    this.eventService.checkInUser(this.event.id, data)
+    this.eventService.checkInUser(this.event.id, data.rollnumber)
       .subscribe(
         (sucess: any) => {
           this.toastrService.show("Checked in Successfully", "Checked in", {

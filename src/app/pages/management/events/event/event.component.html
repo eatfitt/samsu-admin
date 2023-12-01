@@ -89,7 +89,7 @@
                                             </span>
                                             <span>{{ participant.user.rollnumber }}</span>
                                             <span>
-                                                <button [disabled]="participant.checkin" nbButton (click)="openDialog(checkInDialog, participant.user.rollnumber); rollnumberToCheckIn = participant.participant" size="small">{{ participant.checkin ? "Already Checked in" : "Check in" }}</button>
+                                                <button [disabled]="participant.checkin" nbButton (click)="openDialog(checkInDialog, participant.user); rollnumberToCheckIn = participant.participant" size="small">{{ participant.checkin ? "Already Checked in" : "Check in" }}</button>
                                             </span>
                                         </div>
                                         <div *ngIf="participant.checkedIn" class="font-italic">{{ participant.notes }}</div>
@@ -104,7 +104,7 @@
                             <nb-card-body class="p-0">
                                 <nb-list>
                                     <nb-list-item *ngFor="let task of eventToEdit.tasks; let i = index" class="container py-2 px-4 hover-pointer hover-row item small border border-bottom-0"
-                                        [ngClass]="{'selected-row': i === selectedIndex}" (click)="selectedTask = task; selectedIndex = i">
+                                        [ngClass]="{'selected-row': i === selectedIndex}" (click)="selectedTask = selectedTask ? null : task; selectedIndex = selectedIndex ? null : i">
                                         <span class="font-weight-bold">{{ task.title ? task.title : 'Task' }}</span>
                                         <span>
                                             <nb-tag [text]="getTaskStatus(task.status)" size="tiny" appearance="outline"></nb-tag>
@@ -187,7 +187,7 @@
         <nb-card-header>Manual Check-in</nb-card-header>
         <nb-card-body>
             <div class="reason-for-manual-checkin">
-                <div class="label mb-2">Reason</div>
+                <!-- <div class="label mb-2">Reason</div>
                 <nb-radio-group [(ngModel)]="reasonForManualCheckin" class="d-flex" name="reasonForManualCheckin">
                     <nb-radio class="border rounded py-2 pl-3 mr-2"
                       *ngFor="let reason of reasons"
@@ -202,7 +202,12 @@
                     [value]="checkInMethod">
                     {{ checkInMethod }}
                     </nb-radio>
-                </nb-radio-group>
+                </nb-radio-group> -->
+                <div class="w-100 d-flex justify-content-center small flex-column align-items-center">
+                    <img [src]="data.avatar" style="width: 15rem; height: 15rem;" class="mb-3">
+                    <div>User: {{ data.name }}</div>
+                    <div>Roll number: {{ data.rollnumber }}</div>
+                </div>
                 <div class="label mb-2 mt-3">Notes</div>
                 <input nbInput size="small" fullWidth [(ngModel)]="checkInNotes">
             </div>

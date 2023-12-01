@@ -62,6 +62,10 @@ import { EventComponent } from "./management/events/event/event.component";
 import { SafePipe } from "./pipes/safe.pipe";
 import { InvokePointComponent } from './management/invoke-point/invoke-point.component';
 import { EventStatisticComponent } from './management/events/event-statistic/event-statistic.component';
+import { ChartsRoutingModule } from "./charts/charts-routing.module";
+import { NgxEchartsModule } from "ngx-echarts";
+import { NgxChartsModule } from "@swimlane/ngx-charts";
+import { ChartModule } from "angular2-chartjs";
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 const PIPES = [
@@ -106,6 +110,11 @@ const PIPES = [
     NbAccordionModule,
     NbRadioModule,
     NbProgressBarModule,
+
+    ChartsRoutingModule, // CHART
+    NgxEchartsModule,
+    NgxChartsModule,
+    ChartModule,
   ],
   exports: [...PIPES],
   declarations: [
