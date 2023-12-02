@@ -3,7 +3,7 @@
         <nb-card>
             <nb-card-header>
                 <div class="d-flex justify-content-between">
-                    <h5>Events</h5>
+                    <h5>Sự kiện</h5>
                     <button class="btn btn-outline-primary" (click)="navigateTo('/pages/events/add')">
                         <nb-icon [icon]="'plus-round'" pack="ion"></nb-icon>
                     </button>
@@ -94,13 +94,13 @@
             <span>{{ event.id }}</span>
             <span class="hover-pointer" [routerLink]="['..', 'event', event.id]" >{{ event.title }}</span>
             <span>{{ event.creator.name }}</span>
-            <span>{{ event.eventLeader.name }}</span>
+            <span>{{ event.eventLeader?.name }}</span>
             <span>
                 <!-- <nb-tag status="primary" appearance="filled" [text]="event.status" size="tiny"></nb-tag> -->
                 <nb-select [(selected)]="event.status" size="tiny" class="type-select"  filled="true" [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
-                    <nb-option [value]="0">Non Public</nb-option>
-                    <nb-option [value]="1">Public</nb-option>
-                    <nb-option [value]="2">Draft</nb-option>
+                    <nb-option [value]="0">Nội bộ</nb-option>
+                    <nb-option [value]="1">Công khai</nb-option>
+                    <nb-option [value]="2">Bản thảo</nb-option>
                 </nb-select>
             </span>
             <span>{{ event.startTime | date }}</span>

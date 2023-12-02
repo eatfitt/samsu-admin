@@ -21,6 +21,7 @@ export class AddTaskComponent {
       score: 0,
       status: 0,
       gradeSubCriteriaId: 1,
+      gradeSubCriteria: null,
       assignees: []
     }
     this.taskList.push(sampleTask);

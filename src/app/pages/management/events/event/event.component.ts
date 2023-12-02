@@ -15,6 +15,7 @@ export class EventComponent {
 
   @Input() event: Event = null;
   @Input() participants: EventParticipant[] = [];
+  @Input() viewOnly = false; // default false
   @Output() checkIn = new EventEmitter<void>();
   eventToEdit: Event = null;
   editorConfig = {

@@ -23,15 +23,15 @@
         <nb-card-header>Add attendance</nb-card-header>
         <nb-card-body>
             <div class="row">
-                <div class="col-md-6">
-                    <label for="rollnumberToSearch" class="label">Event Leader</label>
+                <div class="d-none">
+                    <label for="rollnumberToSearch" class="label">Search roll number</label>
                     <div class="d-flex align-items-center">
                         <input id="rollnumberToSearch" [(ngModel)]="eventLeaderRollnumberToSearch" nbInput class="flex-grow-1" placeholder="Roll number">
                         <nb-icon *ngIf="!isEditContent" icon="search" pack="eva"
                             (click)="searchExistingUser(eventLeaderRollnumberToSearch)" class="hover-pointer ml-3"></nb-icon>
                     </div>
                 </div>
-                <div class="col-md-6 border-left">
+                <div class="col-md-12">
                     <label class="label">Select Group to Import</label>
                     <input #autoInput nbInput fullWidth="" type="text" (input)="onChange()" placeholder="Enter value"
                         [nbAutocomplete]="auto" />

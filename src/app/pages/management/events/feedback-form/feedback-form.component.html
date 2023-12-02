@@ -1,0 +1,15 @@
+<div *ngFor="let feedbackQuestion of feedbackQuestions">
+    <div class="label mb-2 mt-3">{{ feedbackQuestion.question }}</div>
+    <div *ngIf="feedbackQuestion.type === 0">
+        <nb-checkbox class="d-block" *ngFor="let answer of feedbackQuestion.answer | splitstring: '|'">{{ answer }}</nb-checkbox>
+    </div>
+    <div class="container" *ngIf="feedbackQuestion.type === 1">
+        <nb-radio-group class="row" name="feedback">
+            <nb-radio class="border rounded col-md-6 d-flex"
+                *ngFor="let answer of feedbackQuestion.answer | splitstring: '|'">
+            {{ answer }}
+            </nb-radio>
+        </nb-radio-group>
+    </div>
+    <input nbInput size="small" *ngIf="feedbackQuestion.type === 2" placeholder="Your answer...">
+</div>

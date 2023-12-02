@@ -13,6 +13,7 @@ interface GradeSubCriterias {
 }
 export interface Task {
   gradeSubCriteriaId?: number;
+  gradeSubCriteria?: GradeSubCriteria;
   eventsId?: number;
   creatorUsersId?: number;
   title: string;
@@ -51,6 +52,7 @@ export class TaskDetailComponent {
     assignees: [],
   }
   @Input() index: number;
+  @Input() viewOnly: false; // default false;
   @Output() taskStatusChange = new EventEmitter<number>();
   @Output() removeTask = new EventEmitter<number>();
   existingUser$: Observable<Object> = null;
@@ -108,6 +110,7 @@ export class TaskDetailComponent {
   }
 
   selectSubCriteriaId(event: GradeSubCriteria) {
+    this.task.gradeSubCriteria = event;
     this.task.gradeSubCriteriaId = event.id;
   }
 

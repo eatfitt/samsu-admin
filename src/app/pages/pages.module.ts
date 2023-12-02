@@ -66,10 +66,12 @@ import { ChartsRoutingModule } from "./charts/charts-routing.module";
 import { NgxEchartsModule } from "ngx-echarts";
 import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { ChartModule } from "angular2-chartjs";
+import { FeedbackFormComponent } from './management/events/feedback-form/feedback-form.component';
+import { SplitStringPipe } from "./pipes/splitstring.pipe";
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 const PIPES = [
-  SafePipe
+  SafePipe, SplitStringPipe
 ];
 
 @NgModule({
@@ -110,6 +112,7 @@ const PIPES = [
     NbAccordionModule,
     NbRadioModule,
     NbProgressBarModule,
+    NbCheckboxModule,
 
     ChartsRoutingModule, // CHART
     NgxEchartsModule,
@@ -144,7 +147,8 @@ const PIPES = [
     EventComponent,
     ...PIPES,
     InvokePointComponent,
-    EventStatisticComponent
+    EventStatisticComponent,
+    FeedbackFormComponent
     // TasksComponent,
   ],
 })

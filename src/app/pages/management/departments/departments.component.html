@@ -13,7 +13,7 @@
                 </nb-card-header>
                 <nb-card-body class="p-0">
                     <nb-list>
-                        <nb-list-item *ngFor="let department of departments" (click)="selectedDepartment = department">
+                        <nb-list-item class="py-2" *ngFor="let department of departments" (click)="selectedDepartment = department">
                             <div class="row w-100 ">
                                 <div class="col-6 pl-4">
                                     <div class="font-weight-bold">{{ department.name }}</div>

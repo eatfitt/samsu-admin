@@ -51,4 +51,13 @@ export class FeedbackService {
       })
     );
   }
+
+  deleteQuestion(questionId: number) {
+    return this.http.delete(`${this.apiEndPoint}/feedback/event/${ questionId }/questions`).pipe(
+      catchError((error) => {
+        console.error("Error in deleteQuestion:", error);
+        return throwError(error);
+      })
+    );
+  }
 }

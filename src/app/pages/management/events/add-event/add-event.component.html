@@ -28,6 +28,7 @@
             </nb-step>
             <nb-step label="Review">
                 <h3>Review</h3>
+                <ngx-event *ngIf="aFileUploaded$ | async" [event]="eventReview" [participants]="participantReview" viewOnly="true"></ngx-event>
                 <button nbButton nbStepperPrevious>prev</button>
                 <button class="float-right" nbButton status="primary" (click)="createEvent()">Create</button>
             </nb-step>
@@ -88,9 +89,9 @@
             <div class="col-md-6">
                 <label for="status" class="label" style="margin-top: 1rem;">Status</label>
                 <nb-select [(selected)]="status" fullWidth class="d-block">
-                    <nb-option value="0">Non Public</nb-option>
-                    <nb-option value="1">Public</nb-option>
-                    <nb-option value="2">Draft</nb-option>
+                    <nb-option value="0">Nội bộ</nb-option>
+                    <nb-option value="1">Công khai</nb-option>
+                    <nb-option value="2">Bản thảo</nb-option>
                 </nb-select>
             </div>
             <div class="col-md-6">
@@ -112,6 +113,16 @@
             <ng-template #noEventLeaderFound>
                 <div class="col-md-6 pb-2 mb-1 pl-4 font-italic small" *ngIf="!eventLeader">No Event Leader</div>
             </ng-template>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="departments" class="label" style="margin-top: 1rem;">Departments</label>
+                <ng-container *ngIf="departments$ | async as departments">
+                    <nb-select multiple [(selected)]="department" class="d-block">
+                        <nb-option *ngFor="let department of departments" [value]="department">{{ department.name }}</nb-option>
+                    </nb-select>
+                </ng-container>
+            </div>
         </div>
         <div class="form-group">
             <label for="description" class="label" style="margin-top: 1rem;">Content</label>

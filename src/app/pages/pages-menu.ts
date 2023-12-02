@@ -61,7 +61,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
-    title: 'Grades',
+    title: 'Grade Criteria',
     icon: 'bar-chart',
     link: '/pages/grades',
     home: true,

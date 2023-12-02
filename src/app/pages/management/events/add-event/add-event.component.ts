@@ -13,10 +13,12 @@ import {
   NbIconLibraries,
   NbToastrService,
 } from "@nebular/theme";
-import { Observable, map } from "rxjs";
+import { BehaviorSubject, Observable, map } from "rxjs";
 import { FileUploadService } from "../../../../../services/file-upload.service";
 import {
   CreateEventRequest,
+  Event,
+  EventParticipant,
   EventService,
   FeedbackQuestionRequest,
   TaskRequests
@@ -24,13 +26,14 @@ import {
 import {
   GradeSubCriteria,
 } from "../../../../@core/services/grade-sub-criteria/grade-sub-criteria.service";
-import { UserService } from "../../../../@core/services/user/user.service";
+import { GetAllUsersListResponse, UserService } from "../../../../@core/services/user/user.service";
 import { Router } from "@angular/router";
 import { EventProposalService } from "../../../../../services/event-propsal.service";
 import { EventProposal } from "../../../../../services/event-propsal.service";
 import { SemesterService } from "../../../../@core/services/semester/semester.service";
 import _ from "lodash";
 import { Task } from "../task-detail/task-detail.component";
+import { DepartmentService } from "../../../../@core/services/department/department.service";
 
 enum FeedbackType {
   MultipleSelect = 0,
@@ -83,6 +86,11 @@ export class AddEventComponent implements OnInit {
   eventLeaderRollnumberToSearch: string;
   eventLeader$: Observable<Object> = null;
   semesters$: Observable<Object> = null;
+  departments$: Observable<Object> = null;
+  eventLeader: GetAllUsersListResponse = null;
+  eventReview: Event = null;
+  participantReview: EventParticipant[] = [];
+  aFileUploaded$ = new BehaviorSubject(null);
 
   // FORM DATA - ngModel
   title = "";
@@ -92,6 +100,7 @@ export class AddEventComponent implements OnInit {
   fileUrls: any = null;
   file: File = null;
   semester = "FA23";
+  department = null;
   proposalId = 14;
   startTime: Date = new Date();
   duration = 0;
@@ -116,6 +125,7 @@ export class AddEventComponent implements OnInit {
   ngOnInit(): void {
     this.userService.checkLoggedIn();
     this.semesters$ = this.semesterService.getAllSemesters().pipe(map((data: any) => data.content));
+    this.departments$ = this.departmentService.getAllDepartments().pipe(map((data: any) => data.content));
   }
 
   constructor(
@@ -129,6 +139,7 @@ export class AddEventComponent implements OnInit {
     private router: Router,
     private eventProposalService: EventProposalService,
     private semesterService: SemesterService,
+    private departmentService: DepartmentService
   ) {
     iconsLibrary.registerFontPack("ion", { iconClassPrefix: "ion" });
   }
@@ -191,12 +202,63 @@ export class AddEventComponent implements OnInit {
         console.log("File uploaded successfully. URL:", url);
         // Do something with the URL, such as updating the event object
         this[fileUrl] = url;
+        this.createEventReview();
+        this.aFileUploaded$.next(url);
       },
       (error) => {
         console.error("File upload failed:", error);
+        this.aFileUploaded$.error(error);
         // Handle error appropriately
       }
     );
+  }
+
+  createEventReview() {
+    this.eventReview = {
+      semestersName: this.semester,
+      title: this.title,
+      content: this.content,
+      status: Number(this.status),
+      startTime: this.startTime,
+      duration: Number(this.duration),
+      bannerUrl: this.bannerUrl,
+      fileUrls: this.fileUrls,
+      participants: this.attendanceList,
+      attendScore: Number(this.attendScore),
+      creator: null,
+      eventLeader: this.eventLeader,
+      departments: this.department?.id,
+      tasks: this.taskList.map(task => {
+        return {
+          id: null,
+          creator: null,
+          title: task.title,
+          content: task.content,
+          status: task.status,
+          score: task.score,
+          eventId: null,
+          gradeSubCriteria: task.gradeSubCriteria,
+          assignees: task.assignees
+        }
+      }),
+      feedbackQuestions: this.feedbackQuestionList.map((question) => {
+        return {
+          question: question.question,
+          type: question.type,
+          answer: question.answer.join("|"),
+          createdAt: null,
+          id: null
+        };
+      })
+    }
+    this.participantReview = this.attendanceList.map(user => {
+      return {
+        eventId: null,
+        user: user,
+        checkin: null,
+        checkout: null,
+      }
+    })
   }
 
   addAttendanceList(event) {
@@ -315,6 +377,7 @@ export class AddEventComponent implements OnInit {
     this.eventLeader$ = this.userService.findUserByRollnumber(rollnumber) || null;
     this.eventLeader$.subscribe(
         (success: any) => {
+          this.eventLeader = success;
           this.eventLeaderRollnumber = success.rollnumber;
           this.toastrService.show(`Event leader: ${success.name}`, "User found", {
             status: "success",

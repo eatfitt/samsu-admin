@@ -1,17 +1,17 @@
 <nb-card *ngIf="event">
     <nb-card-body>
-        <div class="row">
-            <div class="col small mb-4">Event {{ eventToEdit.id }}</div>
+        <div *ngIf="!viewOnly" class="row">
+            <div class="col small mb-4">Sự kiện {{ eventToEdit.id }}</div>
         </div>
         <div class="row">
             <div class="col-md-8 overflow-auto" style="max-height: 40rem;">
                 <h5 class="hover-edit" style="font-weight: 600;" *ngIf="!isEditTitle"
-                    (click)="isEditTitle = true">{{ eventToEdit.title }}</h5>
+                    (click)="viewOnly ? null : isEditTitle = true">{{ eventToEdit.title }}</h5>
                 <ng-container *ngIf="isEditTitle">
                     <input nbInput fieldSize="giant" fullWidth [(ngModel)]="eventToEdit.title">
                     <ng-container [ngTemplateOutlet]="saveEditTemplate"></ng-container>
                 </ng-container>
-                <div class="d-flex pb-4 border-bottom">
+                <div *ngIf="!viewOnly" class="d-flex pb-4 border-bottom">
                     <button nbButton size="small" class="text-capitalize mr-2 fileUpload">Update
                         Banners <input class="upload" (change)="uploadFile($event, 'bannerUrl')"
                             type="file" />
@@ -26,8 +26,8 @@
                 <ng-container *ngIf="!isShowStatistic">                
                     <div class="event-content my-3">
                         <div class="d-flex justify-content-between">
-                            <div class="font-weight-bold mb-1">Content</div>
-                            <nb-icon *ngIf="!isEditContent" icon="edit-2" pack="eva"
+                            <div class="font-weight-bold mb-1">Nội dung</div>
+                            <nb-icon *ngIf="!isEditContent && !viewOnly" icon="edit-2" pack="eva"
                                 (click)="isEditContent = true" class="hover-pointer"></nb-icon>
                         </div>
                         <div *ngIf="!isEditContent" [innerHTML]="eventToEdit.content"></div>
@@ -38,7 +38,7 @@
                         </ng-container>
                     </div>
                     <div class="event-attachments my-3">
-                        <div class="font-weight-bold mb-1">Attachments</div>
+                        <div class="font-weight-bold mb-1">File đính kèm</div>
                         <div class="d-flex overflow-auto w-100">
                             <div class="event-bannerurl hover-pointer"
                                 (click)="openDialog(eventBannerDialog, eventToEdit.bannerUrl)">
@@ -74,12 +74,12 @@
                         </div>
                     </div>
                     <div class="event-attendance-list">
-                        <nb-card size="small">
+                        <nb-card >
                             <nb-card-header style="background-color: var(--menu-item-divider-color);" class="d-flex justify-content-between align-items-baseline">
-                                <div>Participants ({{ participants.length }})</div>
+                                <div>Danh sách đăng kí ({{ participants.length }})</div>
                                 <input class=" bg-white border" fieldSize="small" placeholder="Filter by rollnumber" nbInput (keyup)="filterParticipant($event)">
                             </nb-card-header>
-                            <nb-card-body class="p-0">
+                            <nb-card-body class="p-0" style="max-height: 50vh;">
                                 <nb-list>
                                     <nb-list-item class="small px-4 d-block"
                                         *ngFor="let participant of filteredParticipantList; let i = index">
@@ -88,7 +88,7 @@
                                                 <a class="text-basic font-weight-bold" [routerLink]="['../../user', participant.user.rollnumber]">{{participant.user.name}}</a>
                                             </span>
                                             <span>{{ participant.user.rollnumber }}</span>
-                                            <span>
+                                            <span *ngIf="!viewOnly">
                                                 <button [disabled]="participant.checkin" nbButton (click)="openDialog(checkInDialog, participant.user); rollnumberToCheckIn = participant.participant" size="small">{{ participant.checkin ? "Already Checked in" : "Check in" }}</button>
                                             </span>
                                         </div>
@@ -98,10 +98,10 @@
                             </nb-card-body>
                         </nb-card>
                     </div>
-                    <div class="event-attendance-list">
-                        <nb-card size="small">
-                            <nb-card-header style="background-color: var(--menu-item-divider-color);">Tasks ({{ eventToEdit.tasks.length }})</nb-card-header>
-                            <nb-card-body class="p-0">
+                    <div class="event-task-list">
+                        <nb-card>
+                            <nb-card-header style="background-color: var(--menu-item-divider-color);">Công việc ({{ eventToEdit.tasks.length }})</nb-card-header>
+                            <nb-card-body class="p-0" style="max-height: 50vh;">
                                 <nb-list>
                                     <nb-list-item *ngFor="let task of eventToEdit.tasks; let i = index" class="container py-2 px-4 hover-pointer hover-row item small border border-bottom-0"
                                         [ngClass]="{'selected-row': i === selectedIndex}" (click)="selectedTask = selectedTask ? null : task; selectedIndex = selectedIndex ? null : i">
@@ -114,10 +114,18 @@
                                         </span>
                                         <span *ngIf="task.assignees === undefined || task.assignees === null || task.assignees?.length <= 0">N/A</span>
                                     </nb-list-item>
-                                    <nb-list-item class="container border py-2 pl-3">
+                                    <nb-list-item *ngIf="!viewOnly" class="container border py-2 pl-3">
                                         <span class="btn-link hover-pointer" (click)="addTask()" style="font-size: .75rem;">+ Add task</span>
                                     </nb-list-item>
                                 </nb-list>
+                            </nb-card-body>
+                        </nb-card>
+                    </div>
+                    <div class="event-feedback-list">
+                        <nb-card>
+                            <nb-card-header style="background-color: var(--menu-item-divider-color);">Feedback ({{ eventToEdit.feedbackQuestions.length }})</nb-card-header>
+                            <nb-card-body class="pt-0" style="max-height: 50vh;">
+                                <ngx-feedback-form [feedbackQuestions]="eventToEdit.feedbackQuestions"></ngx-feedback-form>
                             </nb-card-body>
                         </nb-card>
                     </div>
@@ -128,37 +136,37 @@
             </div>
             <div class="col-md-4 overflow-auto" style="max-height: 40rem;">
                 <ng-container *ngIf="selectedTask === null; else selectedTaskTemplate">
-                    <nb-select [(selected)]="eventToEdit.status" (selectedChange)="editEvent()"
+                    <nb-select [(selected)]="eventToEdit.status" (selectedChange)="editEvent()" [disabled]="viewOnly"
                         size="small" class="d-block w-50 mb-2" filled="true"
                         [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
-                        <nb-option [value]="0">Non Public</nb-option>
-                        <nb-option [value]="1">Public</nb-option>
-                        <nb-option [value]="2">Draft</nb-option>
+                        <nb-option [value]="0">Nội bộ</nb-option>
+                        <nb-option [value]="1">Công khai</nb-option>
+                        <nb-option [value]="2">Bản thảo</nb-option>
                     </nb-select>
                     <nb-card>
-                        <nb-card-header>Details</nb-card-header>
+                        <nb-card-header>Chi tiết</nb-card-header>
                         <nb-card-body>
                             <div class="row">
-                                <div class="col-md-4 small">Creator</div>
-                                <div class="col-md-8 small">{{ event.creator.name }}</div>
+                                <div class="col-md-4 small">Người tạo</div>
+                                <div class="col-md-8 small">{{ event.creator?.name ?? 'N/A' }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 small">Leader</div>
-                                <div class="col-md-8 small">{{ event.eventLeader.name }}</div>
+                                <div class="col-md-8 small">{{ event.eventLeader?.name ?? 'N/A' }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4 small">Start time</div>
-                                <div class="col-md-8 small">{{ event.startTime | date:"MMM dd, yyyy 'at'hh:mm a" }}</div>
+                                <div class="col-md-4 small">Thời gian</div>
+                                <div class="col-md-8 small">{{ event.startTime | date:"MMM dd, yyyy hh:mm a" }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4 small">Duration</div>
-                                <div class="col-md-8 small">{{ durationObject.hours + ' hours ' + durationObject.minutes + ' minutes' }}</div>
+                                <div class="col-md-4 small">Thời lượng</div>
+                                <div class="col-md-8 small">{{ durationObject.hours + ' giờ ' + durationObject.minutes + ' phút' }}</div>
                             </div>
                         </nb-card-body>
                     </nb-card>
                 </ng-container>
                 <ng-template #selectedTaskTemplate>
-                    <ngx-task-detail [task]="selectedTask" [index]="selectedIndex"
+                    <ngx-task-detail [task]="selectedTask" [index]="selectedIndex" [viewOnly]="viewOnly"
                         (removeTask)="deleteTask($event)" (taskStatusChange)="editTaskStatus($event)"
             ></ngx-task-detail>
                 </ng-template>
