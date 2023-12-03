@@ -15,8 +15,10 @@ import {
   GetAllAnswersByQuestionIdResponse,
   GetAllQuestionsByEventIdResponse,
 } from "../../../../@core/services/feedback/feedback.service";
-import { Observable, forkJoin, map, of, switchMap } from "rxjs";
+import { Observable, forkJoin, map, switchMap } from "rxjs";
 import { ECharts } from 'echarts';
+import { WorkBook, WorkSheet, read, utils, writeFileXLSX } from "xlsx";
+import { convertMilliToDate } from "../../../../@core/utils/data-util";
 
 export interface MappedQuestionsAnswers {
   question: GetAllQuestionsByEventIdResponse;
@@ -34,6 +36,7 @@ export class EventStatisticComponent {
   @Input() participants: EventParticipant[] = [];
 
   allQuestionsAndAnswers = new Observable<any>();
+  _allQuestionsAndAnswers: any = null;
   progressInfoData = [];
   options: any = {};
   feedbackStat: any = []
@@ -86,6 +89,11 @@ export class EventStatisticComponent {
             bottom: '3%',
             containLabel: true,
         },
+        toolbox: {
+          feature: {
+            saveAsImage: { title: 'Lưu thống kê', show: true },
+          }
+        },
         xAxis: [
             {
                 type: 'category',
@@ -103,26 +111,54 @@ export class EventStatisticComponent {
         ],
         series: [
             {
-                // name: 'Score',
                 type: 'bar',
-                // barWidth: '60%',
                 data: [],
             },
         ],
     };
 
     if (item.question.type === 0 || item.question.type === 1) {
-        option.xAxis[0].data = item.question.answer.split('|');
-        var answerCounts = {};
-        item.answers.forEach(function(answer) {
-            if (!answerCounts[answer.content]) {
-                answerCounts[answer.content] = 0;
-            }
-            answerCounts[answer.content]++;
-        });
-        option.series[0].data = option.xAxis[0].data.map(function(answerOption) {
-            return answerCounts[answerOption] || 0;
-        });
+      option.xAxis[0].data = item.question.answer.split('|');
+      var answerCounts = {};
+      item.answers.forEach(function(answer) {
+          const userAnswers = answer.content.split('|');
+          userAnswers.forEach(userAnswer => {
+              if (!answerCounts[userAnswer]) {
+                  answerCounts[userAnswer] = 0;
+              }
+              answerCounts[userAnswer]++;
+          });
+      });
+      option.series[0].data = option.xAxis[0].data.map(function(answerOption) {
+          return answerCounts[answerOption] || 0;
+      });
+    }
+  
+    if (item.question.type === 3) {
+      option.xAxis[0].data = ['< 1', '1 - 2', '2 - 3', '3 - 4', '4 - 5'];
+      var answerCounts = {};
+      item.answers.forEach(function(answer) {
+        let rating = parseFloat(answer.content);
+        let category;
+        if (rating < 1) {
+          category = '< 1';
+        } else if (rating < 2) {
+          category = '1 - 2';
+        } else if (rating < 3) {
+          category = '2 - 3';
+        } else if (rating < 4) {
+          category = '3 - 4';
+        } else {
+          category = '4 - 5';
+        }
+        if (!answerCounts[category]) {
+          answerCounts[category] = 0;
+        }
+        answerCounts[category]++;
+      });
+      option.series[0].data = option.xAxis[0].data.map(function(answerOption) {
+        return answerCounts[answerOption] || 0;
+      });
     }
     return option;
 }
@@ -147,6 +183,7 @@ export class EventStatisticComponent {
         )
       )
     );
+    this.allQuestionsAndAnswers.subscribe(items => this._allQuestionsAndAnswers = items);
   }
 
   calculateStat() {
@@ -192,5 +229,34 @@ export class EventStatisticComponent {
       });
       console.log(img.src)
     })
+  }
+
+  exportToExcel() { // ✔
+    let rows = [];
+    let participantRows = this.participants.map((participant) => {
+      return {
+        Rollnumber: participant.user.rollnumber,
+        Name: participant.user.name,
+        Checkin: participant.checkin ? convertMilliToDate(participant.checkin) : '',
+        Checkout: participant.checkout ? convertMilliToDate(participant.checkout) : '',
+      }
+    })
+    rows = rows.concat(participantRows).concat([{}, {}]);
+    rows.push({ Rollnumber: '' });
+
+    let feedbackRows = this._allQuestionsAndAnswers.map((participant) => {
+      return {
+        Rollnumber: participant.user.rollnumber,
+        Name: participant.user.name,
+        Checkin: participant.checkin ? convertMilliToDate(participant.checkin) : '',
+        Checkout: participant.checkout ? convertMilliToDate(participant.checkout) : '',
+      }
+    })
+
+    const ws = utils.json_to_sheet(rows);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, "Data");
+    writeFileXLSX(wb, "SheetJSAngularAoO.xlsx");
+  
   }
 }
