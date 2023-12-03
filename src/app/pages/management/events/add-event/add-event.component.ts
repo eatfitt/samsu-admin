@@ -319,6 +319,11 @@ export class AddEventComponent implements OnInit {
           answer: question.answer.join("|"),
         };
       });
+    feedbackPayload.push({
+      question: 'Rate your experience',
+      type: 3,
+      answer: ''
+    })
     const rollnumbersPayload: string[] = this.attendanceList.map(
       (user) => user.rollnumber
     );

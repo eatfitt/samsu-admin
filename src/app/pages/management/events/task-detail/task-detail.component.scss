@@ -1,3 +1,13 @@
 .view-only-mode {
-    pointer-events: none;
+  pointer-events: none;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:first-child {
+    border-top: none;
+  }
 }

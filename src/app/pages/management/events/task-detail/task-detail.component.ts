@@ -120,4 +120,13 @@ export class TaskDetailComponent {
     TaskStatus.Incompleted,
     TaskStatus.Completed,
   ]
+
+  checkRange(event: KeyboardEvent) {
+    let input = event.target as HTMLInputElement;
+    let value = Number(input.value + event.key);
+    if (value > this.task.gradeSubCriteria.maxScore || value < this.task.gradeSubCriteria.minScore) {
+        event.preventDefault();
+    }
+}
+
 }

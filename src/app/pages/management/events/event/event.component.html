@@ -12,16 +12,15 @@
                     <ng-container [ngTemplateOutlet]="saveEditTemplate"></ng-container>
                 </ng-container>
                 <div *ngIf="!viewOnly" class="d-flex pb-4 border-bottom">
-                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload">Update
-                        Banners <input class="upload" (change)="uploadFile($event, 'bannerUrl')"
+                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload">Cập nhật ảnh bìa<input class="upload" (change)="uploadFile($event, 'bannerUrl')"
                             type="file" />
                     </button>
-                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload"> Update
-                        Attachment <input class="upload" (change)="uploadFile($event, 'fileUrls')"
+                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload"> Cập nhật tệp đính kèm <input class="upload" (change)="uploadFile($event, 'fileUrls')"
                             type="file" />
                     </button>
-                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload" (click)="isShowStatistic = !isShowStatistic"> {{ isShowStatistic ? 'Hide statistic' : 'View statistic'}}
+                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload" (click)="isShowStatistic = !isShowStatistic"> {{ isShowStatistic ? 'Ẩn thống kê' : 'Thống kê'}}
                     </button>
+                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload" (click)="exportData()">Export thống kê</button>
                 </div>
                 <ng-container *ngIf="!isShowStatistic">                
                     <div class="event-content my-3">

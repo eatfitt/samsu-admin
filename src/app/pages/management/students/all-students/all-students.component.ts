@@ -8,7 +8,7 @@ import {
 } from "@nebular/theme";
 import { Store } from "@ngrx/store";
 import { LocalDataSource } from "ng2-smart-table";
-import { Subscription } from "rxjs";
+import { Observable, Subscription, map } from "rxjs";
 import {
   AddListUserRequest,
   AddListUserResponse,
@@ -20,6 +20,7 @@ import {
 import { UserState } from "../../../../app-state/user";
 import { GetAllUsersListResponse } from "../../../../@core/services/user/user.service";
 import { convertToDate } from "../../../../@core/utils/data-util";
+import { DepartmentService } from "../../../../@core/services/department/department.service";
 
 @Component({
   selector: "ngx-all-students",
@@ -220,6 +221,7 @@ export class AllStudentsComponent {
   singleUserAction = [{ title: "Update" }, { title: "Delete" }];
   test: Subscription;
   singleUserActionSubscription: Subscription;
+  departments$: Observable<any> = this.departmentService.getAllDepartments().pipe(map((data: any) => data.content));
   private contentTemplateRef: NbDialogRef<AllStudentsComponent>;
 
   constructor(
@@ -228,11 +230,10 @@ export class AllStudentsComponent {
     protected dialogService: NbDialogService,
     protected router: Router,
     protected toastrService: NbToastrService,
-    protected menuService: NbMenuService
-  ) {
-    // this.source.load(this.allUserList);
-    // this.source.setFilter([{field: 'rollnumber', search: '79'}, {field: 'name', search: 'ha'}, ])
-  }
+    protected menuService: NbMenuService,
+    protected departmentService: DepartmentService
+  ) {}
+
   ngOnInit() {
     this.userService.checkLoggedIn();
     this.fetchData();
@@ -254,86 +255,6 @@ export class AllStudentsComponent {
           }
         }
       });
-    //   this.settings = {
-    //     pager: this.pager,
-    //     actions: {
-    //       add: false,
-    //       edit: this.showAction,
-    //       delete: this.showAction,
-    //     },
-    //     add: {
-    //       addButtonContent: '<i class="nb-plus"></i>',
-    //       createButtonContent: '<i class="nb-checkmark"></i>',
-    //       cancelButtonContent: '<i class="nb-close"></i>',
-    //     },
-    //     edit: {
-    //       editButtonContent: '<i class="nb-edit"></i>',
-    //       saveButtonContent: '<i class="nb-checkmark"></i>',
-    //       cancelButtonContent: '<i class="nb-close"></i>',
-    //       confirmSave: true,
-    //     },
-    //     delete: {
-    //       deleteButtonContent: '<i class="nb-trash"></i>',
-    //       confirmDelete: true,
-    //     },
-    //     columns: {
-    //       avatar: {
-    //         title: '',
-    //         type: 'html',
-    //         valuePrepareFunction: (images) => {
-    //           return `<img class='table-avatar-img' src="${images}"/>`
-    //         },
-    //         // editable: false,
-    //         filter: false,
-    //       },
-    //       rollnumber: {
-    //         title: "Roll Number",
-    //         type: "string",
-    //       },
-    //       name: {
-    //         title: "Name",
-    //         type: "string",
-    //       },
-    //       email: {
-    //         title: "Email",
-    //         type: "string",
-    //       },
-    //       username: {
-    //         title: "Username",
-    //         type: "string",
-    //       },
-    //       role: {
-    //         title: "Role",
-    //         type: "string",
-    //         defaultValue: 'ROLE_STUDENT',
-    //         //addable: false,
-    //         filter: {
-    //           type: 'list',
-    //           config: {
-    //             selectText: 'Select...',
-    //               list: [
-    //                 { value: 'ROLE_ADMIN', title: 'ROLE_ADMIN' },
-    //                 { value: 'ROLE_MANAGER', title: 'ROLE_MANAGER' },
-    //                 { value: 'ROLE_STAFF', title: 'ROLE_STAFF' },
-    //                 { value: 'ROLE_STUDENT', title: 'ROLE_STUDENT' },
-    //               ],
-    //           }
-    //         },
-    //         editor: {
-    //           type: 'list',
-    //           config: {
-    //             selectText: 'Select...',
-    //               list: [
-    //                 { value: 'ROLE_ADMIN', title: 'ROLE_ADMIN' },
-    //                 { value: 'ROLE_MANAGER', title: 'ROLE_MANAGER' },
-    //                 { value: 'ROLE_STAFF', title: 'ROLE_STAFF' },
-    //                 { value: 'ROLE_STUDENT', title: 'ROLE_STUDENT' },
-    //               ],
-    //           }
-    //         }
-    //       }
-    //     },
-    //   };
   }
 
   importFromExcel(data: any[][]) {
@@ -501,11 +422,12 @@ export class AllStudentsComponent {
   }
 
   updateUser() {
-    let studentPayload = this.selectedStudent;
+    let studentPayload: any = this.selectedStudent;
     // studentPayload.role = RoleEnum[studentPayload.role];
     studentPayload.role = this.getUserRoleString(this.selectedStudent.role as number);
     studentPayload.status = 1;
-    studentPayload.dob = convertToDate(this.selectedStudent.dob as string)
+    studentPayload.departmentId = this.selectedStudent.department.id;
+    // studentPayload.dob = convertToDate(this.selectedStudent.dob as string)
     this.userService
       .updateUser(
         this.bearerToken,
@@ -538,6 +460,15 @@ export class AllStudentsComponent {
         this.router.navigateByUrl(`pages/user/${data.username}`);
         break;
     }
+  }
+
+  selectUser(event) {
+    const user = {
+      ... event,
+      dob: new Date(event.dob),
+    }
+    this.selectedStudent = user;
+
   }
 
   getUserRole(role: string): number {

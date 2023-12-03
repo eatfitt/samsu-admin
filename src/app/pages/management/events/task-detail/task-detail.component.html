@@ -15,10 +15,10 @@
     <textarea [disabled]="viewOnly" type="text" nbInput fullWidth id="content" placeholder="Description" [(ngModel)]="task.content" fieldSize="small"></textarea>
     
     <nb-card class="mt-2">
-        <nb-card-header class="px-3 py-2 small font-weight-bold">Details</nb-card-header>
+        <nb-card-header class="px-3 py-2 small font-weight-bold">Chi tiết</nb-card-header>
         <nb-card-body>
             <div class="row mb-2 align-items-baseline">
-                <div class="col-4 small">Assignee</div>
+                <div class="col-4 small">Phụ trách</div>
                 <div class="col-8 px-0">
                     <div [ngClass]="{'view-only-mode': viewOnly}" class="d-flex align-items-center">
                         <nb-tag-list (tagRemove)="onAssigneeRemove($event)" class="p-1">
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="row mb-2 align-items-baseline">
-                <div class="col-4 small">Criteria</div>
+                <div class="col-4 small">Loại điểm</div>
                 <div class="col-8 px-0">
                     <ngx-custom-autoselect
                         [fieldSize]="'small'"
@@ -37,13 +37,35 @@
                         [property]="'content'"
                         (selectItem)="selectSubCriteriaId($event)"
                         [disabled]="viewOnly"
+                        [defaultValue]="task.gradeSubCriteria?.content"
                     ></ngx-custom-autoselect>
                 </div>
             </div>
             <div class="row mb-2 align-items-baseline">
-                <div class="col-4 small">Score</div>
-                <input [disabled]="viewOnly" type="number" min="0" nbInput class="col-8" [(ngModel)]="task.score" fieldSize="small">
+                <div class="col-4 small">Điểm cộng</div>
+                <div class="col-8 p-0">
+                    <nb-form-field class="w-100">
+                        <input [disabled]="viewOnly || !task.gradeSubCriteria" type="number" [min]="task.gradeSubCriteria?.minScore" [max]="task.gradeSubCriteria?.maxScore" (keydown)="checkRange($event)" nbInput [(ngModel)]="task.score" fieldSize="small" fullWidth>
+                        <span nbSuffix>({{ task.gradeSubCriteria?.minScore }} - {{ task.gradeSubCriteria?.maxScore }})</span>
+                    </nb-form-field>
+                </div>
+                
             </div>
+        </nb-card-body>
+    </nb-card>
+    <nb-card>
+        <nb-card-header class="px-3 py-2 small font-weight-bold">Tiến độ</nb-card-header>
+        <nb-card-body class="p-0">
+            <nb-list>
+                <nb-list-item class="item small font-weight-bold">
+                    <span>Phụ trách</span>
+                    <span>Trạng thái</span>
+                </nb-list-item>
+                <nb-list-item *ngFor="let assignee of task.assignees" class="item small">
+                    <span>{{ assignee.name }}</span>
+                    <th>{{ (assignee.status === 'ENABLE' || assignee.status === 'DISABLE') ? 'Pending' : assignee.status }}</th>
+                </nb-list-item>
+            </nb-list>
         </nb-card-body>
     </nb-card>
 </div>

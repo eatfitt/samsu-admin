@@ -41,7 +41,7 @@
             <span>{{ student.email }}</span>
             <span>{{ (student.dob | date: 'd/M/yyyy') ?? 'N/A' }}</span>
             <span>
-              <button (click)="selectedStudent = student" class="btn"
+              <button (click)="selectUser(student)" class="btn"
                 [nbContextMenu]="singleUserAction">
                 <nb-icon icon="more-vertical"></nb-icon>
               </button>
@@ -88,7 +88,7 @@
             <span>{{ manager.email }}</span>
             <span>{{ manager.DOB ?? 'N/A' }}</span>
             <span>
-              <button (click)="selectedStudent = student" class="btn"
+              <button (click)="selectUser(manager)" class="btn"
                 [nbContextMenu]="singleUserAction">
                 <nb-icon icon="more-vertical"></nb-icon>
               </button>
@@ -120,6 +120,7 @@
             <span>Username</span>
             <span>Email</span>
             <span>DOB</span>
+            <span>Department</span>
             <span></span>
           </nb-list-item>
           <nb-list-item class="item small"
@@ -134,8 +135,9 @@
             <span>{{ staff.username }}</span>
             <span>{{ staff.email }}</span>
             <span>{{ staff.DOB ?? 'N/A' }}</span>
+            <span>{{ staff.department?.name ?? 'N/A' }}</span>
             <span>
-              <button (click)="selectedStudent = student" class="btn"
+              <button (click)="selectUser(staff)" class="btn"
                 [nbContextMenu]="singleUserAction">
                 <nb-icon icon="more-vertical"></nb-icon>
               </button>
@@ -206,7 +208,7 @@
 <ng-template #deleteUserDialog let-data let-ref="dialogRef">
   <nb-card>
     <nb-card-header>Delete User</nb-card-header>
-    <nb-card-body> Do you want to delete {{ selectedStudent.name }} </nb-card-body>
+    <nb-card-body> Do you want to delete {{ selectedStudent?.name }} </nb-card-body>
     <nb-card-footer>
       <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
       <button nbButton class="bg-primary text-light ml-3" (click)="deleteUser()">Delete</button>
@@ -214,8 +216,8 @@
   </nb-card>
 </ng-template>
 <ng-template #updateUserDialog let-data let-ref="dialogRef">
-  <nb-card style="max-width: 40rem;">
-    <nb-card-header>Update User {{ selectedStudent.name }}</nb-card-header>
+  <nb-card *ngIf="selectedStudent" style="max-width: 40rem;">
+    <nb-card-header>Update User {{ selectedStudent?.name }}</nb-card-header>
     <nb-card-body>
       <label for="title" class="label">Name</label>
       <input type="text" [(ngModel)]="selectedStudent.name" nbInput fullWidth id="title" placeholder="Title">
@@ -224,13 +226,20 @@
       <label for="title" class="label">Avatar</label>
       <input type="text" [(ngModel)]="selectedStudent.avatar" nbInput fullWidth id="title" placeholder="Title">
       <label for="title" class="label">DOB</label>
-      <input type="text" [(ngModel)]="selectedStudent.dob" nbInput fullWidth id="title" placeholder="Title">
+      <input type="datetime" fullWidth [(ngModel)]="selectedStudent.dob" nbInput id="startTime" placeholder="Start time" [nbDatepicker]="dateTimePicker">
+      <nb-datepicker #dateTimePicker></nb-datepicker>
       <label for="title" class="label">Role</label>
       <nb-select [(selected)]="selectedStudent.role" fullWidth class="d-block">
         <nb-option [value]="1">Manager</nb-option>
         <nb-option [value]="2">Staff</nb-option>
         <nb-option [value]="3">Student</nb-option>
       </nb-select>
+      <ng-container *ngIf="selectedStudent.role === 2">
+        <label for="title" class="label">Department</label>
+        <nb-select [(selected)]="selectedStudent.department" fullWidth class="d-block">
+          <nb-option *ngFor="let department of departments$ | async" [value]="department">{{ department.name }}</nb-option>
+        </nb-select>
+      </ng-container>
     </nb-card-body>
     <nb-card-footer>
       <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>

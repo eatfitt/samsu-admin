@@ -14,6 +14,7 @@ import {
   NbInputModule,
   NbContextMenuModule,
   NbCalendarModule,
+  NbDatepickerModule,
 } from '@nebular/theme';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -101,7 +102,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     NbContextMenuModule,
     NbCalendarModule,
     ChartsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    NbDatepickerModule,
   ],
   declarations: [
     ECommerceComponent,

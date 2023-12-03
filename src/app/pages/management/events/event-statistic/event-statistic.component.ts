@@ -16,6 +16,7 @@ import {
   GetAllQuestionsByEventIdResponse,
 } from "../../../../@core/services/feedback/feedback.service";
 import { Observable, forkJoin, map, of, switchMap } from "rxjs";
+import { ECharts } from 'echarts';
 
 export interface MappedQuestionsAnswers {
   question: GetAllQuestionsByEventIdResponse;
@@ -36,6 +37,7 @@ export class EventStatisticComponent {
   progressInfoData = [];
   options: any = {};
   feedbackStat: any = []
+  chartInstances: ECharts[] = [];
 
   studentCount: number;
   attendanceCount: number;
@@ -88,6 +90,10 @@ export class EventStatisticComponent {
             {
                 type: 'category',
                 data: [],
+                axisLabel: {
+                  interval: 0,
+                  rotate: 30
+                }
             },
         ],
         yAxis: [
@@ -97,9 +103,9 @@ export class EventStatisticComponent {
         ],
         series: [
             {
-                name: 'Score',
+                // name: 'Score',
                 type: 'bar',
-                barWidth: '60%',
+                // barWidth: '60%',
                 data: [],
             },
         ],
@@ -170,5 +176,21 @@ export class EventStatisticComponent {
         )}%)`,
       },
     ];
+  }
+
+  onChartInit(ec: ECharts) {
+    let chartInstance = ec;
+    this.chartInstances.push(chartInstance);
+  }
+
+  exportData() {
+    this.chartInstances.forEach(chart => {
+      let img = new Image();
+      img.src = chart.getDataURL({
+          pixelRatio: 2,
+          backgroundColor: '#fff'
+      });
+      console.log(img.src)
+    })
   }
 }

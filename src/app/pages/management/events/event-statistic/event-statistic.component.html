@@ -14,15 +14,13 @@
 <nb-card>
     <nb-card-header>Feedback</nb-card-header>
     <nb-card-body>
-        <!-- {{allQuestionsAndAnswers | async | json}}
-        {{allQuestionsAndAnswersChart | async | json}} -->
         <nb-accordion>
             <nb-accordion-item *ngFor="let feedback of allQuestionsAndAnswers | async">
                 <nb-accordion-item-header>
                     {{ feedback.question.question }}
                 </nb-accordion-item-header>
                 <nb-accordion-item-body>
-                    <div *ngIf="feedback.question.type === 0 || feedback.question.type === 1" echarts [options]="feedback.chart" class="echart"></div>
+                    <div *ngIf="feedback.question.type === 0 || feedback.question.type === 1" echarts [options]="feedback.chart" (chartInit)="onChartInit($event)" class="echart" [id]="feedback.question.id"></div>
                     <ng-card *ngIf="feedback.question.type === 2">
                         <nb-card-body class="p-0">
                             <nb-list>
@@ -30,7 +28,6 @@
                                     {{ openEndedAnswer.content }}
                                 </nb-list-item>
                             </nb-list>
-                            
                         </nb-card-body>
                     </ng-card>
                 </nb-accordion-item-body>

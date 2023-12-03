@@ -60,6 +60,7 @@ export interface AddListUserRequest {
 }
 
 export interface Department {
+  id: number;
   name: string;
 }
 

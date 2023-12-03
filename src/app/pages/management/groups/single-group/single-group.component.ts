@@ -7,6 +7,7 @@ import { GetSingleGroupResponse, GroupService, PutUpdateGroupRequest } from '../
 import { GetAllUsersListResponse, GetAllUsersResponse, RoleEnum, UserService } from '../../../../@core/services/user/user.service';
 import { UserState } from '../../../../app-state/user';
 import { AllStudentsComponent } from '../../students/all-students/all-students.component';
+import { DepartmentService } from '../../../../@core/services/department/department.service';
 
 @Component({
   selector: 'ngx-single-group',
@@ -55,9 +56,10 @@ constructor(
   public router: Router,
   public groupService: GroupService,
   public toastrService: NbToastrService,
-  public menuService: NbMenuService
+  public menuService: NbMenuService,
+  public departmentService: DepartmentService
 ) {
-  super(userService, store, dialogService, router, toastrService, menuService);
+  super(userService, store, dialogService, router, toastrService, menuService, departmentService);
   let url = this.router.url;
   this.groupId = Number(url.split('/').pop());
 }

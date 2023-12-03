@@ -1,5 +1,5 @@
-<div *ngFor="let feedbackQuestion of feedbackQuestions">
-    <div class="label mb-2 mt-3">{{ feedbackQuestion.question }}</div>
+<div *ngFor="let feedbackQuestion of feedbackQuestions" class="my-4">
+    <div class="label mb-2">{{ feedbackQuestion.question }}</div>
     <div *ngIf="feedbackQuestion.type === 0">
         <nb-checkbox class="d-block" *ngFor="let answer of feedbackQuestion.answer | splitstring: '|'">{{ answer }}</nb-checkbox>
     </div>

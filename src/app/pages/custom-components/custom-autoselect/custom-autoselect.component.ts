@@ -8,6 +8,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Simple
 })
 export class CustomAutoselectComponent {
   @ViewChild('autoInput') input;
+  @Input() defaultValue = null;
   @Input() arr: any[] = [];
   @Input() property = '';
   @Input() label = '';
