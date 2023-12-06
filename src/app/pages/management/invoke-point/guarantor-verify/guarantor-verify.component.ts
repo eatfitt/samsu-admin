@@ -11,6 +11,9 @@ export class GuarantorVerifyComponent {
 
   ticketInfo = null;
   code = '';
+  alreadyApproved = false;
+  alreadyRejected = false;
+  apiCalledSuccess: boolean;
   constructor(private router: Router, private gradeTicketCodeService: GradeTicketCodeService) { }
   ngOnInit() {
     let url = this.router.url;  // e.g. "/guarantorVerify/something/something"
@@ -18,9 +21,17 @@ export class GuarantorVerifyComponent {
     // Now you can use the code
     this.code = param.replace(/%2BB/gi, '+');
     this.gradeTicketCodeService.getGradeTicketInfoForGuarantorVerify(this.code)
-      .subscribe(data => this.ticketInfo = data);
+      .subscribe((data: any) => {
+        this.ticketInfo = data
+        if (data.status === 1) this.alreadyApproved = true;
+        if (data.status === 2) this.alreadyRejected = true;
+      });
   }
   updateTicketStatus(status: number) {
-    this.gradeTicketCodeService.postGradeTicketInfoForGuarantorVerify(status, this.code).subscribe();
+    this.gradeTicketCodeService.postGradeTicketInfoForGuarantorVerify(status, this.code).subscribe(
+      (success) => [
+        this.apiCalledSuccess = true
+      ]
+    );
   }
 }
