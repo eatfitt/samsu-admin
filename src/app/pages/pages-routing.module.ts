@@ -83,7 +83,7 @@ const routes: Routes = [{
       component: InvokePointComponent,
     },
     {
-      path: 'user/:username',
+      path: 'user/:id',
       component: UserComponent,
     },
     {

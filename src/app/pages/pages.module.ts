@@ -68,6 +68,7 @@ import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { ChartModule } from "angular2-chartjs";
 import { FeedbackFormComponent } from './management/events/feedback-form/feedback-form.component';
 import { SplitStringPipe } from "./pipes/splitstring.pipe";
+import { GuarantorVerifyComponent } from './management/invoke-point/guarantor-verify/guarantor-verify.component';
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 const PIPES = [
@@ -148,7 +149,8 @@ const PIPES = [
     ...PIPES,
     InvokePointComponent,
     EventStatisticComponent,
-    FeedbackFormComponent
+    FeedbackFormComponent,
+    GuarantorVerifyComponent
     // TasksComponent,
   ],
 })

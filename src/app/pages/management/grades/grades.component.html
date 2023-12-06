@@ -1,17 +1,19 @@
 <nb-card>
-    <nb-card-header>Grade Criteria</nb-card-header>
+    <nb-card-header class="d-flex justify-content-between">
+        <div>Tiêu chí đánh giá</div>
+        <button class="btn" [nbContextMenu]="gradeMenuItems">
+            <nb-icon icon="more-vertical"></nb-icon>
+          </button>
+    </nb-card-header>
     <nb-card-body>
         <div class="row">
-            <div class="col-3">
+            <div class="col-6">
                 <ng-container [ngTemplateOutlet]="gradeCriteriaList"
                     [ngTemplateOutletContext]="{gradeCriterias: filteredGradeCriterias}"></ng-container>
             </div>
             <div class="col-6">
                 <ng-container [ngTemplateOutlet]="gradeSubCriteriaList"
                     [ngTemplateOutletContext]="{gradeSubCriterias: filteredGradeSubCriterias}"></ng-container>
-            </div>
-            <div class="col-3">
-                <ng-container [ngTemplateOutlet]="selectedPolicyDocumentTemplate"></ng-container>
             </div>
         </div>
     </nb-card-body>
@@ -20,19 +22,36 @@
 <!-- GRADE CRITERIA -->
 <!-- TODO: CHO CASI MUI TEN -->
 <ng-template #gradeCriteriaList let-gradeCriterias="gradeCriterias">
-    <div class="font-weight-bold mb-1">Criterias</div>
+    <div class="font-weight-bold mb-1">Tiêu chí</div>
     <input nbInput fullWidth (keyup)="filterGradeCriteria($event)">
-    <nb-list>
-        <nb-list-item class="item small">All</nb-list-item>
+    <!-- <nb-list>
         <nb-list-item class="item small" *ngFor="let gradeCriteria of gradeCriterias">
             {{ gradeCriteria.content }}
         </nb-list-item>
-    </nb-list>
+    </nb-list> -->
+    <nb-accordion multi class="mt-3">
+        <nb-accordion-item *ngFor="let gradeCriteria of gradeCriterias">
+            <nb-accordion-item-header>{{ gradeCriteria.gradeCriteria.content }}</nb-accordion-item-header>
+            <nb-accordion-item-body class="small">
+                <div class="row">
+                    <div class="col-md-4 font-weight-bold">Policy</div>
+                    <a target="_blank" [href]="gradeCriteria.policyDocument.fileUrls" class="col-md-8">{{ gradeCriteria.policyDocument.name }}</a>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-4 font-weight-bold">Sub criteria</div>
+                    <div class="col-md-8">
+                        <div *ngFor="let sub of gradeCriteria.gradeSubCriterias">{{ sub.content }}</div>
+                        <div *ngIf="gradeCriteria.gradeSubCriterias?.length === 0">N/A</div>
+                    </div>
+                </div>
+            </nb-accordion-item-body>
+        </nb-accordion-item>
+    </nb-accordion>
 </ng-template>
 
 <!-- GRADE SUB CRITERIA -->
 <ng-template #gradeSubCriteriaList let-gradeSubCriterias="gradeSubCriterias">
-    <div class="font-weight-bold mb-1">Sub-criterias</div>
+    <div class="font-weight-bold mb-1">Tiêu chí phụ</div>
     <input nbInput fullWidth (keyup)="filterGradeSubCriteria($event)">
     <nb-list>
         <nb-list-item class="item small bg-light mt-3">
@@ -46,10 +65,4 @@
             <span>{{ gradeSubCriteria.maxScore }}</span>
         </nb-list-item>
     </nb-list>
-</ng-template>
-
-<!-- GRADE SUB CRITERIA -->
-<ng-template #selectedPolicyDocumentTemplate let-gradeSubCriterias="gradeSubCriterias">
-    <div class="font-weight-bold mb-1">Policy Documents</div>
-    <div>No criteria selected</div>
 </ng-template>

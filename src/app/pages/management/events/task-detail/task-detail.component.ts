@@ -3,6 +3,7 @@ import { GradeSubCriteria, GradeSubCriteriaService } from '../../../../@core/ser
 import { UserService } from '../../../../@core/services/user/user.service';
 import { NbTagComponent, NbTagInputAddEvent, NbToastrService } from '@nebular/theme';
 import { Observable } from 'rxjs';
+import { getAssigneeStatus, getTaskStatus } from '../../../../@core/utils/data-util';
 
 interface GradeSubCriterias {
   id?: number;
@@ -22,6 +23,7 @@ export interface Task {
   status: number;
   createdAt?: Date;
   assignees: Assignee[];
+  deadline: Date;
 }
 
 export interface Assignee {
@@ -50,6 +52,7 @@ export class TaskDetailComponent {
     status: 1,
     gradeSubCriteriaId: 1,
     assignees: [],
+    deadline: new Date()
   }
   @Input() index: number;
   @Input() viewOnly: false; // default false;
@@ -127,6 +130,13 @@ export class TaskDetailComponent {
     if (value > this.task.gradeSubCriteria.maxScore || value < this.task.gradeSubCriteria.minScore) {
         event.preventDefault();
     }
-}
+  }
 
+  getTaskStatus(status: number) {
+    return getTaskStatus(status);
+  }
+
+  getAssigneeStatus(status: number) {
+    return getAssigneeStatus(status);
+  }
 }

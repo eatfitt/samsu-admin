@@ -17,63 +17,57 @@ export const MENU_ITEMS: NbMenuItem[] = [
     group: true,
   },
   {
-    title: 'Users',
+    title: 'Người dùng',
     icon: 'person-outline',
     link: '/pages/users',
     home: true,
   },
   {
-      title: 'Events',
+      title: 'Sự kiện',
       icon: 'calendar-outline',
       children: [
         {
-          title: 'All events',
+          title: 'Tất cả sự kiện',
           link: '/pages/events',
         },
-        {
-          title: 'Calendar',
-          link: '/pages/events/calendar',
-        },
+        // {
+        //   title: 'Calendar',
+        //   link: '/pages/events/calendar',
+        // },
       ],
     },
   {
-    title: 'Groups',
+    title: 'Nhóm',
     icon: 'people-outline',
     link: '/pages/groups',
     home: true,
   },
   {
-    title: 'Announcements',
-    icon: 'volume-up-outline',
-    link: '/pages/dashboard',
-    home: true,
-  },
-  {
-    title: 'Posts',
+    title: 'Bài đăng',
     icon: 'cast-outline',
     link: '/pages/dashboard',
     home: true,
   },
   {
-    title: 'My Event Proposal',
+    title: 'Đề xuất sự kiện của tôi',
     icon: 'bulb',
     link: '/pages/my-event-proposal',
     home: true,
   },
   {
-    title: 'Grade Criteria',
+    title: 'Tiêu chí đánh giá',
     icon: 'bar-chart',
     link: '/pages/grades',
     home: true,
   },
   {
-    title: 'Departments',
+    title: 'Phòng ban',
     icon: 'pantone',
     link: '/pages/departments',
     home: true,
   },
   {
-    title: 'Grade Tickets',
+    title: 'Xác nhận điểm bổ sung',
     icon: 'paper-plane',
     link: '/pages/grade-tickets',
     home: true,
@@ -310,7 +304,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
 
 export const ADMIN_MENU_ITEMS: NbMenuItem[] = [
   {
-    title: 'All Event Proposal',
+    title: 'Đề xuất sự kiện',
     icon: 'bulb',
     link: '/pages/event-proposals',
     home: true,

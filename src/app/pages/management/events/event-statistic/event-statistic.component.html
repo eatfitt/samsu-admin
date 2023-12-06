@@ -16,8 +16,8 @@
 <nb-card>
     <nb-card-header>Feedback</nb-card-header>
     <nb-card-body>
-        <nb-accordion>
-            <nb-accordion-item *ngFor="let feedback of allQuestionsAndAnswers | async">
+        <nb-accordion multi>
+            <nb-accordion-item expanded="true" *ngFor="let feedback of allQuestionsAndAnswers | async">
                 <nb-accordion-item-header>
                     {{ feedback.question.question }}
                 </nb-accordion-item-header>

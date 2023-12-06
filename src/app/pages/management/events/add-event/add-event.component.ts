@@ -227,7 +227,7 @@ export class AddEventComponent implements OnInit {
       attendScore: Number(this.attendScore),
       creator: null,
       eventLeader: this.eventLeader,
-      departments: this.department?.id,
+      departments: this.department,
       tasks: this.taskList.map(task => {
         return {
           id: null,
@@ -238,7 +238,8 @@ export class AddEventComponent implements OnInit {
           score: task.score,
           eventId: null,
           gradeSubCriteria: task.gradeSubCriteria,
-          assignees: task.assignees
+          assignees: task.assignees,
+          deadline: task.deadline
         }
       }),
       feedbackQuestions: this.feedbackQuestionList.map((question) => {
@@ -339,9 +340,11 @@ export class AddEventComponent implements OnInit {
             status: 0,
             rollnumber: assignee.rollnumber
           }
-        })
+        }),
+        deadline: task.deadline
       }
     })
+    const departmentIdsPayload = this.department.map(de => de.id);
     const createEventPayload: CreateEventRequest = {
       status: Number(this.status),
       duration: Number(this.duration),
@@ -357,6 +360,7 @@ export class AddEventComponent implements OnInit {
       feedbackQuestionRequestList: feedbackPayload,
       rollnumbers: rollnumbersPayload,
       taskRequests: taskPayload,
+      departmentIds: departmentIdsPayload
     };
     console.log(createEventPayload);
     this.eventService.createEvent(createEventPayload).subscribe(

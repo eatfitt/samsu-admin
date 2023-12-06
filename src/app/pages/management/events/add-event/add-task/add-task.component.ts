@@ -16,13 +16,14 @@ export class AddTaskComponent {
 
   addTask() {
     const sampleTask: Task = {
-      title: 'New task',
+      title: 'Check In',
       content: '',
       score: 0,
       status: 0,
       gradeSubCriteriaId: 1,
       gradeSubCriteria: null,
-      assignees: []
+      assignees: [],
+      deadline: new Date()
     }
     this.taskList.push(sampleTask);
     this.selectedTask = this.taskList[this.taskList.length - 1];

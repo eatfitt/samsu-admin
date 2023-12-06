@@ -1,7 +1,7 @@
 import { Component, Input, TemplateRef, ViewChild, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { CreateEventRequest, Event, EventParticipant, EventService } from '../../../../@core/services/event/event.service';
 import { NbDialogRef, NbDialogService, NbToastrService } from '@nebular/theme';
-import { convertMilliToDate, convertMillisToTime, isImageFile } from '../../../../@core/utils/data-util';
+import { convertMilliToDate, convertMillisToTime, getAssigneeStatus, getTaskStatus, isImageFile } from '../../../../@core/utils/data-util';
 import _ from 'lodash';
 import { FileUploadService } from '../../../../../services/file-upload.service';
 @Component({
@@ -103,7 +103,8 @@ export class EventComponent {
               rollnumber: assignee.rollnumber,
               status: assignee.status ?? 0,
             }
-          })
+          }),
+          deadline: task.deadline
         }
       })
     }
@@ -203,7 +204,7 @@ export class EventComponent {
 
   editTaskStatus(index: number) {
     this.eventToEdit.tasks[this.selectedIndex].status = index;
-    this.editEvent();
+    // this.editEvent();
   }
 
   deleteTask(i) {
@@ -212,14 +213,19 @@ export class EventComponent {
     this.selectedTask = null;
   }
 
+  updateTask() {
+    
+  }
+
   logger(event?) {
     console.log('Logger', event);
   }
 
   getTaskStatus(status: number) {
-    if (status === 0) return 'Pending';
-    else if (status === 1) return 'OnGoing';
-    else if (status === 2) return 'Incompleted';
-    else if (status === 3) return 'Completed';
+    return getTaskStatus(status);
+  }
+
+  getAssigneeStatus(status: number) {
+    return getAssigneeStatus(status);
   }
 }

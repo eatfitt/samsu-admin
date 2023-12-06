@@ -55,6 +55,7 @@ export interface Task {
   eventId: number;
   gradeSubCriteria: GradeSubCriteria;
   assignees: AssigneeRequest[];
+  deadline: Date;
 }
 
 export interface TaskRequests {
@@ -64,6 +65,7 @@ export interface TaskRequests {
   score: number;
   gradeSubCriteriaId: number;
   assignees: AssigneeRequest[];
+  deadline: Date;
 }
 
 export interface CreateEventRequest {

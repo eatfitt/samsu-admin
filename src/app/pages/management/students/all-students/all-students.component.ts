@@ -13,7 +13,6 @@ import {
   AddListUserRequest,
   AddListUserResponse,
   GetAllUsersResponse,
-  RoleEnum,
   UserImportsFail,
   UserService,
 } from "../../../../@core/services/user/user.service";

@@ -10,6 +10,7 @@ import {
 } from '@nebular/auth';
 import { LoginComponent } from './pages/authentication-components/login/login.component';
 import { UpdatePersonalInfoComponent } from './pages/authentication-components/update-personal-info/update-personal-info.component';
+import { GuarantorVerifyComponent } from './pages/management/invoke-point/guarantor-verify/guarantor-verify.component';
 
 export const routes: Routes = [
   {
@@ -46,6 +47,10 @@ export const routes: Routes = [
         component: NbResetPasswordComponent,
       },
     ],
+  },
+  {
+    path: 'guarantorVerify/:code',
+    component: GuarantorVerifyComponent,
   },
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
   { path: '**', redirectTo: 'pages' },

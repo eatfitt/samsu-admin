@@ -17,7 +17,7 @@ import {
 } from "../../../../@core/services/feedback/feedback.service";
 import { Observable, forkJoin, map, switchMap } from "rxjs";
 import { ECharts } from "echarts";
-import { WorkBook, WorkSheet, read, utils, writeFileXLSX } from "xlsx";
+import { utils, writeFileXLSX } from "xlsx";
 import { convertMilliToDate, convertMillisToTime } from "../../../../@core/utils/data-util";
 
 export interface MappedQuestionsAnswers {

@@ -44,3 +44,17 @@ export function convertToDate(dateString: string) {
 export function convertMilliToDate(millis) {
   return new Date(millis);
 }
+
+export function getTaskStatus(status: number) {
+  if (status === 0) return 'Đang diễn ra'; // Processing
+  else if (status === 1) return 'Đã duyệt'; // Reviewed
+}
+
+export function getAssigneeStatus(status: number) {
+  return status === 0 ? "Đang chờ"
+    : status === 1 ? "Chấp nhận"
+    : status === 2 ? "Từ chối"
+    : status === 3 ? "Hoàn thành"
+    : status === 4 ? "Công nhận"
+    : "Không công nhận"
+}
