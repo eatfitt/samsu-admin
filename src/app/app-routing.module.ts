@@ -52,7 +52,20 @@ export const routes: Routes = [
     path: 'guarantorVerify/:code',
     component: GuarantorVerifyComponent,
   },
+  {
+    path: 'guarantorVerify/:code/:code',
+    component: GuarantorVerifyComponent,
+  },
+  {
+    path: 'guarantorVerify/:code/:code/:code',
+    component: GuarantorVerifyComponent,
+  },
+  {
+    path: 'guarantorVerify/:code/:code/:code/:code',
+    component: GuarantorVerifyComponent,
+  },
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
+  // { path: 'guarantorVerify/**', component: GuarantorVerifyComponent },
   { path: '**', redirectTo: 'pages' },
 ];
 

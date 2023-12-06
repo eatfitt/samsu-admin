@@ -1,5 +1,39 @@
 <nb-layout>
     <nb-layout-column>
-      // Your content
+      <div class="d-flex w-100 h-100 justify-content-center align-items-center">
+        <div class="border border-primary shadow p-5" style="max-width: 45rem;">
+          <img src="../../../../assets/images/logo-modified-small.png" style="width:7rem">
+          <h1 class="text-primary">Xác nhận điểm rèn luyện</h1>
+          <div>Hệ thống cần Thầy/Cô xác nhận các hoạt động rèn luyện mà sinh viên đã thực hiện.</div>
+          <div class="border p-3 my-3">
+            <div class="row mb-2">
+              <div class="col-md-4 label">Sinh viên</div>
+              <div class="col-md-8 small">{{ ticketInfo?.creator?.name }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-md-4 label">MSSV</div>
+              <div class="col-md-8 small">{{ ticketInfo?.creator?.rollnumber }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-md-4 label">Tiêu đề</div>
+              <div class="col-md-8 small">{{ ticketInfo?.title }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-md-4 label">Nội dung</div>
+              <div class="col-md-8 small">{{ ticketInfo?.content }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-md-4 label">Tệp đính kèm</div>
+              <a target="_blank" [href]="ticketInfo?.evidenceUrls" class="col-md-8 small">{{ ticketInfo?.evidenceUrls }}</a>
+            </div>
+          </div>
+          <div class="mb-3"> Để xác nhận, vui lòng nhấp vào nút “Xác nhận” dưới đây.</div>
+          <div class="w-100 d-flex justify-content-between">
+            <button nbButton status="primary" (click)="updateTicketStatus(1)">Xác nhận</button>
+            <button nbButton status="danger" (click)="updateTicketStatus(2)">Từ chối</button>
+
+          </div>
+        </div>
+      </div>
     </nb-layout-column>
   </nb-layout>
