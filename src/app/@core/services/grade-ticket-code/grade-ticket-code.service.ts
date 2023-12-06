@@ -35,7 +35,7 @@ export class GradeTicketCodeService {
     .set("CodeTicket", code)
     .set("Content-Type", "application/json");
     const options = { headers: headers };
-    return this.http.post(`${this.apiEndPoint}/gradeTicketCode/status/${status}`, options).pipe(
+    return this.http.post(`${this.apiEndPoint}/gradeTicketCode/status/${status}`, {}, options).pipe(
       catchError((error) => {
         console.error("Error in postGradeTicketInfoForGuarantorVerify:", error);
         return throwError(error);
