@@ -9,17 +9,17 @@ import {
 import { Store } from "@ngrx/store";
 import { LocalDataSource } from "ng2-smart-table";
 import { Observable, Subscription, map } from "rxjs";
+import { DepartmentService } from "../../../../@core/services/department/department.service";
 import {
   AddListUserRequest,
   AddListUserResponse,
+  GetAllUsersListResponse,
   GetAllUsersResponse,
   UserImportsFail,
   UserService,
 } from "../../../../@core/services/user/user.service";
-import { UserState } from "../../../../app-state/user";
-import { GetAllUsersListResponse } from "../../../../@core/services/user/user.service";
 import { convertToDate } from "../../../../@core/utils/data-util";
-import { DepartmentService } from "../../../../@core/services/department/department.service";
+import { UserState } from "../../../../app-state/user";
 
 @Component({
   selector: "ngx-all-students",
@@ -425,7 +425,7 @@ export class AllStudentsComponent {
     // studentPayload.role = RoleEnum[studentPayload.role];
     studentPayload.role = this.getUserRoleString(this.selectedStudent.role as number);
     studentPayload.status = 1;
-    studentPayload.departmentId = this.selectedStudent.department.id;
+    studentPayload.departmentId = this.selectedStudent?.department?.id;
     // studentPayload.dob = convertToDate(this.selectedStudent.dob as string)
     this.userService
       .updateUser(
