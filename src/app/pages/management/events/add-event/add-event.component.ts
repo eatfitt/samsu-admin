@@ -91,6 +91,8 @@ export class AddEventComponent implements OnInit {
   eventReview: Event = null;
   participantReview: EventParticipant[] = [];
   aFileUploaded$ = new BehaviorSubject(null);
+  today = new Date();
+  minDate = new Date(this.today);
 
   // FORM DATA - ngModel
   title = "";
@@ -118,12 +120,24 @@ export class AddEventComponent implements OnInit {
   // ATTENDANCE TAB
   attendanceList: any = [];
   // TASK TAB
-  taskList: Task[] = [];
+  taskList: Task[] = [
+    {
+      title: 'Check In',
+      content: 'Check In người tham gia',
+      score: 0,
+      status: 0,
+      gradeSubCriteriaId: 1,
+      gradeSubCriteria: null,
+      assignees: [],
+      deadline: new Date()
+    }
+  ];
 
   private contentTemplateRef: NbDialogRef<AddEventComponent>;
 
   ngOnInit(): void {
     this.userService.checkLoggedIn();
+    this.minDate.setDate(this.today.getDate() - 1);
     this.semesters$ = this.semesterService.getAllSemesters().pipe(map((data: any) => data.content));
     this.departments$ = this.departmentService.getAllDepartments().pipe(map((data: any) => data.content));
   }

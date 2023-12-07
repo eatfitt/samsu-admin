@@ -21,6 +21,7 @@ import { PagesComponent } from './pages.component';
 import { SingleEventComponent } from './management/events/single-event/single-event.component';
 import { EventComponent } from './management/events/event/event.component';
 import { InvokePointComponent } from './management/invoke-point/invoke-point.component';
+import { AllGradesComponent } from './management/all-grades/all-grades.component';
 
 const routes: Routes = [{
   path: '',
@@ -81,6 +82,10 @@ const routes: Routes = [{
     {
       path: 'grade-tickets',
       component: InvokePointComponent,
+    },
+    {
+      path: 'all-grades',
+      component: AllGradesComponent
     },
     {
       path: 'user/:id',

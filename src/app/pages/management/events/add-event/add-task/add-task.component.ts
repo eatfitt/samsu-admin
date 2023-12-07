@@ -16,7 +16,7 @@ export class AddTaskComponent {
 
   addTask() {
     const sampleTask: Task = {
-      title: 'Check In',
+      title: 'New Task',
       content: '',
       score: 0,
       status: 0,

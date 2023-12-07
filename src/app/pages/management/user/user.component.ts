@@ -2,14 +2,10 @@ import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
   Jwt,
-  UserState,
   UserSummary,
-  getUserJwtState,
-  getUserUserSummaryState,
 } from "../../../app-state/user";
 import { UserService } from "../../../@core/services/user/user.service";
-import { Store } from "@ngrx/store";
-import { Observable, combineLatest, filter, map, switchMap, tap } from "rxjs";
+import { Observable, combineLatest, map, switchMap, tap } from "rxjs";
 import {
   Semester,
   SemesterService,

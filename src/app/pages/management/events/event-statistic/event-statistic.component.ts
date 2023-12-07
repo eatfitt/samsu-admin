@@ -332,7 +332,7 @@ export class EventStatisticComponent {
             (a, b) => a + Number(b.content),
             0
           );
-          const avgRating = +(sumRating / qna.answers.length).toFixed(2);
+          const avgRating = qna.answers.length === 0 ? 0 : +(sumRating / qna.answers.length).toFixed(2);
 
           rows.push({ ROLLNUMBER: "", NAME: "AVERAGE", CHECKIN: avgRating });
         }
@@ -361,6 +361,6 @@ export class EventStatisticComponent {
     if (!ws["!rows"][0]) ws["!rows"][0] = {};
     ws["!rows"][0].hidden = true;
 
-    writeFileXLSX(wb, "SheetJSAngularAoO.xlsx");
+    writeFileXLSX(wb, `${this.event.title}_STATISTIC.xlsx`);
   }
 }

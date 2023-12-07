@@ -1,14 +1,14 @@
 <div class="task-detail">
     <h5 style="font-weight: 600;">{{ task.title }}</h5>
-    <div *ngIf="!viewOnly" class="d-flex mb-3">
+    <div *ngIf="!viewOnly && !isDefaultTaskCheckin(task)" class="d-flex mb-3">
         <button nbButton size="tiny" outline status="basic" (click)="removeTask.emit(index)" class="mr-1">Xóa công việc</button>
     </div>
     <nb-select [disabled]="viewOnly" [(selected)]="task.status" (selectedChange)="taskStatusChange.emit($event)" size="small">
         <nb-option [value]="0">{{ getTaskStatus(0) }}</nb-option>
         <nb-option [value]="1">{{ getTaskStatus(1) }}</nb-option>
     </nb-select><br/>
-    <label for="title" class="label">Công việc</label>
-    <input  [disabled]="viewOnly" class="mb-3" nbInput fullWidth id="title" placeholder="Title" [(ngModel)]="task.title" fieldSize="small">
+    <label for="title" class="label mt-3">Công việc</label>
+    <input  [disabled]="viewOnly" class="mb-3" nbInput fullWidth id="title" placeholder="Title" [disabled]="isDefaultTaskCheckin(task)" [(ngModel)]="task.title" fieldSize="small">
     <label for="content" class="label">Mô tả</label>
     <textarea [disabled]="viewOnly" type="text" nbInput fullWidth id="content" placeholder="Description" [(ngModel)]="task.content" fieldSize="small"></textarea>
     

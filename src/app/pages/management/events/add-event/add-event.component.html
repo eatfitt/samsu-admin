@@ -70,7 +70,7 @@
                     <input class="w-50" nbInput [(ngModel)]="startTime" [nbTimepicker]="timepicker" style="border-radius: 0.25rem 0 0 0.25rem;">
                     <nb-timepicker #timepicker></nb-timepicker>
                     <input class="w-75" type="datetime" [(ngModel)]="startTime" nbInput id="startTime" placeholder="Start time" [nbDatepicker]="dateTimePicker" style="border-radius: 0 0.25rem 0.25rem 0;">
-                    <nb-datepicker #dateTimePicker></nb-datepicker>
+                    <nb-datepicker [min]="minDate" #dateTimePicker></nb-datepicker>
                 </div>         
             </div>
             <div class="col-md-6">

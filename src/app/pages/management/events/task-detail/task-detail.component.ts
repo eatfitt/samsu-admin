@@ -139,4 +139,9 @@ export class TaskDetailComponent {
   getAssigneeStatus(status: number) {
     return getAssigneeStatus(status);
   }
+
+  isDefaultTaskCheckin(task: Task) {
+    if (task.title === 'Check In' && this.index === 0) return true;
+    return false;
+  }
 }

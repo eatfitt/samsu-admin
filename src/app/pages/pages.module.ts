@@ -22,6 +22,7 @@ import {
   NbTabsetModule,
   NbTagModule,
   NbTimepickerModule,
+  NbTooltipModule,
   NbTreeGridModule,
 } from "@nebular/theme";
 
@@ -69,6 +70,7 @@ import { ChartModule } from "angular2-chartjs";
 import { FeedbackFormComponent } from './management/events/feedback-form/feedback-form.component';
 import { SplitStringPipe } from "./pipes/splitstring.pipe";
 import { GuarantorVerifyComponent } from './management/invoke-point/guarantor-verify/guarantor-verify.component';
+import { AllGradesComponent } from './management/all-grades/all-grades.component';
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 const PIPES = [
@@ -114,6 +116,7 @@ const PIPES = [
     NbRadioModule,
     NbProgressBarModule,
     NbCheckboxModule,
+    NbTooltipModule,
 
     ChartsRoutingModule, // CHART
     NgxEchartsModule,
@@ -150,7 +153,8 @@ const PIPES = [
     InvokePointComponent,
     EventStatisticComponent,
     FeedbackFormComponent,
-    GuarantorVerifyComponent
+    GuarantorVerifyComponent,
+    AllGradesComponent
     // TasksComponent,
   ],
 })

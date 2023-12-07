@@ -72,6 +72,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/grade-tickets',
     home: true,
   },
+  {
+    title: 'Xem điểm',
+    icon: 'book-open',
+    link: '/pages/all-grades',
+    home: true
+  }
   // {
   //   title: 'Layout',
   //   icon: 'layout-outline',
