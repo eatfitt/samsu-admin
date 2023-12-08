@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FeedbackQuestion } from '../../../../@core/services/event/event.service';
 
 @Component({
@@ -8,4 +8,6 @@ import { FeedbackQuestion } from '../../../../@core/services/event/event.service
 })
 export class FeedbackFormComponent {
   @Input() feedbackQuestions: Partial<FeedbackQuestion>[] = [];
+  @Input() viewOnly = true;
+  @Output() edit = new EventEmitter<FeedbackQuestion>();
 }

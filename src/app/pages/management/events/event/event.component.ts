@@ -1,9 +1,10 @@
 import { Component, Input, TemplateRef, ViewChild, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { CreateEventRequest, Event, EventParticipant, EventService } from '../../../../@core/services/event/event.service';
+import { CreateEventRequest, Event, EventParticipant, EventService, FeedbackQuestion, FeedbackQuestionRequest } from '../../../../@core/services/event/event.service';
 import { NbDialogRef, NbDialogService, NbToastrService } from '@nebular/theme';
 import { convertMilliToDate, convertMillisToTime, getAssigneeStatus, getTaskStatus, isImageFile } from '../../../../@core/utils/data-util';
 import _ from 'lodash';
 import { FileUploadService } from '../../../../../services/file-upload.service';
+import { FeedbackService } from '../../../../@core/services/feedback/feedback.service';
 @Component({
   selector: 'ngx-event',
   templateUrl: './event.component.html',
@@ -12,9 +13,11 @@ import { FileUploadService } from '../../../../../services/file-upload.service';
 export class EventComponent {
   @ViewChild("eventBannerDialog", { static: true }) eventBannerDialog: TemplateRef<any>;
   @ViewChild('saveEditTemplate') saveEditTemplate: TemplateRef<any>;
+  @ViewChild('addFeedbackQuestionDialog') addFeedbackQuestionDialog: TemplateRef<any>;
 
   @Input() event: Event = null;
   @Input() participants: EventParticipant[] = [];
+  @Input() feedback: FeedbackQuestion[];
   @Input() viewOnly = false; // default false
   @Output() checkIn = new EventEmitter<void>();
   eventToEdit: Event = null;
@@ -51,6 +54,15 @@ export class EventComponent {
   selectedTask: Task = null;
   selectedIndex: number;
 
+  // FEEDBACK MANAGEMENT
+  sampleFeedback = {
+    question: 'What do you think of the event?',
+    answer: [''],
+    type: 2
+  };
+
+  selectedFeedback = null;
+
   private contentTemplateRef: NbDialogRef<EventComponent>;
 
   constructor(
@@ -58,12 +70,29 @@ export class EventComponent {
     public toastrService: NbToastrService,
     private eventService: EventService,
     private uploadService: FileUploadService,
+    private feedbackService: FeedbackService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    const { event, participants } = changes;
-    if (_.isObject(event) || _.isObject(participants)) {
-      this.eventToEdit = { ...this.event };
+    const { event, participants, feedback } = changes;
+    if (_.isObject(event) || _.isObject(participants) || _.isObject(feedback)) {
+      this.eventToEdit = {
+        ...this.event,
+        tasks: this.event.tasks.map((task) => {
+          return {
+            ... task,
+            assignees: task.assignees.map((assignee: any) => {
+              return {
+                ...assignee,
+                rollnumber: assignee.user ? assignee.user.rollnumber : assignee.rollnumber,
+                name: assignee.user ? assignee.user.name : assignee.name,
+                username: assignee.user ? assignee.user.username : assignee.username,
+              }
+            })
+          }
+        }),
+        feedbackQuestions: this.feedback ?? this.event.feedbackQuestions
+      };
       this.filteredParticipantList = this.participants;
       this.getDuration();
     }
@@ -191,13 +220,9 @@ export class EventComponent {
       )
 
     this.contentTemplateRef.close();
-
-    // const rollNoToCheckin = this.filteredmockCheckInFlagParticipantList.findIndex((participant) => participant.participant === this.rollnumberToCheckIn);
-    // this.filteredmockCheckInFlagParticipantList[rollNoToCheckin].checkedIn = true;
-    // this.filteredmockCheckInFlagParticipantList[rollNoToCheckin].notes = `Check in via ${this.checkInMethod} due to ${this.reasonForManualCheckin}. Notes: ${this.checkInNotes}`;
-    // this.checkInMethod = this.reasonForManualCheckin = this.checkInNotes;
   }
 
+  // TASK
   addTask() {
 
   }
@@ -217,8 +242,61 @@ export class EventComponent {
     
   }
 
+  // FEEDBACK
+  deleteAnswer(i) {
+    this.selectedFeedback.answer.splice(i, 1);
+  }
+  addAnswer() {
+    this.selectedFeedback.answer.push('');
+  }
+  addQuestion() {
+    const feedbackPayload = {
+      type: this.selectedFeedback.type,
+      question: this.selectedFeedback.question,
+      answer: this.selectedFeedback.answer.join("|"),
+    }
+    this.feedbackService.addQuestionByEventId(this.event.id, feedbackPayload)
+      .subscribe(
+        (data) => { this.toastrService.show("Feedbkac updated successfully", "Success", {
+            status: "success",
+          });
+          this.selectedFeedback = this.sampleFeedback;
+          this.checkIn.emit();
+          this.contentTemplateRef.close();
+        }
+      )
+  }
+
+  getFeedbackToEdit(event) {
+    this.selectedFeedback = {
+      ...event,
+      answer: event.answer.split("|")
+    }
+  }
+
+  editQuestion() {
+    const feedbackPayload = {
+      type: this.selectedFeedback.type,
+      question: this.selectedFeedback.question,
+      answer: this.selectedFeedback.answer.join("|"),
+    }
+    this.feedbackService.edtQuestionById(this.selectedFeedback.id, feedbackPayload)
+      .subscribe(
+        (data) => { this.toastrService.show("Feedbkac updated successfully", "Success", {
+            status: "success",
+          });
+          this.selectedFeedback = this.sampleFeedback;
+          this.checkIn.emit();
+          this.contentTemplateRef.close();
+        }
+      )
+  }
+
   logger(event?) {
     console.log('Logger', event);
+  }
+  trackByFn(index, item) {
+    return index; 
   }
 
   getTaskStatus(status: number) {

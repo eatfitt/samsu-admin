@@ -1,5 +1,7 @@
 <div *ngFor="let feedbackQuestion of feedbackQuestions" class="my-4">
-    <div class="label mb-2">{{ feedbackQuestion.question }}</div>
+    <div class="label mb-2">{{ feedbackQuestion.question }} 
+        <nb-icon class="hover-pointer" *ngIf="!viewOnly" (click)="edit.emit(feedbackQuestion)" icon="edit-2-outline" pack="eva"></nb-icon>
+    </div>
     <div *ngIf="feedbackQuestion.type === 0">
         <nb-checkbox class="d-block" *ngFor="let answer of feedbackQuestion.answer | splitstring: '|'">{{ answer }}</nb-checkbox>
     </div>

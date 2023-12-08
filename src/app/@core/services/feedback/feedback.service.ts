@@ -5,6 +5,7 @@ import { throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { environment } from "../../../../environments/environment";
 import { GetAllUsersListResponse } from "../user/user.service";
+import { FeedbackQuestionRequest } from "../event/event.service";
 
 export interface GetAllQuestionsByEventIdResponse {
   id: number;
@@ -53,11 +54,38 @@ export class FeedbackService {
   }
 
   deleteQuestion(questionId: number) {
-    return this.http.delete(`${this.apiEndPoint}/feedback/event/${ questionId }/questions`).pipe(
+    return this.http.delete(`${this.apiEndPoint}/feedback/questions/${ questionId }`).pipe(
       catchError((error) => {
         console.error("Error in deleteQuestion:", error);
         return throwError(error);
       })
     );
+  }
+  addQuestionByEventId(eventId: number, feedback: FeedbackQuestionRequest) {
+    const headers = new HttpHeaders()
+      .set("Content-Type", "application/json")
+    const options = { headers: headers };
+    return this.http
+      .post(`${this.apiEndPoint}/feedback/questions/event/${eventId}`, JSON.stringify(feedback), options)
+      .pipe(
+        catchError((error) => {
+          console.error("Error in addQuestionByEventId:", error);
+          return throwError(error);
+        })
+      );
+  }
+
+  edtQuestionById(id: number, feedback: FeedbackQuestionRequest) {
+    const headers = new HttpHeaders()
+      .set("Content-Type", "application/json")
+    const options = { headers: headers };
+    return this.http
+      .put(`${this.apiEndPoint}/feedback/questions/${id}`, JSON.stringify(feedback), options)
+      .pipe(
+        catchError((error) => {
+          console.error("Error in edtQuestionById:", error);
+          return throwError(error);
+        })
+      );
   }
 }

@@ -1,54 +1,62 @@
-<nb-tabset *ngIf="semesters$ | async as semesters" (changeTab)="selectSemester($event)">
-    <nb-tab class="px-0" *ngFor="let semester of semesters; let i = index" [tabTitle]="semester.name" [active]="i === 0">
-        <nb-card>
-            <nb-card-body class="all-grades-table" *ngIf="tableAllGrades">
-                <table style="overflow-x: auto; white-space: nowrap;">
-                    <tr class="item small" style="background-color: var(--accordion-header-disabled-text-color);">
-                        <th></th>
-                        <th></th>
-                        <th class="border-left text-wrap border-bottom px-2" *ngFor="let gradeCrit of tableAllGrades?.gradeCriteriaResponses">
-                            <div class=" d-flex w-100 justify-content-center">{{ gradeCrit?.content }}</div>
-                        </th>
-                        <th class="border-left text-wrap border-bottom px-2">Tổng</th>
-                        <th class="border-left text-wrap border-bottom px-2">Xếp loại</th>
-                    </tr>
-                    <tr class="item small" style="background-color: var(--background-basic-color-4);">
-                        <th></th>
-                        <th></th>
-                        <th class="border-left px-2" *ngFor="let gradeCrit of tableAllGrades?.gradeCriteriaResponses">
-                            <div class="d-flex w-100 justify-content-center border-bottom">Mặc định: {{ gradeCrit?.defaultScore }} - Tối đa: {{ gradeCrit?.maxScore }}</div>
-                        </th>
-                        <th class="border-left border-bottom" ></th>
-                        <th class="border-left border-bottom" ></th>
-                    </tr>
-                    <tr class="item small">
-                        <td class="border-bottom td-width-padding">MSSV</td>
-                        <td class="border-bottom td-width-padding">Họ tên</td>
-                        <td class="border-bottom border-left" *ngFor="let gradeCrit of tableAllGrades?.gradeCriteriaResponses; let i = index">
-                            <div class="item d-flex">
-                                <span *ngFor="let subCrit of getSubCriteriasByCriteriaId(gradeCrit.id)" [nbTooltip]="subCrit.content" class="sub-crit-item border-left text-wrap">{{ subCrit.content }}</span>
-                                <span class="sub-crit-item border-left text-wrap">Tổng</span>
-                            </div>
-                        </td>
-                        <td class="border-left border-bottom" ></td>
-                        <td class="border-left border-bottom" ></td>
-                    </tr>
-                    <tr class="item small" *ngFor="let student of tableAllGrades?.studentGrade">
-                        <td class="td-width-padding">{{ student.userProfileReduce.rollnumber }}</td>
-                        <td class="td-width-padding">{{ student.userProfileReduce.name }}</td>
-                        <td class="border-left" *ngFor="let gradeCrit of tableAllGrades?.gradeCriteriaResponses">
-                            <div class="item d-flex">
-                                <span *ngFor="let subCrit of getSubCriteriasByCriteriaId(gradeCrit.id)" class="sub-crit-item border-left text-wrap">
-                                    {{ getGradeByStudentAndSubCritId(student, subCrit.id) ?? 0 }}
-                                </span>
-                                <span class="sub-crit-item border-left text-wrap">{{ sumSubCrit(gradeCrit, student) }}</span>
-                            </div>
-                        </td>
-                        <td class="td-width-padding border-left">{{ sumAllStudentGrade(tableAllGrades?.gradeCriteriaResponses, student) }}</td>
-                        <td class="td-width-padding border-left"></td>
-                    </tr>
-                </table>
-            </nb-card-body>
-        </nb-card>
-    </nb-tab>
-</nb-tabset>
+<nb-card>
+    <nb-card-header class="d-flex">
+        <div>Quản lí điểm</div>
+        <button nbButton size="small" (click)="exportToExcel()">Export điểm</button>
+    </nb-card-header>
+    <nb-card-body class="p-0">
+        <nb-tabset *ngIf="semesters$ | async as semesters" (changeTab)="selectSemester($event)">
+            <nb-tab class="px-0" *ngFor="let semester of semesters; let i = index" [tabTitle]="semester.name" [active]="i === 0">
+                <nb-card>
+                    <nb-card-body class="all-grades-table" *ngIf="tableAllGrades">
+                        <table style="overflow-x: auto; white-space: nowrap;">
+                            <tr class="item small" style="background-color: var(--accordion-header-disabled-text-color);">
+                                <th></th>
+                                <th></th>
+                                <th class="border-left text-wrap border-bottom px-2" *ngFor="let gradeCrit of tableAllGrades?.gradeCriteriaResponses">
+                                    <div class=" d-flex w-100 justify-content-center">{{ gradeCrit?.content }}</div>
+                                </th>
+                                <th class="border-left text-wrap border-bottom px-2 align-top">Tổng</th>
+                                <th class="border-left text-wrap border-bottom px-2 align-top">Xếp loại</th>
+                            </tr>
+                            <tr class="item small" style="background-color: var(--background-basic-color-4);">
+                                <th></th>
+                                <th></th>
+                                <th class="border-left px-2" *ngFor="let gradeCrit of tableAllGrades?.gradeCriteriaResponses">
+                                    <div class="d-flex w-100 justify-content-center border-bottom">Mặc định: {{ gradeCrit?.defaultScore }} - Tối đa: {{ gradeCrit?.maxScore }}</div>
+                                </th>
+                                <th class="border-left border-bottom" ></th>
+                                <th class="border-left border-bottom" ></th>
+                            </tr>
+                            <tr class="item small">
+                                <td class="border-bottom td-width-padding">MSSV</td>
+                                <td class="border-bottom td-width-padding">Họ tên</td>
+                                <td class="border-bottom border-left" *ngFor="let gradeCrit of tableAllGrades?.gradeCriteriaResponses; let i = index">
+                                    <div class="item d-flex">
+                                        <span *ngFor="let subCrit of getSubCriteriasByCriteriaId(gradeCrit.id)" [nbTooltip]="subCrit.content" class="sub-crit-item border-left text-wrap">{{ subCrit.content }}</span>
+                                        <span class="sub-crit-item border-left text-wrap font-weight-bold">Tổng</span>
+                                    </div>
+                                </td>
+                                <td class="border-left border-bottom" style="background-color: var(--accordion-header-border-color);"></td>
+                                <td class="border-left border-bottom" style="background-color: var(--accordion-header-border-color);"></td>
+                            </tr>
+                            <tr class="item small" *ngFor="let student of tableAllGrades?.studentGrade">
+                                <td class="td-width-padding">{{ student.userProfileReduce.rollnumber }}</td>
+                                <td class="td-width-padding">{{ student.userProfileReduce.name }}</td>
+                                <td class="border-left" *ngFor="let gradeCrit of tableAllGrades?.gradeCriteriaResponses">
+                                    <div class="item d-flex">
+                                        <span *ngFor="let subCrit of getSubCriteriasByCriteriaId(gradeCrit.id)" class="sub-crit-item border-left text-wrap">
+                                            {{ getGradeByStudentAndSubCritId(student, subCrit.id) ?? 0 }}
+                                        </span>
+                                        <span class="sub-crit-item border-left text-wrap font-weight-bold">{{ sumSubCrit(gradeCrit, student) }}</span>
+                                    </div>
+                                </td>
+                                <td class="td-width-padding border-left font-weight-bold" style="background-color: var(--accordion-header-border-color);">{{ sumAllStudentGrade(tableAllGrades?.gradeCriteriaResponses, student) }}</td>
+                                <td class="td-width-padding border-left" style="background-color: var(--accordion-header-border-color);">{{ rankStudent(tableAllGrades?.gradeCriteriaResponses, student) }}</td>
+                            </tr>
+                        </table>
+                    </nb-card-body>
+                </nb-card>
+            </nb-tab>
+        </nb-tabset>
+    </nb-card-body>
+</nb-card>

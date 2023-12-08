@@ -121,9 +121,12 @@
                     </div>
                     <div class="event-feedback-list">
                         <nb-card>
-                            <nb-card-header style="background-color: var(--menu-item-divider-color);">Feedback ({{ eventToEdit.feedbackQuestions.length }})</nb-card-header>
+                            <nb-card-header style="background-color: var(--menu-item-divider-color);" class="d-flex justify-content-between">
+                                <div>Feedback ({{ eventToEdit.feedbackQuestions.length }})</div>
+                                <nb-icon (click)="selectedFeedback = sampleFeedback; openDialog(addFeedbackQuestionDialog, 'Add')" icon="plus-outline" pack="eva" class="border rounded hover-pointer"></nb-icon>
+                            </nb-card-header>
                             <nb-card-body class="pt-0" style="max-height: 50vh;">
-                                <ngx-feedback-form [feedbackQuestions]="eventToEdit.feedbackQuestions"></ngx-feedback-form>
+                                <ngx-feedback-form [viewOnly]="false" [feedbackQuestions]="eventToEdit.feedbackQuestions" (edit)="getFeedbackToEdit($event); openDialog(addFeedbackQuestionDialog, 'Edit')"></ngx-feedback-form>
                             </nb-card-body>
                         </nb-card>
                     </div>
@@ -202,22 +205,6 @@
         <nb-card-header>Manual Check-in</nb-card-header>
         <nb-card-body>
             <div class="reason-for-manual-checkin">
-                <!-- <div class="label mb-2">Reason</div>
-                <nb-radio-group [(ngModel)]="reasonForManualCheckin" class="d-flex" name="reasonForManualCheckin">
-                    <nb-radio class="border rounded py-2 pl-3 mr-2"
-                      *ngFor="let reason of reasons"
-                      [value]="reason">
-                      {{ reason }}
-                    </nb-radio>
-                </nb-radio-group>
-                <div class="label mb-2 mt-3">Check-in Method</div>
-                <nb-radio-group [(ngModel)]="checkInMethod" class="d-flex" name="checkInMethod">
-                    <nb-radio class="border rounded py-2 pl-3 mr-2"
-                    *ngFor="let checkInMethod of checkInMethods"
-                    [value]="checkInMethod">
-                    {{ checkInMethod }}
-                    </nb-radio>
-                </nb-radio-group> -->
                 <div class="w-100 d-flex justify-content-center small flex-column align-items-center">
                     <img [src]="data.avatar" style="width: 15rem; height: 15rem;" class="mb-3">
                     <div>User: {{ data.name }}</div>
@@ -229,6 +216,39 @@
         </nb-card-body>
         <nb-card-footer class="d-flex justify-content-center">
             <button nbButton status="danger" (click)="checkInManually(data)">Check in</button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>
+
+<ng-template #addFeedbackQuestionDialog let-data>
+    <nb-card style="width: 60vw;">
+        <nb-card-header *ngIf="data === 'Add'">Thêm câu hỏi feedback</nb-card-header>
+        <nb-card-header *ngIf="data === 'Edit'">Chỉnh sửa câu hỏi feedback</nb-card-header>
+        <nb-card-body>
+            <div class="label mb-1">Câu hỏi</div>
+            <div class="feedback-question d-flex justify-content-between mb-3">
+                <input class="flex-grow-1 mw-100" nbInput [(ngModel)]="selectedFeedback.question" style="border-radius: 0.25rem 0 0 0.25rem;">
+                <nb-select [(selected)]="selectedFeedback.type">
+                    <nb-option [value]="0">Multiple Select</nb-option>
+                    <nb-option [value]="1">Single Select</nb-option>
+                    <nb-option [value]="2">Open Ended</nb-option>
+                </nb-select>
+            </div>
+            <div class="label mb-1">Trả lời</div>
+            <ng-container *ngIf="selectedFeedback.answer?.length > 0">
+                <div class="d-flex mb-2 align-items-center" *ngFor="let answer of selectedFeedback.answer; let i = index; trackBy: trackByFn">
+                    <input class="flex-grow-1 mw-100" nbInput [(ngModel)]="selectedFeedback.answer[i]">
+                    <nb-icon (click)="deleteAnswer(i)" class="small ml-3"  icon="close-outline" pack="eva"></nb-icon>
+                </div>
+            </ng-container>
+            <button (click)="addAnswer()" class="btn btn-link mb-3">
+                <nb-icon status="primary" class="small mr-2 hover-pointer"  icon="plus-outline" pack="eva"></nb-icon>
+                <span class="label">Thêm câu trả lời</span>
+            </button>
+        </nb-card-body>
+        <nb-card-footer>
+            <button *ngIf="data === 'Add'" (click)="addQuestion()" nbButton>Thêm câu hỏi</button>
+            <button *ngIf="data === 'Edit'" (click)="editQuestion()" nbButton>Chỉnh sửa câu hỏi</button>
         </nb-card-footer>
     </nb-card>
 </ng-template>

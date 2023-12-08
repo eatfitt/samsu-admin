@@ -2,3 +2,9 @@
 ::ng-deep nb-radio-group .inner-circle {
     margin-left: 1rem !important;
 }
+
+::ng-deep .hover-pointer {
+    &:hover {
+        cursor: pointer;
+    }
+}
