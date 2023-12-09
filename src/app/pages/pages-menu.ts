@@ -305,7 +305,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
 
 export const ADMIN_MENU_ITEMS: NbMenuItem[] = [
   {
-    title: 'Đề xuất sự kiện',
+    title: 'All event proposal',
     icon: 'bulb',
     link: '/pages/event-proposals',
     home: true,

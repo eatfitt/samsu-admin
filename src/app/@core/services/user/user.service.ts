@@ -175,10 +175,9 @@ export class UserService {
       );
   }
 
-  public deleteUser(bearerToken: string, rollnumber: string) {
+  public deleteUser(rollnumber: string) {
     const headers = new HttpHeaders()
       .set("Content-Type", "application/json")
-      .set("Authorization", bearerToken);
     const options = { headers: headers };
     return this.http
       .delete(`${this.apiEndPoint}/users/${rollnumber}`, options)

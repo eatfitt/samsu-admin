@@ -78,7 +78,7 @@ export class EventComponent {
     if (_.isObject(event) || _.isObject(participants) || _.isObject(feedback)) {
       this.eventToEdit = {
         ...this.event,
-        tasks: this.event.tasks.map((task) => {
+        tasks: this.event?.tasks?.map((task) => {
           return {
             ... task,
             assignees: task.assignees.map((assignee: any) => {
@@ -135,7 +135,9 @@ export class EventComponent {
           }),
           deadline: task.deadline
         }
-      })
+      }),
+      subGradeCriteriaId: this.eventToEdit.gradeSubCriteriaResponse.id,
+      processStatus: this.eventToEdit.processStatus,
     }
     this.eventService.updateEvent(eventPayload, this.event.id.toString())
       .subscribe(

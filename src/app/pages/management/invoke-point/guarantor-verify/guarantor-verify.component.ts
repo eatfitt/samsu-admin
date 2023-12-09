@@ -19,7 +19,7 @@ export class GuarantorVerifyComponent {
     let url = this.router.url;  // e.g. "/guarantorVerify/something/something"
     let param = url.split('/').slice(2).join('/');  // "something/something"
     // Now you can use the code
-    this.code = param.replace(/%2BB/gi, '+');
+    this.code = param.replace(/%2B/gi, '+');
     this.gradeTicketCodeService.getGradeTicketInfoForGuarantorVerify(this.code)
       .subscribe((data: any) => {
         this.ticketInfo = data

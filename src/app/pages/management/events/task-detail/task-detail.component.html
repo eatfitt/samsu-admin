@@ -1,57 +1,64 @@
 <div class="task-detail">
     <h5 style="font-weight: 600;">{{ task.title }}</h5>
     <div *ngIf="!viewOnly && !isDefaultTaskCheckin(task)" class="d-flex mb-3">
-        <button nbButton size="tiny" outline status="basic" (click)="removeTask.emit(index)" class="mr-1">Xóa công việc</button>
+        <button nbButton size="tiny" outline status="basic" (click)="removeTask.emit(index)"
+            class="mr-1">Delete task</button>
     </div>
-    <nb-select [disabled]="viewOnly" [(selected)]="task.status" (selectedChange)="taskStatusChange.emit($event)" size="small">
+    <nb-select [disabled]="viewOnly" [(selected)]="task.status"
+        (selectedChange)="taskStatusChange.emit($event)" size="small">
         <nb-option [value]="0">{{ getTaskStatus(0) }}</nb-option>
         <nb-option [value]="1">{{ getTaskStatus(1) }}</nb-option>
-    </nb-select><br/>
-    <label for="title" class="label mt-3">Công việc</label>
-    <input  [disabled]="viewOnly" class="mb-3" nbInput fullWidth id="title" placeholder="Title" [disabled]="isDefaultTaskCheckin(task)" [(ngModel)]="task.title" fieldSize="small">
-    <label for="content" class="label">Mô tả</label>
-    <textarea [disabled]="viewOnly" type="text" nbInput fullWidth id="content" placeholder="Description" [(ngModel)]="task.content" fieldSize="small"></textarea>
-    
+    </nb-select><br />
+    <label for="title" class="label mt-3">Task</label>
+    <input [disabled]="viewOnly" class="mb-3" nbInput fullWidth id="title" placeholder="Title"
+        [disabled]="isDefaultTaskCheckin(task)" [(ngModel)]="task.title" fieldSize="small">
+    <label for="content" class="label">Description</label>
+    <textarea [disabled]="viewOnly" type="text" nbInput fullWidth id="content"
+        placeholder="Description" [(ngModel)]="task.content" fieldSize="small"></textarea>
     <nb-card class="mt-2">
-        <nb-card-header class="px-3 py-2 small font-weight-bold">Chi tiết</nb-card-header>
+        <nb-card-header class="px-3 py-2 small font-weight-bold">Details</nb-card-header>
         <nb-card-body>
             <div class="row mb-2 align-items-baseline">
-                <div class="col-4 small">Phụ trách</div>
+                <div class="col-4 small">Assignees</div>
                 <div class="col-8 px-0">
                     <div [ngClass]="{'view-only-mode': viewOnly}" class="d-flex align-items-center">
                         <nb-tag-list (tagRemove)="onAssigneeRemove($event)" class="p-1">
-                            <nb-tag *ngFor="let assignee of task.assignees" [text]="assignee.name ?? assignee.user.name" removable size="tiny"></nb-tag>
-                            <input type="text" nbTagInput (tagAdd)="onAssigneeAdd($event)" fullWidth placeholder="Tìm theo MSSV" fieldSize="small">
+                            <nb-tag *ngFor="let assignee of task.assignees"
+                                [text]="assignee.name ?? assignee.user.name" removable
+                                size="tiny"></nb-tag>
+                            <input type="text" nbTagInput (tagAdd)="onAssigneeAdd($event)" fullWidth
+                                placeholder="Search by rollnumber" fieldSize="small">
                         </nb-tag-list>
                     </div>
                 </div>
             </div>
             <div class="row mb-2 align-items-baseline">
-                <div class="col-4 small">Loại điểm</div>
+                <div class="col-4 small">Sub Criteria</div>
                 <div class="col-8 px-0">
-                    <ngx-custom-autoselect
-                        [fieldSize]="'small'"
-                        [arr]="gradeSubCriterias"
-                        [property]="'content'"
-                        (selectItem)="selectSubCriteriaId($event)"
+                    <ngx-custom-autoselect [fieldSize]="'small'" [arr]="gradeSubCriterias"
+                        [property]="'content'" (selectItem)="selectSubCriteriaId($event)"
                         [disabled]="viewOnly"
-                        [defaultValue]="task.gradeSubCriteria?.content"
-                    ></ngx-custom-autoselect>
+                        [defaultValue]="task.gradeSubCriteria?.content"></ngx-custom-autoselect>
                 </div>
             </div>
             <div class="row mb-2 align-items-baseline">
-                <div class="col-4 small">Điểm cộng</div>
+                <div class="col-4 small">Points</div>
                 <div class="col-8 p-0">
                     <nb-form-field class="w-100">
-                        <input [disabled]="viewOnly || !task.gradeSubCriteria" type="number" [min]="task.gradeSubCriteria?.minScore" [max]="task.gradeSubCriteria?.maxScore" (keydown)="checkRange($event)" nbInput [(ngModel)]="task.score" fieldSize="small" fullWidth>
-                        <span nbSuffix>({{ task.gradeSubCriteria?.minScore }} - {{ task.gradeSubCriteria?.maxScore }})</span>
+                        <input [disabled]="viewOnly || !task.gradeSubCriteria" type="number"
+                            [min]="task.gradeSubCriteria?.minScore"
+                            [max]="task.gradeSubCriteria?.maxScore" (keydown)="checkRange($event)"
+                            nbInput [(ngModel)]="task.score" fieldSize="small" fullWidth>
+                        <span nbSuffix>({{ task.gradeSubCriteria?.minScore }} - {{
+                            task.gradeSubCriteria?.maxScore }})</span>
                     </nb-form-field>
                 </div>
             </div>
             <div class="row mb-2 align-items-baseline">
-                <div class="col-4 small">Hạn chót</div>
+                <div class="col-4 small">Deadline</div>
                 <div class="col-8 p-0">
-                    <input type="datetime" [(ngModel)]="task.deadline" nbInput id="startTime" placeholder="Hạn chót" [nbDatepicker]="dateTimePicker">
+                    <input type="datetime" [(ngModel)]="task.deadline" nbInput id="startTime"
+                        placeholder="Deadline" [nbDatepicker]="dateTimePicker">
                     <nb-datepicker #dateTimePicker></nb-datepicker>
                 </div>
             </div>
@@ -62,12 +69,13 @@
         <nb-card-body class="p-0">
             <nb-list>
                 <nb-list-item class="item small font-weight-bold">
-                    <span>Phụ trách</span>
+                    <span>Assignees</span>
                     <span>Trạng thái</span>
                 </nb-list-item>
                 <nb-list-item *ngFor="let assignee of task.assignees" class="item small">
                     <span>{{ assignee.name ?? assignee.user.name }}</span>
-                    <th>{{ (assignee.status === 'ENABLE' || assignee.status === 'DISABLE') ? 'Đang chờ' : getAssigneeStatus(assignee.status) }}</th>
+                    <th>{{ (assignee.status === 'ENABLE' || assignee.status === 'DISABLE') ? 'Đang
+                        chờ' : getAssigneeStatus(assignee.status) }}</th>
                 </nb-list-item>
             </nb-list>
         </nb-card-body>

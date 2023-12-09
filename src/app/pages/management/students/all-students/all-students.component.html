@@ -14,7 +14,6 @@
       (deleteConfirm)="onDeleteConfirm($event)" (editConfirm)="onEditConfirm($event)" (custom)="onCustomAction($event)">
     </ng2-smart-table> -->
     <nb-tabset>
-
       <!-- STUDENTS -->
       <nb-tab tabTitle="Students">
         <nb-list>
@@ -33,7 +32,8 @@
             <span>{{ student.id }}</span>
             <span>
               <img *ngIf="student.avatar" class="table-avatar-img" [src]="student.avatar" alt="N/A">
-              <img *ngIf="!student.avatar" class="table-avatar-img" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="N/A">
+              <img *ngIf="!student.avatar" class="table-avatar-img"
+                src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="N/A">
             </span>
             <span><a [routerLink]="'../user/' + student.rollnumber">{{ student.name }}</a></span>
             <span>{{ student.rollnumber }}</span>
@@ -41,8 +41,7 @@
             <span>{{ student.email }}</span>
             <span>{{ (student.dob | date: 'd/M/yyyy') ?? 'N/A' }}</span>
             <span>
-              <button (click)="selectUser(student)" class="btn"
-                [nbContextMenu]="singleUserAction">
+              <button (click)="selectUser(student)" class="btn" [nbContextMenu]="singleUserAction">
                 <nb-icon icon="more-vertical"></nb-icon>
               </button>
             </span>
@@ -61,7 +60,6 @@
           </div>
         </div>
       </nb-tab>
-
       <!-- MANAGERS -->
       <nb-tab tabTitle="Managers">
         <nb-list>
@@ -80,7 +78,8 @@
             <span>{{ manager.id }}</span>
             <span>
               <img *ngIf="manager.avatar" class="table-avatar-img" [src]="manager.avatar" alt="N/A">
-              <img *ngIf="!manager.avatar" class="table-avatar-img" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="N/A">
+              <img *ngIf="!manager.avatar" class="table-avatar-img"
+                src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="N/A">
             </span>
             <span><a [routerLink]="'../user/' + manager.rollnumber">{{ manager.name }}</a></span>
             <span>{{ manager.rollnumber }}</span>
@@ -88,8 +87,7 @@
             <span>{{ manager.email }}</span>
             <span>{{ manager.DOB ?? 'N/A' }}</span>
             <span>
-              <button (click)="selectUser(manager)" class="btn"
-                [nbContextMenu]="singleUserAction">
+              <button (click)="selectUser(manager)" class="btn" [nbContextMenu]="singleUserAction">
                 <nb-icon icon="more-vertical"></nb-icon>
               </button>
             </span>
@@ -108,7 +106,6 @@
           </div>
         </div>
       </nb-tab>
-
       <!-- MANAGERS -->
       <nb-tab tabTitle="Staffs">
         <nb-list>
@@ -120,7 +117,7 @@
             <span>Username</span>
             <span>Email</span>
             <span>Ngày sinh</span>
-            <span>Phòng ban</span>
+            <span>Department</span>
             <span></span>
           </nb-list-item>
           <nb-list-item class="item small"
@@ -128,16 +125,17 @@
             <span>{{ staff.id }}</span>
             <span>
               <img *ngIf="staff.avatar" class="table-avatar-img" [src]="staff.avatar" alt="N/A">
-              <img *ngIf="!staff.avatar" class="table-avatar-img" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="N/A">
+              <img *ngIf="!staff.avatar" class="table-avatar-img"
+                src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="N/A">
             </span>
-            <span><a [routerLink]="'../user/' + staff.rollnumber">{{ staff.name }}</a></span>            <span>{{ staff.rollnumber }}</span>
+            <span><a [routerLink]="'../user/' + staff.rollnumber">{{ staff.name }}</a></span>
+            <span>{{ staff.rollnumber }}</span>
             <span>{{ staff.username }}</span>
             <span>{{ staff.email }}</span>
             <span>{{ staff.DOB ?? 'N/A' }}</span>
             <span>{{ staff.department?.name ?? 'N/A' }}</span>
             <span>
-              <button (click)="selectUser(staff)" class="btn"
-                [nbContextMenu]="singleUserAction">
+              <button (click)="selectUser(staff)" class="btn" [nbContextMenu]="singleUserAction">
                 <nb-icon icon="more-vertical"></nb-icon>
               </button>
             </span>
@@ -161,7 +159,7 @@
 </nb-card>
 <ng-template #dialog let-data let-ref="dialogRef">
   <nb-card>
-    <nb-card-header>Nhập người dùng</nb-card-header>
+    <nb-card-header>Input user</nb-card-header>
     <nb-card-body>
       <ng2-smart-table [settings]="importSetting" [source]="sourceAddingStudents">
       </ng2-smart-table>
@@ -174,11 +172,11 @@
 </ng-template>
 <ng-template #importResultDialog let-data let-ref="dialogRef">
   <nb-card>
-    <nb-card-header>Nhập người dùng</nb-card-header>
+    <nb-card-header>Input user</nb-card-header>
     <nb-card-body>
-      <div class="text-success"><strong>Thành công</strong>: {{importSuccess}} / {{importAmount}}
+      <div class="text-success"><strong>Success</strong>: {{importSuccess}} / {{importAmount}}
         students</div>
-      <div class="text-danger"><strong>Thất bại</strong>: {{importFailed}} / {{importAmount}} students
+      <div class="text-danger"><strong>Failed</strong>: {{importFailed}} / {{importAmount}} students
       </div>
       <div class="failed-import-list">
       </div>
@@ -206,8 +204,8 @@
 </ng-template>
 <ng-template #deleteUserDialog let-data let-ref="dialogRef">
   <nb-card>
-    <nb-card-header>Xóa người dùng</nb-card-header>
-    <nb-card-body> Bạn muốn xóa {{ selectedStudent?.name }}? </nb-card-body>
+    <nb-card-header>Delete user</nb-card-header>
+    <nb-card-body>You are deleting {{ selectedStudent?.name }} </nb-card-body>
     <nb-card-footer>
       <button nbButton class="bg-danger text-light" (click)="ref.close()">Đóng</button>
       <button nbButton class="bg-primary text-light ml-3" (click)="deleteUser()">Xóa</button>
@@ -218,25 +216,30 @@
   <nb-card *ngIf="selectedStudent" style="max-width: 40rem;">
     <nb-card-header>Update User {{ selectedStudent?.name }}</nb-card-header>
     <nb-card-body>
-      <label for="title" class="label">Tên</label>
-      <input type="text" [(ngModel)]="selectedStudent.name" nbInput fullWidth id="title" placeholder="Title">
+      <label for="title" class="label">Name</label>
+      <input type="text" [(ngModel)]="selectedStudent.name" nbInput fullWidth id="title"
+        placeholder="Title">
       <label for="title" class="label">Email</label>
-      <input type="text" [(ngModel)]="selectedStudent.email" nbInput fullWidth id="title" placeholder="Title">
-      <label for="title" class="label">Ảnh đại doeenj</label>
-      <input type="text" [(ngModel)]="selectedStudent.avatar" nbInput fullWidth id="title" placeholder="Title">
-      <label for="title" class="label">Ngày sinh</label>
-      <input type="datetime" fullWidth [(ngModel)]="selectedStudent.dob" nbInput id="startTime" placeholder="Start time" [nbDatepicker]="dateTimePicker">
+      <input type="text" [(ngModel)]="selectedStudent.email" nbInput fullWidth id="title"
+        placeholder="Title">
+      <label for="title" class="label">Avatar</label>
+      <input type="text" [(ngModel)]="selectedStudent.avatar" nbInput fullWidth id="title"
+        placeholder="Title">
+      <label for="title" class="label">DOB</label>
+      <input type="datetime" fullWidth [(ngModel)]="selectedStudent.dob" nbInput id="startTime"
+        placeholder="Start time" [nbDatepicker]="dateTimePicker">
       <nb-datepicker #dateTimePicker></nb-datepicker>
-      <label for="title" class="label">Chức vụ</label>
+      <label for="title" class="label">Role</label>
       <nb-select [(selected)]="selectedStudent.role" fullWidth class="d-block">
         <nb-option [value]="1">Manager</nb-option>
         <nb-option [value]="2">Staff</nb-option>
         <nb-option [value]="3">Student</nb-option>
       </nb-select>
       <ng-container *ngIf="selectedStudent.role === 2">
-        <label for="title" class="label">Phòng ban</label>
+        <label for="title" class="label">Department</label>
         <nb-select [(selected)]="selectedStudent.department" fullWidth class="d-block">
-          <nb-option *ngFor="let department of departments$ | async" [value]="department">{{ department.name }}</nb-option>
+          <nb-option *ngFor="let department of departments$ | async" [value]="department">{{
+            department.name }}</nb-option>
         </nb-select>
       </ng-container>
     </nb-card-body>

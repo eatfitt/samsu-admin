@@ -79,12 +79,12 @@ export class AllStudentsComponent {
     },
     columns: {
       rollnumber: {
-        title: "MSSV",
+        title: "Rollnumber",
         type: "string",
         filter: false,
       },
       name: {
-        title: "Họ tên",
+        title: "Name",
         type: "string",
         filter: false,
       },
@@ -99,7 +99,7 @@ export class AllStudentsComponent {
         filter: false,
       },
       role: {
-        title: "Chức vụ",
+        title: "Role",
         type: "list",
         defaultValue: "ROLE_STUDENT",
         //addable: false,
@@ -118,12 +118,12 @@ export class AllStudentsComponent {
         },
       },
       dob: {
-        title: "Ngày sinh",
+        title: "DOB",
         defaultValue: '01/01/2001',
         filter: false,
       },
       avatar: {
-        title: "Ảnh đại diện",
+        title: "Avatar",
         defaultValue: 'https://cdn-icons-png.flaticon.com/512/3177/3177440.png',
         filter: false,
       }
@@ -415,7 +415,6 @@ export class AllStudentsComponent {
 
   deleteUserObservable() {
     return this.userService.deleteUser(
-      this.bearerToken,
       this.selectedStudent.rollnumber
     );
   }

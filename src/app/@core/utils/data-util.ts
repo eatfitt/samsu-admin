@@ -51,10 +51,10 @@ export function getTaskStatus(status: number) {
 }
 
 export function getAssigneeStatus(status: number) {
-  return status === 0 ? "Đang chờ"
-    : status === 1 ? "Chấp nhận"
-    : status === 2 ? "Từ chối"
-    : status === 3 ? "Hoàn thành"
-    : status === 4 ? "Công nhận"
-    : "Không công nhận"
+  return status === 0 ? "Pending"
+    : status === 1 ? "Accepted"
+    : status === 2 ? "Rejected"
+    : status === 3 ? "Completed"
+    : status === 4 ? "Approved"
+    : "Disapproved"
 }

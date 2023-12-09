@@ -7,6 +7,7 @@ import { throwError } from 'rxjs';
 import { Department, GetAllUsersListResponse } from '../user/user.service';
 import { Semester } from '../semester/semester.service';
 import { GradeSubCriteria } from '../grade-sub-criteria/grade-sub-criteria.service';
+import { GradeSubCriteriaResponse } from '../grade/grade.service';
 export interface Event {
   id?: number;
   semestersName: string;
@@ -27,6 +28,8 @@ export interface Event {
   eventProposalId?: number;
   feedbackQuestions: FeedbackQuestion[],
   tasks: Task[];
+  gradeSubCriteriaResponse?: GradeSubCriteriaResponse;
+  processStatus: number;
 }
 
 export interface FeedbackQuestion extends FeedbackQuestionRequest {
@@ -84,6 +87,8 @@ export interface CreateEventRequest {
   departmentIds?: string[];
   rollnumbers: string[];
   taskRequests?: TaskRequests[];
+  subGradeCriteriaId: number;
+  processStatus: number;
 }
 
 export interface EventParticipant {

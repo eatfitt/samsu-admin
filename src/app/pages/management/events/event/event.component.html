@@ -1,10 +1,10 @@
 <nb-card *ngIf="event">
     <nb-card-body>
         <div *ngIf="!viewOnly" class="row">
-            <div class="col small mb-4">Sự kiện {{ eventToEdit.id }}</div>
+            <div class="col small mb-4">Event {{ eventToEdit.id }}</div>
         </div>
         <div class="row">
-            <div class="col-md-8 overflow-auto" style="max-height: 40rem;">
+            <div class="col-md-8 overflow-auto">
                 <h5 class="hover-edit" style="font-weight: 600;" *ngIf="!isEditTitle"
                     (click)="viewOnly ? null : isEditTitle = true">{{ eventToEdit.title }}</h5>
                 <ng-container *ngIf="isEditTitle">
@@ -12,16 +12,19 @@
                     <ng-container [ngTemplateOutlet]="saveEditTemplate"></ng-container>
                 </ng-container>
                 <div *ngIf="!viewOnly" class="d-flex pb-4 border-bottom">
-                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload">Cập nhật ảnh bìa<input class="upload" (change)="uploadFile($event, 'bannerUrl')"
+                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload">Update
+                        banner<input class="upload" (change)="uploadFile($event, 'bannerUrl')"
                             type="file" />
                     </button>
-                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload"> Cập nhật tệp đính kèm <input class="upload" (change)="uploadFile($event, 'fileUrls')"
+                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload">Update
+                        attachments<input class="upload" (change)="uploadFile($event, 'fileUrls')"
                             type="file" />
                     </button>
-                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload" (click)="isShowStatistic = !isShowStatistic"> {{ isShowStatistic ? 'Ẩn thống kê' : 'Thống kê'}}
-                    </button>
+                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload"
+                        (click)="isShowStatistic = !isShowStatistic"> {{ isShowStatistic ? 'Hide
+                        statistics' : 'Show Statistics'}} </button>
                 </div>
-                <ng-container *ngIf="!isShowStatistic">                
+                <ng-container *ngIf="!isShowStatistic">
                     <div class="event-content my-3">
                         <div class="d-flex justify-content-between">
                             <div class="font-weight-bold mb-1">Nội dung</div>
@@ -72,25 +75,38 @@
                         </div>
                     </div>
                     <div class="event-attendance-list">
-                        <nb-card >
-                            <nb-card-header style="background-color: var(--menu-item-divider-color);" class="d-flex justify-content-between align-items-baseline">
-                                <div>Danh sách đăng kí ({{ participants.length }})</div>
-                                <input class=" bg-white border" fieldSize="small" placeholder="Lọc theo MSSV" nbInput (keyup)="filterParticipant($event)">
+                        <nb-card>
+                            <nb-card-header
+                                style="background-color: var(--menu-item-divider-color);"
+                                class="d-flex justify-content-between align-items-baseline">
+                                <div>Participant list ({{ participants.length }})</div>
+                                <input class=" bg-white border" fieldSize="small"
+                                    placeholder="Lọc theo MSSV" nbInput
+                                    (keyup)="filterParticipant($event)">
                             </nb-card-header>
                             <nb-card-body class="p-0" style="max-height: 50vh;">
                                 <nb-list>
                                     <nb-list-item class="small px-4 d-block"
                                         *ngFor="let participant of filteredParticipantList; let i = index">
-                                        <div class="d-flex justify-content-between align-items-center">
+                                        <div
+                                            class="d-flex justify-content-between align-items-center">
                                             <span>
-                                                <a class="text-basic font-weight-bold" [routerLink]="['../../user', participant.user.rollnumber]">{{participant.user.name}}</a>
+                                                <a class="text-basic font-weight-bold"
+                                                    [routerLink]="['../../user', participant.user.rollnumber]">{{participant.user.name}}</a>
                                             </span>
                                             <span>{{ participant.user.rollnumber }}</span>
                                             <span *ngIf="!viewOnly">
-                                                <button [disabled]="participant.checkin || participant.checkout" nbButton (click)="openDialog(checkInDialog, participant.user); rollnumberToCheckIn = participant.participant" size="small">{{ participant.checkin ? "Đã check in" : participant.checkout ? "Đã check out" : "Check in" }}</button>
+                                                <button
+                                                    [disabled]="participant.checkin || participant.checkout"
+                                                    nbButton
+                                                    (click)="openDialog(checkInDialog, participant.user); rollnumberToCheckIn = participant.participant"
+                                                    size="small">{{ participant.checkin ? "Đã check
+                                                    in" : participant.checkout ? "Đã check out" :
+                                                    "Check in" }}</button>
                                             </span>
                                         </div>
-                                        <div *ngIf="participant.checkedIn" class="font-italic">{{ participant.notes }}</div>
+                                        <div *ngIf="participant.checkedIn" class="font-italic">{{
+                                            participant.notes }}</div>
                                     </nb-list-item>
                                 </nb-list>
                             </nb-card-body>
@@ -98,22 +114,32 @@
                     </div>
                     <div class="event-task-list">
                         <nb-card>
-                            <nb-card-header style="background-color: var(--menu-item-divider-color);">Công việc ({{ eventToEdit.tasks.length }})</nb-card-header>
+                            <nb-card-header
+                                style="background-color: var(--menu-item-divider-color);">Tasks ({{
+                                eventToEdit.tasks.length }})</nb-card-header>
                             <nb-card-body class="p-0" style="max-height: 50vh;">
                                 <nb-list>
-                                    <nb-list-item *ngFor="let task of eventToEdit.tasks; let i = index" class="container py-2 px-4 hover-pointer hover-row item small border border-bottom-0"
-                                        [ngClass]="{'selected-row': i === selectedIndex}" (click)="selectedTask = selectedTask ? null : task; selectedIndex = selectedIndex ? null : i">
-                                        <span class="font-weight-bold">{{ task.title ? task.title : 'Task' }}</span>
+                                    <nb-list-item
+                                        *ngFor="let task of eventToEdit.tasks; let i = index"
+                                        class="container py-2 px-4 hover-pointer hover-row item small border border-bottom-0"
+                                        [ngClass]="{'selected-row': i === selectedIndex}"
+                                        (click)="selectedTask = selectedTask ? null : task; selectedIndex = selectedIndex ? null : i">
+                                        <span class="font-weight-bold">{{ task.title ? task.title :
+                                            'Task' }}</span>
                                         <span>
-                                            <nb-tag [text]="getTaskStatus(task.status)" size="tiny" appearance="outline"></nb-tag>
+                                            <nb-tag [text]="getTaskStatus(task.status)" size="tiny"
+                                                appearance="outline"></nb-tag>
                                         </span>
-                                        <span *ngIf="task.assignees?.length > 0">
-                                            {{ task.assignees[0] ? task.assignees[0].name : 'Unassigned' }}
-                                        </span>
-                                        <span *ngIf="task.assignees === undefined || task.assignees === null || task.assignees?.length <= 0">N/A</span>
+                                        <span *ngIf="task.assignees?.length > 0"> {{
+                                            task.assignees[0] ? task.assignees[0].name :
+                                            'Unassigned' }} </span>
+                                        <span
+                                            *ngIf="task.assignees === undefined || task.assignees === null || task.assignees?.length <= 0">N/A</span>
                                     </nb-list-item>
-                                    <nb-list-item *ngIf="!viewOnly" class="container border py-2 pl-3">
-                                        <span class="btn-link hover-pointer" (click)="addTask()" style="font-size: .75rem;">+ Add task</span>
+                                    <nb-list-item *ngIf="!viewOnly"
+                                        class="container border py-2 pl-3">
+                                        <span class="btn-link hover-pointer" (click)="addTask()"
+                                            style="font-size: .75rem;">+ Add task</span>
                                     </nb-list-item>
                                 </nb-list>
                             </nb-card-body>
@@ -121,31 +147,52 @@
                     </div>
                     <div class="event-feedback-list">
                         <nb-card>
-                            <nb-card-header style="background-color: var(--menu-item-divider-color);" class="d-flex justify-content-between">
+                            <nb-card-header
+                                style="background-color: var(--menu-item-divider-color);"
+                                class="d-flex justify-content-between">
                                 <div>Feedback ({{ eventToEdit.feedbackQuestions.length }})</div>
-                                <nb-icon (click)="selectedFeedback = sampleFeedback; openDialog(addFeedbackQuestionDialog, 'Add')" icon="plus-outline" pack="eva" class="border rounded hover-pointer"></nb-icon>
+                                <nb-icon
+                                    (click)="selectedFeedback = sampleFeedback; openDialog(addFeedbackQuestionDialog, 'Add')"
+                                    icon="plus-outline" pack="eva"
+                                    class="border rounded hover-pointer"></nb-icon>
                             </nb-card-header>
                             <nb-card-body class="pt-0" style="max-height: 50vh;">
-                                <ngx-feedback-form [viewOnly]="false" [feedbackQuestions]="eventToEdit.feedbackQuestions" (edit)="getFeedbackToEdit($event); openDialog(addFeedbackQuestionDialog, 'Edit')"></ngx-feedback-form>
+                                <ngx-feedback-form [viewOnly]="false"
+                                    [feedbackQuestions]="eventToEdit.feedbackQuestions"
+                                    (edit)="getFeedbackToEdit($event); openDialog(addFeedbackQuestionDialog, 'Edit')"></ngx-feedback-form>
                             </nb-card-body>
                         </nb-card>
                     </div>
                 </ng-container>
                 <ng-container *ngIf="isShowStatistic">
-                    <ngx-event-statistic [event]="event" [participants]="participants"></ngx-event-statistic>
+                    <ngx-event-statistic [event]="event"
+                        [participants]="participants"></ngx-event-statistic>
                 </ng-container>
             </div>
             <div class="col-md-4 overflow-auto" style="max-height: 40rem;">
                 <ng-container *ngIf="selectedTask === null; else selectedTaskTemplate">
-                    <nb-select [(selected)]="eventToEdit.status" (selectedChange)="editEvent()" [disabled]="viewOnly"
-                        size="small" class="d-block w-50 mb-2" filled="true"
+                    <label class="label">Status</label>
+                    <nb-select [(selected)]="eventToEdit.status" (selectedChange)="editEvent()"
+                        [disabled]="viewOnly" size="small" class="d-block w-50 mb-2" filled="true"
                         [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
-                        <nb-option [value]="0">Nội bộ</nb-option>
-                        <nb-option [value]="1">Công khai</nb-option>
-                        <nb-option [value]="2">Bản thảo</nb-option>
+                        <nb-option [value]="0">Non public</nb-option>
+                        <nb-option [value]="1">Public</nb-option>
+                        <nb-option [value]="2">Draft</nb-option>
+                    </nb-select>
+                    <label class="label">Process</label>
+                    <nb-select [(selected)]="eventToEdit.status" (selectedChange)="editEvent()"
+                        [disabled]="viewOnly" size="small" class="d-block w-50 mb-2" filled="true"
+                        [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
+                        <nb-option [value]="0">Coming</nb-option>
+                        <nb-option [value]="1">Check in</nb-option>
+                        <nb-option [value]="2">Processing</nb-option>
+                        <nb-option [value]="3">Check out</nb-option>
+                        <nb-option [value]="4">Complete</nb-option>
+                        <nb-option [value]="5">Reviewed</nb-option>
+                        <nb-option [value]="6">Finish</nb-option>
                     </nb-select>
                     <nb-card>
-                        <nb-card-header>Chi tiết</nb-card-header>
+                        <nb-card-header>Details</nb-card-header>
                         <nb-card-body>
                             <div class="row">
                                 <div class="col-md-4 small">Người tạo</div>
@@ -153,22 +200,24 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4 small">Leader</div>
-                                <div class="col-md-8 small">{{ event.eventLeader?.name ?? 'N/A' }}</div>
+                                <div class="col-md-8 small">{{ event.eventLeader?.name ?? 'N/A' }}
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 small">Thời gian</div>
-                                <div class="col-md-8 small">{{ event.startTime | date:"MMM dd, yyyy hh:mm a" }}</div>
+                                <div class="col-md-8 small">{{ event.startTime | date:"MMM dd, yyyy
+                                    hh:mm a" }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 small">Thời lượng</div>
-                                <div class="col-md-8 small">{{ durationObject.hours + ' giờ ' + durationObject.minutes + ' phút' }}</div>
+                                <div class="col-md-8 small">{{ durationObject.hours + ' giờ ' +
+                                    durationObject.minutes + ' phút' }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4 small">Phòng ban</div>
+                                <div class="col-md-4 small">Department</div>
                                 <div class="col-md-8 small" *ngIf="event.departments">
-                                    <div *ngFor="let department of event.departments">
-                                        {{ department.name }}
-                                    </div>
+                                    <div *ngFor="let department of event.departments"> {{
+                                        department.name }} </div>
                                 </div>
                                 <div class="col-md-8 small" *ngIf="!event.departments">N/A</div>
                             </div>
@@ -176,11 +225,10 @@
                     </nb-card>
                 </ng-container>
                 <ng-template #selectedTaskTemplate>
-                    <ngx-task-detail [task]="selectedTask" [index]="selectedIndex" [viewOnly]="viewOnly"
-                        (removeTask)="deleteTask($event)" (taskStatusChange)="editTaskStatus($event)"
-            ></ngx-task-detail>
+                    <ngx-task-detail [task]="selectedTask" [index]="selectedIndex"
+                        [viewOnly]="viewOnly" (removeTask)="deleteTask($event)"
+                        (taskStatusChange)="editTaskStatus($event)"></ngx-task-detail>
                 </ng-template>
-                
             </div>
         </div>
     </nb-card-body>
@@ -199,13 +247,13 @@
             class="border rounded hover-pointer ml-1"></nb-icon>
     </div>
 </ng-template>
-
 <ng-template #checkInDialog let-ref="dialogRef" let-data>
     <nb-card>
         <nb-card-header>Manual Check-in</nb-card-header>
         <nb-card-body>
             <div class="reason-for-manual-checkin">
-                <div class="w-100 d-flex justify-content-center small flex-column align-items-center">
+                <div
+                    class="w-100 d-flex justify-content-center small flex-column align-items-center">
                     <img [src]="data.avatar" style="width: 15rem; height: 15rem;" class="mb-3">
                     <div>User: {{ data.name }}</div>
                     <div>Roll number: {{ data.rollnumber }}</div>
@@ -219,7 +267,6 @@
         </nb-card-footer>
     </nb-card>
 </ng-template>
-
 <ng-template #addFeedbackQuestionDialog let-data>
     <nb-card style="width: 60vw;">
         <nb-card-header *ngIf="data === 'Add'">Thêm câu hỏi feedback</nb-card-header>
@@ -227,7 +274,8 @@
         <nb-card-body>
             <div class="label mb-1">Câu hỏi</div>
             <div class="feedback-question d-flex justify-content-between mb-3">
-                <input class="flex-grow-1 mw-100" nbInput [(ngModel)]="selectedFeedback.question" style="border-radius: 0.25rem 0 0 0.25rem;">
+                <input class="flex-grow-1 mw-100" nbInput [(ngModel)]="selectedFeedback.question"
+                    style="border-radius: 0.25rem 0 0 0.25rem;">
                 <nb-select [(selected)]="selectedFeedback.type">
                     <nb-option [value]="0">Multiple Select</nb-option>
                     <nb-option [value]="1">Single Select</nb-option>
@@ -236,19 +284,24 @@
             </div>
             <div class="label mb-1">Trả lời</div>
             <ng-container *ngIf="selectedFeedback.answer?.length > 0">
-                <div class="d-flex mb-2 align-items-center" *ngFor="let answer of selectedFeedback.answer; let i = index; trackBy: trackByFn">
-                    <input class="flex-grow-1 mw-100" nbInput [(ngModel)]="selectedFeedback.answer[i]">
-                    <nb-icon (click)="deleteAnswer(i)" class="small ml-3"  icon="close-outline" pack="eva"></nb-icon>
+                <div class="d-flex mb-2 align-items-center"
+                    *ngFor="let answer of selectedFeedback.answer; let i = index; trackBy: trackByFn">
+                    <input class="flex-grow-1 mw-100" nbInput
+                        [(ngModel)]="selectedFeedback.answer[i]">
+                    <nb-icon (click)="deleteAnswer(i)" class="small ml-3" icon="close-outline"
+                        pack="eva"></nb-icon>
                 </div>
             </ng-container>
             <button (click)="addAnswer()" class="btn btn-link mb-3">
-                <nb-icon status="primary" class="small mr-2 hover-pointer"  icon="plus-outline" pack="eva"></nb-icon>
-            <span class="label">Thêm câu trả lời</span>
+                <nb-icon status="primary" class="small mr-2 hover-pointer" icon="plus-outline"
+                    pack="eva"></nb-icon>
+                <span class="label">Thêm câu trả lời</span>
             </button>
         </nb-card-body>
         <nb-card-footer>
             <button *ngIf="data === 'Add'" (click)="addQuestion()" nbButton>Thêm câu hỏi</button>
-            <button *ngIf="data === 'Edit'" (click)="editQuestion()" nbButton>Chỉnh sửa câu hỏi</button>
+            <button *ngIf="data === 'Edit'" (click)="editQuestion()" nbButton>Chỉnh sửa câu
+                hỏi</button>
         </nb-card-footer>
     </nb-card>
 </ng-template>

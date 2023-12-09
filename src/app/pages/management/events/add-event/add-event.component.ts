@@ -24,7 +24,7 @@ import {
   TaskRequests
 } from "../../../../@core/services/event/event.service";
 import {
-  GradeSubCriteria,
+  GradeSubCriteria, GradeSubCriteriaService,
 } from "../../../../@core/services/grade-sub-criteria/grade-sub-criteria.service";
 import { GetAllUsersListResponse, UserService } from "../../../../@core/services/user/user.service";
 import { Router } from "@angular/router";
@@ -93,6 +93,7 @@ export class AddEventComponent implements OnInit {
   aFileUploaded$ = new BehaviorSubject(null);
   today = new Date();
   minDate = new Date(this.today);
+  gradeSubCriteria$: Observable<any> = this.gradeSubCritService.getAllGradeSubCriterias().pipe(map((data: any) => data.content)); 
 
   // FORM DATA - ngModel
   title = "";
@@ -109,6 +110,8 @@ export class AddEventComponent implements OnInit {
   status = 2;
   attendScore = 0;
   eventLeaderRollnumber: string;
+  subGradeCriteriaId: number;
+  processStatus = 0;
 
   // FEEDBACK TAB
   feedbackQuestionList: Feedback[] = [];
@@ -153,7 +156,8 @@ export class AddEventComponent implements OnInit {
     private router: Router,
     private eventProposalService: EventProposalService,
     private semesterService: SemesterService,
-    private departmentService: DepartmentService
+    private departmentService: DepartmentService,
+    private gradeSubCritService: GradeSubCriteriaService,
   ) {
     iconsLibrary.registerFontPack("ion", { iconClassPrefix: "ion" });
   }
@@ -264,7 +268,9 @@ export class AddEventComponent implements OnInit {
           createdAt: null,
           id: null
         };
-      })
+      }),
+      // gradeSubCriteriaResponse: null;
+      processStatus: this.processStatus
     }
     this.participantReview = this.attendanceList.map(user => {
       return {
@@ -274,6 +280,10 @@ export class AddEventComponent implements OnInit {
         checkout: null,
       }
     })
+  }
+
+  setSubGradeCriteriaId(event) {
+    this.subGradeCriteriaId = event.id;
   }
 
   addAttendanceList(event) {
@@ -374,7 +384,9 @@ export class AddEventComponent implements OnInit {
       feedbackQuestionRequestList: feedbackPayload,
       rollnumbers: rollnumbersPayload,
       taskRequests: taskPayload,
-      departmentIds: departmentIdsPayload
+      departmentIds: departmentIdsPayload,
+      subGradeCriteriaId: this.subGradeCriteriaId,
+      processStatus: 0,
     };
     console.log(createEventPayload);
     this.eventService.createEvent(createEventPayload).subscribe(

@@ -46,7 +46,7 @@
         <div class="row">
             <div class="col-md-4">
                 <nb-card>
-                    <nb-card-header>Điểm tham gia sự kiện</nb-card-header>
+                    <nb-card-header>Participant Grade</nb-card-header>
                     <nb-card-body class="p-0">
                         <ng-container
                             *ngTemplateOutlet="gradeListTemplate; context: { type: participantsGradesBySemester }"></ng-container>
@@ -55,7 +55,7 @@
             </div>
             <div class="col-md-4">
                 <nb-card>
-                    <nb-card-header>Điểm hoạt động sự kiện</nb-card-header>
+                    <nb-card-header>Task Grade</nb-card-header>
                     <nb-card-body class="p-0">
                         <ng-container
                             *ngTemplateOutlet="gradeListTemplate; context: { type: taskGradesBySemester }"></ng-container>
@@ -64,7 +64,7 @@
             </div>
             <div class="col-md-4">
                 <nb-card>
-                    <nb-card-header>Điểm thành tích</nb-card-header>
+                    <nb-card-header>Achievement Grade</nb-card-header>
                     <nb-card-body class="p-0">
                         <ng-container
                             *ngTemplateOutlet="gradeListTemplate; context: { type: ticketGradesBySemester }"></ng-container>
@@ -78,9 +78,9 @@
     <nb-list>
         <nb-list-item class="item small">
             <span>Id</span>
-            <span>Tiêu đề</span>
-            <span>Điểm</span>
-            <span>Thời gian</span>
+            <span>Title</span>
+            <span>Grade</span>
+            <span>Time</span>
         </nb-list-item>
         <nb-list-item class="item small" *ngFor="let grade of type">
             <span>{{ grade.id }}</span>

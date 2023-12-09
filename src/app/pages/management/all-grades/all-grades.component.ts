@@ -156,10 +156,10 @@ console.log(currentSemester)
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, this.selectedSemester);
 
-    [0, 1].map((col) => {
-      if (!ws["!cols"][col]) ws["!cols"][col] = { wch: 8 };
-      ws["!cols"][col].wpx = 100;
-    });
+    // [0, 1].map((col) => {
+    //   if (!ws["!cols"][col]) ws["!cols"][col] = { wch: 8 };
+    //   ws["!cols"][col].wpx = 100;
+    // });
 
     if (!ws["!rows"]) ws["!rows"] = [];
     if (!ws["!rows"][0]) ws["!rows"][0] = {};

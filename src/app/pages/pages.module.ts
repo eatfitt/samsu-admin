@@ -71,6 +71,7 @@ import { FeedbackFormComponent } from './management/events/feedback-form/feedbac
 import { SplitStringPipe } from "./pipes/splitstring.pipe";
 import { GuarantorVerifyComponent } from './management/invoke-point/guarantor-verify/guarantor-verify.component';
 import { AllGradesComponent } from './management/all-grades/all-grades.component';
+import { PostsComponent } from './management/events/posts/posts.component';
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 const PIPES = [
@@ -154,7 +155,8 @@ const PIPES = [
     EventStatisticComponent,
     FeedbackFormComponent,
     GuarantorVerifyComponent,
-    AllGradesComponent
+    AllGradesComponent,
+    PostsComponent
     // TasksComponent,
   ],
 })
