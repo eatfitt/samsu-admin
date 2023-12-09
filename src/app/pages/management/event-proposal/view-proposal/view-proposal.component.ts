@@ -91,7 +91,7 @@ export class ViewProposalComponent implements OnInit {
       return {
         content,
         time: Number(time),
-        isResolved: Number(time) < (Number(this.eventProposal?.modifyAt) / 1000),
+        isResolved: Number(time) < (Number(this.eventProposal?.modifyAt)),
       };
     });
   }

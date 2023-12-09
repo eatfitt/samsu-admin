@@ -79,12 +79,12 @@ export class AllStudentsComponent {
     },
     columns: {
       rollnumber: {
-        title: "Roll Number",
+        title: "MSSV",
         type: "string",
         filter: false,
       },
       name: {
-        title: "Name",
+        title: "Họ tên",
         type: "string",
         filter: false,
       },
@@ -99,7 +99,7 @@ export class AllStudentsComponent {
         filter: false,
       },
       role: {
-        title: "Role",
+        title: "Chức vụ",
         type: "list",
         defaultValue: "ROLE_STUDENT",
         //addable: false,
@@ -118,12 +118,12 @@ export class AllStudentsComponent {
         },
       },
       dob: {
-        title: "DOB",
+        title: "Ngày sinh",
         defaultValue: '01/01/2001',
         filter: false,
       },
       avatar: {
-        title: "Avatar",
+        title: "Ảnh đại diện",
         defaultValue: 'https://cdn-icons-png.flaticon.com/512/3177/3177440.png',
         filter: false,
       }

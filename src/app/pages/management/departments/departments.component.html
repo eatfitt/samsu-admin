@@ -66,10 +66,10 @@
 </div>
 
 <ng-template #createDepartmentDialog let-data let-ref="dialogRef">
-    <nb-card>
+    <nb-card style="width: 30rem;">
       <nb-card-header>Create department</nb-card-header>
       <nb-card-body>
-        <input type="text" nbInput placeholder="Department name" [(ngModel)]="newDepartmentName">
+        <input fullWidth type="text" nbInput placeholder="Department name" [(ngModel)]="newDepartmentName">
       </nb-card-body>
       <nb-card-footer>
         <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>

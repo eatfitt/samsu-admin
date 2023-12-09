@@ -17,63 +17,58 @@ export const MENU_ITEMS: NbMenuItem[] = [
     group: true,
   },
   {
-    title: 'Người dùng',
+    title: 'Users',
     icon: 'person-outline',
     link: '/pages/users',
     home: true,
   },
   {
-      title: 'Sự kiện',
+      title: 'Events',
       icon: 'calendar-outline',
-      children: [
-        {
-          title: 'Tất cả sự kiện',
-          link: '/pages/events',
-        },
+      link: '/pages/events',
         // {
         //   title: 'Calendar',
         //   link: '/pages/events/calendar',
         // },
-      ],
     },
   {
-    title: 'Nhóm',
+    title: 'Groups',
     icon: 'people-outline',
     link: '/pages/groups',
     home: true,
   },
   {
-    title: 'Bài đăng',
+    title: 'Posts',
     icon: 'cast-outline',
     link: '/pages/dashboard',
     home: true,
   },
   {
-    title: 'Đề xuất sự kiện của tôi',
+    title: 'My event proposal',
     icon: 'bulb',
     link: '/pages/my-event-proposal',
     home: true,
   },
   {
-    title: 'Tiêu chí đánh giá',
+    title: 'Grade criteria',
     icon: 'bar-chart',
     link: '/pages/grades',
     home: true,
   },
   {
-    title: 'Phòng ban',
+    title: 'Departments',
     icon: 'pantone',
     link: '/pages/departments',
     home: true,
   },
   {
-    title: 'Xác nhận điểm bổ sung',
+    title: 'Grade tickets',
     icon: 'paper-plane',
     link: '/pages/grade-tickets',
     home: true,
   },
   {
-    title: 'Xem điểm',
+    title: 'View grades',
     icon: 'book-open',
     link: '/pages/all-grades',
     home: true

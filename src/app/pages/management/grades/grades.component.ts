@@ -26,8 +26,21 @@ export class GradesComponent {
   gradeSubCriterias: GradeSubCriteria[] = [];
   filteredGradeSubCriterias: GradeSubCriteria[] = [];
   combinedGradeCriterias = [];
-  gradeMenuItems = [{ title: "Thêm tiêu chí đánh giá" }, { title: "Thêm tiêu chí phụ" }, { title: "Thêm văn bản" }];
+  gradeMenuItems = [{ title: "Add Grade Criteria" }, { title: "Add Sub Grade Criteria" }, { title: "Add Policy Document" }];
   menu: Subscription;
+
+  // Grade criteria
+  gradeCriteriaContent = '';
+  policyDocumentId: number;
+  defaultScore: number;
+  gradeCriteriaMaxScore: number;
+
+  // Sub Grade criteria
+  subGradeCriteriaContent = '';
+  gradeCriteriaId: number;
+  minScore: number;
+  maxScore: number;
+
 
   constructor(
     iconsLibrary: NbIconLibraries,
@@ -40,11 +53,11 @@ export class GradesComponent {
   ) {
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
     this.menu = this.menuService.onItemClick().subscribe((event) => {
-      if (event.item.title === "Thêm tiêu chí đánh giá") {
+      if (event.item.title === "Add Grade Criteria") {
         this.openDialog(this.addGradeCriteriaDialog);
-      } else if (event.item.title === "Thêm tiêu chí phụ") {
+      } else if (event.item.title === "Add Sub Grade Criteria") {
         this.openDialog(this.addSubGradeCriteriaDialog);
-      } else if (event.item.title === "Thêm văn bản") {
+      } else if (event.item.title === "Add Policy Document") {
         this.openDialog(this.addPolicyDialog);
       }      
     })
@@ -93,5 +106,13 @@ export class GradesComponent {
 
   openDialog(dialog) {
     this.contentTemplateRef = this.dialogService.open(dialog);
+  }
+
+  setPolicyDocuments(event: PolicyDocument) {
+    this.policyDocumentId = event.id;
+  }
+
+  createGradeCriteria() {
+
   }
 }

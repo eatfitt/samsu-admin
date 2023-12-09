@@ -22,10 +22,10 @@
 </nb-card>
 
 <ng-template #createGorupDialog let-data let-ref="dialogRef">
-  <nb-card>
+  <nb-card style="width: 30rem">
     <nb-card-header>Create group</nb-card-header>
     <nb-card-body>
-      <input type="text" [disabled]="isApiSuccess" nbInput placeholder="Group name" [(ngModel)]="newGroupName">
+      <input fullWidth type="text" [disabled]="isApiSuccess" nbInput placeholder="Group name" [(ngModel)]="newGroupName">
       <div class="text-success mt-2" *ngIf="isApiSuccess && !isApiFailed">
         Created successfully!
       </div>
