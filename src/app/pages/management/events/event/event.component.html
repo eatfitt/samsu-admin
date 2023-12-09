@@ -180,9 +180,9 @@
                         <nb-option [value]="2">Draft</nb-option>
                     </nb-select>
                     <label class="label">Process</label>
-                    <nb-select [(selected)]="eventToEdit.status" (selectedChange)="editEvent()"
+                    <nb-select [(selected)]="eventToEdit.processStatus" (selectedChange)="editEvent()"
                         [disabled]="viewOnly" size="small" class="d-block w-50 mb-2" filled="true"
-                        [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
+                        [status]="eventToEdit.processStatus === 0 || eventToEdit.processStatus === 1 ? 'basic' : eventToEdit.processStatus === 2 || eventToEdit.processStatus === 3 ? 'warning' : 'success'">
                         <nb-option [value]="0">Coming</nb-option>
                         <nb-option [value]="1">Check in</nb-option>
                         <nb-option [value]="2">Processing</nb-option>
@@ -195,7 +195,7 @@
                         <nb-card-header>Details</nb-card-header>
                         <nb-card-body>
                             <div class="row">
-                                <div class="col-md-4 small">Người tạo</div>
+                                <div class="col-md-4 small">Creator</div>
                                 <div class="col-md-8 small">{{ event.creator?.name ?? 'N/A' }}</div>
                             </div>
                             <div class="row">
@@ -204,12 +204,12 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4 small">Thời gian</div>
+                                <div class="col-md-4 small">Time</div>
                                 <div class="col-md-8 small">{{ event.startTime | date:"MMM dd, yyyy
                                     hh:mm a" }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4 small">Thời lượng</div>
+                                <div class="col-md-4 small">Duration</div>
                                 <div class="col-md-8 small">{{ durationObject.hours + ' giờ ' +
                                     durationObject.minutes + ' phút' }}</div>
                             </div>
@@ -220,6 +220,13 @@
                                         department.name }} </div>
                                 </div>
                                 <div class="col-md-8 small" *ngIf="!event.departments">N/A</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 small">Sub Criteria</div>
+                                <div class="col-md-8 small" *ngIf="event.gradeSubCriteriaResponse">
+                                   {{ event.gradeSubCriteriaResponse.content }}
+                                </div>
+                                <div class="col-md-8 small" *ngIf="!event.gradeSubCriteriaResponse">N/A</div>
                             </div>
                         </nb-card-body>
                     </nb-card>

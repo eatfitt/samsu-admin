@@ -94,6 +94,7 @@ export class AddEventComponent implements OnInit {
   today = new Date();
   minDate = new Date(this.today);
   gradeSubCriteria$: Observable<any> = this.gradeSubCritService.getAllGradeSubCriterias().pipe(map((data: any) => data.content)); 
+  selectedSubGradeCriteria: GradeSubCriteria = null;
 
   // FORM DATA - ngModel
   title = "";
@@ -269,7 +270,7 @@ export class AddEventComponent implements OnInit {
           id: null
         };
       }),
-      // gradeSubCriteriaResponse: null;
+      gradeSubCriteriaResponse: this.selectedSubGradeCriteria,
       processStatus: this.processStatus
     }
     this.participantReview = this.attendanceList.map(user => {
@@ -284,6 +285,7 @@ export class AddEventComponent implements OnInit {
 
   setSubGradeCriteriaId(event) {
     this.subGradeCriteriaId = event.id;
+    this.selectedSubGradeCriteria = event;
   }
 
   addAttendanceList(event) {

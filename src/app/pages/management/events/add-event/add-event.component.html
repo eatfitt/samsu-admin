@@ -39,10 +39,8 @@
 <nb-card>
     <nb-card-body class="example-items-col">
         <div class="form-group">
-            <div class="col-md-6">
-                <label for="title" class="label">Title</label>
-                <input type="text" [(ngModel)]="title" nbInput fullWidth id="title" placeholder="Title">
-            </div>
+            <label for="title" class="label">Title</label>
+            <input type="text" [(ngModel)]="title" nbInput fullWidth id="title" placeholder="Title">
         </div>
         <div class="form-group row">
             <div class="col-md-6">
@@ -91,7 +89,7 @@
             <div class="col-md-6">
                 <label for="status" class="label" style="margin-top: 1rem;">Status</label>
                 <nb-select [(selected)]="status" fullWidth class="d-block">
-                    <nb-option value="0">Un Public</nb-option>
+                    <nb-option value="0">Un-public</nb-option>
                     <nb-option value="1">Public</nb-option>
                     <nb-option value="2">Draft</nb-option>
                 </nb-select>
