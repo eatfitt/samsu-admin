@@ -178,4 +178,13 @@ export class EventService {
         })
       );
   }
+
+  public getPostsByEventId(eventId: number) {
+    return this.http.get(`${this.apiEndPoint}/events/${eventId}/posts`).pipe(
+      catchError((error) => {
+        console.error("Error in getPostsByEventId:", error);
+        return throwError(error);
+      })
+    );
+  }
 }

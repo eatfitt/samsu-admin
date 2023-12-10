@@ -80,8 +80,6 @@ export class TaskDetailComponent {
       .subscribe((data: any) => this.gradeSubCriterias = data.content);
   }
 
-  
-
   onAssigneeRemove(tagToRemove: NbTagComponent): void {
     this.task.assignees = this.task.assignees.filter(t => t.name !== tagToRemove.text);
   }

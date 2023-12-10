@@ -5,6 +5,8 @@ import { Store } from "@ngrx/store";
 import { Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { environment } from "../../../../environments/environment";
+import { Event } from "../event/event.service";
+import { GetAllUsersListResponse } from "../user/user.service";
 
 export interface Post {
   title: string;
@@ -12,6 +14,17 @@ export interface Post {
   kudos: number;
   eventId: number;
   userRollnumber: string;
+  image_urls: string;
+  file_urls: string;
+  status: number;
+}
+export interface PostResponse {
+  id: number;
+  title: string;
+  body: string;
+  kudos: number;
+  event: Event;
+  user: GetAllUsersListResponse;
   image_urls: string;
   file_urls: string;
   status: number;

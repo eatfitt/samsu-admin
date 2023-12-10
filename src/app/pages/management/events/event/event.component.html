@@ -168,7 +168,7 @@
                         [participants]="participants"></ngx-event-statistic>
                 </ng-container>
                 <ng-container *ngIf="isShowPosts">
-                    <ngx-posts></ngx-posts>
+                    <ngx-posts [eventId]="event.id"></ngx-posts>
                 </ng-container>
             </div>
             <div class="col-md-4 overflow-auto" style="max-height: 45rem;">
@@ -207,13 +207,12 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4 small">Time</div>
-                                <div class="col-md-8 small">{{ event.startTime | date:"MMM dd, yyyy
-                                    hh:mm a" }}</div>
+                                <div class="col-md-8 small">{{ event.startTime | date:"MMM dd, yyyy hh:mm a" }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 small">Duration</div>
-                                <div class="col-md-8 small">{{ durationObject.hours + ' giờ ' +
-                                    durationObject.minutes + ' phút' }}</div>
+                                <div class="col-md-8 small">{{ durationObject.hours + ' hours ' +
+                                    durationObject.minutes + ' minutes' }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 small">Department</div>
