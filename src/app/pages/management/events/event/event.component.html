@@ -4,7 +4,7 @@
             <div class="col small mb-4">Event {{ eventToEdit.id }}</div>
         </div>
         <div class="row">
-            <div class="col-md-8 overflow-auto">
+            <div class="col-md-8 overflow-auto" style="max-height: 45rem;">
                 <h5 class="hover-edit" style="font-weight: 600;" *ngIf="!isEditTitle"
                     (click)="viewOnly ? null : isEditTitle = true">{{ eventToEdit.title }}</h5>
                 <ng-container *ngIf="isEditTitle">
@@ -21,13 +21,14 @@
                             type="file" />
                     </button>
                     <button nbButton size="small" class="text-capitalize mr-2 fileUpload"
-                        (click)="isShowStatistic = !isShowStatistic"> {{ isShowStatistic ? 'Hide
-                        statistics' : 'Show Statistics'}} </button>
+                        (click)="isShowStatistic = !isShowStatistic; isShowPosts = false;"> {{ isShowStatistic ? 'Hide statistics' : 'Show Statistics'}} </button>
+                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload"
+                        (click)="isShowPosts = !isShowPosts; isShowStatistic = false"> {{ isShowPosts ? 'Hide Posts' : 'Show Posts'}} </button>
                 </div>
-                <ng-container *ngIf="!isShowStatistic">
+                <ng-container *ngIf="!isShowStatistic && !isShowPosts">
                     <div class="event-content my-3">
                         <div class="d-flex justify-content-between">
-                            <div class="font-weight-bold mb-1">Nội dung</div>
+                            <div class="font-weight-bold mb-1">Content</div>
                             <nb-icon *ngIf="!isEditContent && !viewOnly" icon="edit-2" pack="eva"
                                 (click)="isEditContent = true" class="hover-pointer"></nb-icon>
                         </div>
@@ -39,7 +40,7 @@
                         </ng-container>
                     </div>
                     <div class="event-attachments my-3">
-                        <div class="font-weight-bold mb-1">File đính kèm</div>
+                        <div class="font-weight-bold mb-1">Attachments</div>
                         <div class="d-flex overflow-auto w-100">
                             <div class="event-bannerurl hover-pointer"
                                 (click)="openDialog(eventBannerDialog, eventToEdit.bannerUrl)">
@@ -100,9 +101,7 @@
                                                     [disabled]="participant.checkin || participant.checkout"
                                                     nbButton
                                                     (click)="openDialog(checkInDialog, participant.user); rollnumberToCheckIn = participant.participant"
-                                                    size="small">{{ participant.checkin ? "Đã check
-                                                    in" : participant.checkout ? "Đã check out" :
-                                                    "Check in" }}</button>
+                                                    size="small">{{ participant.checkin ? "Already Checked in" : participant.checkout ? "Already Checked out" : "Check in" }}</button>
                                             </span>
                                         </div>
                                         <div *ngIf="participant.checkedIn" class="font-italic">{{
@@ -127,7 +126,7 @@
                                         <span class="font-weight-bold">{{ task.title ? task.title :
                                             'Task' }}</span>
                                         <span>
-                                            <nb-tag [text]="getTaskStatus(task.status)" size="tiny"
+                                            <nb-tag [text]="getTaskStatus(task.status)" size="tiny" [status]="task.status === 0 ? 'primary' : 'success'"
                                                 appearance="outline"></nb-tag>
                                         </span>
                                         <span *ngIf="task.assignees?.length > 0"> {{
@@ -168,8 +167,11 @@
                     <ngx-event-statistic [event]="event"
                         [participants]="participants"></ngx-event-statistic>
                 </ng-container>
+                <ng-container *ngIf="isShowPosts">
+                    <ngx-posts></ngx-posts>
+                </ng-container>
             </div>
-            <div class="col-md-4 overflow-auto" style="max-height: 40rem;">
+            <div class="col-md-4 overflow-auto" style="max-height: 45rem;">
                 <ng-container *ngIf="selectedTask === null; else selectedTaskTemplate">
                     <label class="label">Status</label>
                     <nb-select [(selected)]="eventToEdit.status" (selectedChange)="editEvent()"
@@ -232,9 +234,11 @@
                     </nb-card>
                 </ng-container>
                 <ng-template #selectedTaskTemplate>
-                    <ngx-task-detail [task]="selectedTask" [index]="selectedIndex"
+                    <ngx-task-detail [task]="selectedTask" [index]="selectedIndex" [editable]="true"
                         [viewOnly]="viewOnly" (removeTask)="deleteTask($event)"
-                        (taskStatusChange)="editTaskStatus($event)"></ngx-task-detail>
+                        (taskStatusChange)="editTaskStatus($event)"
+                        (changeAssigneeStatus)="changeAssigneeStatus($event)" (editTask)="editTask($event)"
+                    ></ngx-task-detail>
                 </ng-template>
             </div>
         </div>

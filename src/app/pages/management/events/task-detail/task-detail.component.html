@@ -3,7 +3,10 @@
     <div *ngIf="!viewOnly && !isDefaultTaskCheckin(task)" class="d-flex mb-3">
         <button nbButton size="tiny" outline status="basic" (click)="removeTask.emit(index)"
             class="mr-1">Delete task</button>
+        <button *ngIf="editable" nbButton size="tiny" outline status="basic" (click)="editTask.emit(task)"
+            class="mr-1">Edit task</button>
     </div>
+    
     <nb-select [disabled]="viewOnly" [(selected)]="task.status"
         (selectedChange)="taskStatusChange.emit($event)" size="small">
         <nb-option [value]="0">{{ getTaskStatus(0) }}</nb-option>
@@ -57,7 +60,7 @@
             <div class="row mb-2 align-items-baseline">
                 <div class="col-4 small">Deadline</div>
                 <div class="col-8 p-0">
-                    <input type="datetime" [(ngModel)]="task.deadline" nbInput id="startTime"
+                    <input type="datetime" [ngClass]="{'view-only-mode': viewOnly}" [(ngModel)]="task.deadline" nbInput id="startTime"
                         placeholder="Deadline" [nbDatepicker]="dateTimePicker">
                     <nb-datepicker #dateTimePicker></nb-datepicker>
                 </div>
@@ -65,17 +68,26 @@
         </nb-card-body>
     </nb-card>
     <nb-card>
-        <nb-card-header class="px-3 py-2 small font-weight-bold">Tiến độ</nb-card-header>
+        <nb-card-header class="px-3 py-2 small font-weight-bold">Progress</nb-card-header>
         <nb-card-body class="p-0">
             <nb-list>
                 <nb-list-item class="item small font-weight-bold">
                     <span>Assignees</span>
-                    <span>Trạng thái</span>
+                    <span>Status</span>
                 </nb-list-item>
                 <nb-list-item *ngFor="let assignee of task.assignees" class="item small">
                     <span>{{ assignee.name ?? assignee.user.name }}</span>
-                    <th>{{ (assignee.status === 'ENABLE' || assignee.status === 'DISABLE') ? 'Đang
-                        chờ' : getAssigneeStatus(assignee.status) }}</th>
+                    <nb-select [(selected)]="assignee.status" (selectedChange)="changeAssigneeStatus.emit({assignee: assignee, status: assignee.status})"
+                        [disabled]="viewOnly" size="small" class="d-block w-50 mb-2" filled="true"
+                        [status]="assignee.status === 0 ? 'basic' : assignee.status === 1 || assignee.status === 3 ? 'primary' : assignee.status === 2 || assignee.status === 5 ? 'danger': 'success'">
+                        <nb-option [value]="0">Pending</nb-option>
+                        <nb-option [value]="1" disabled>Accepted</nb-option>
+                        <nb-option [value]="2" disabled>Rejected</nb-option>
+                        <nb-option [value]="3" disabled>Completed</nb-option>
+                        <nb-option [value]="4">Approved</nb-option>
+                        <nb-option [value]="5">Disapproved</nb-option>
+                    </nb-select>
+                    <!-- <th>{{ (assignee.status === 'ENABLE' || assignee.status === 'DISABLE') ? 'Pending' : getAssigneeStatus(assignee.status) }}</th> -->
                 </nb-list-item>
             </nb-list>
         </nb-card-body>

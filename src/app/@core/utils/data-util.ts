@@ -46,8 +46,8 @@ export function convertMilliToDate(millis) {
 }
 
 export function getTaskStatus(status: number) {
-  if (status === 0) return 'Đang diễn ra'; // Processing
-  else if (status === 1) return 'Đã duyệt'; // Reviewed
+  if (status === 0) return 'Processing'; // Processing
+  else if (status === 1) return 'Reviewed'; // Reviewed
 }
 
 export function getAssigneeStatus(status: number) {

@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./posts.component.scss']
 })
 export class PostsComponent {
-
+  title = '';
+  body = ''
 }

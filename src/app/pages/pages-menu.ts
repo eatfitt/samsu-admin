@@ -37,12 +37,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/groups',
     home: true,
   },
-  {
-    title: 'Posts',
-    icon: 'cast-outline',
-    link: '/pages/dashboard',
-    home: true,
-  },
+  // {
+  //   title: 'Posts',
+  //   icon: 'cast-outline',
+  //   link: '/pages/dashboard',
+  //   home: true,
+  // },
   {
     title: 'My event proposal',
     icon: 'bulb',

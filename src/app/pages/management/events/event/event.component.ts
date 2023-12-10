@@ -5,6 +5,8 @@ import { convertMilliToDate, convertMillisToTime, getAssigneeStatus, getTaskStat
 import _ from 'lodash';
 import { FileUploadService } from '../../../../../services/file-upload.service';
 import { FeedbackService } from '../../../../@core/services/feedback/feedback.service';
+import { TaskService } from '../../../../@core/services/task/task.service';
+import { Task } from '../task-detail/task-detail.component';
 @Component({
   selector: 'ngx-event',
   templateUrl: './event.component.html',
@@ -30,6 +32,7 @@ export class EventComponent {
   };
   durationObject = null;
   isShowStatistic = false;
+  isShowPosts = false;
   
   // CHECK FIELD IS EDITING
   isEditContent = false;
@@ -71,6 +74,7 @@ export class EventComponent {
     private eventService: EventService,
     private uploadService: FileUploadService,
     private feedbackService: FeedbackService,
+    private taskService: TaskService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
@@ -229,9 +233,57 @@ export class EventComponent {
 
   }
 
+  editTask(task: Task) {
+    this.taskService.updateTaskById(this.selectedTask.id,
+      {
+        ...task,
+        eventId: this.event.id,
+        gradeSubCriteriaId: this.eventToEdit.tasks[this.selectedIndex].gradeSubCriteria.id
+      }).subscribe(
+        (data: any) => this.toastrService.show("Feedback updated successfully", "Success", {
+          status: "success",
+        }),
+        (failed: any) => this.toastrService.show(failed, "Failed", {
+          status: "danger",
+        })
+      )
+  }
+
   editTaskStatus(index: number) {
-    this.eventToEdit.tasks[this.selectedIndex].status = index;
-    // this.editEvent();
+    // this.eventToEdit.tasks[this.selectedIndex].status = index;
+    // this.taskService.updateTaskById(this.selectedTask.id,
+    //   {
+    //     ...this.eventToEdit.tasks[this.selectedIndex],
+    //     gradeSubCriteriaId: this.eventToEdit.tasks[this.selectedIndex].gradeSubCriteria.id
+    //   }).subscribe(
+    //     (data: any) => this.toastrService.show("Feedback updated successfully", "Success", {
+    //       status: "success",
+    //     }),
+    //     (failed: any) => this.toastrService.show(failed, "Failed", {
+    //       status: "danger",
+    //     })
+    //   )
+    this.taskService.updateEventStatusByTaskId(this.selectedTask.id, index)
+    .subscribe(
+      (data: any) => this.toastrService.show("Asignee status updated successfully", "Success", {
+        status: "success",
+      }),
+      (failed: any) => this.toastrService.show(failed, "Failed", {
+        status: "danger",
+      })
+    )
+  }
+
+  changeAssigneeStatus(event) {
+    this.taskService.updateAssigneeStatusByTaskId(this.selectedTask.id, event.status, event.assignee.rollnumber)
+    .subscribe(
+      (data: any) => this.toastrService.show("Asignee status updated successfully", "Success", {
+        status: "success",
+      }),
+      (failed: any) => this.toastrService.show(failed, "Failed", {
+        status: "danger",
+      })
+    )
   }
 
   deleteTask(i) {
@@ -259,7 +311,7 @@ export class EventComponent {
     }
     this.feedbackService.addQuestionByEventId(this.event.id, feedbackPayload)
       .subscribe(
-        (data) => { this.toastrService.show("Feedbkac updated successfully", "Success", {
+        (data) => { this.toastrService.show("Feedback updated successfully", "Success", {
             status: "success",
           });
           this.selectedFeedback = this.sampleFeedback;

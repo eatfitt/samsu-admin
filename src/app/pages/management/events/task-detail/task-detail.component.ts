@@ -4,6 +4,7 @@ import { UserService } from '../../../../@core/services/user/user.service';
 import { NbTagComponent, NbTagInputAddEvent, NbToastrService } from '@nebular/theme';
 import { Observable } from 'rxjs';
 import { getAssigneeStatus, getTaskStatus } from '../../../../@core/utils/data-util';
+import { TaskRequests } from '../../../../@core/services/event/event.service';
 
 interface GradeSubCriterias {
   id?: number;
@@ -13,6 +14,7 @@ interface GradeSubCriterias {
   maxScore: number;
 }
 export interface Task {
+  id?: number;
   gradeSubCriteriaId?: number;
   gradeSubCriteria?: GradeSubCriteria;
   eventsId?: number;
@@ -56,8 +58,11 @@ export class TaskDetailComponent {
   }
   @Input() index: number;
   @Input() viewOnly: false; // default false;
+  @Input() editable: false;
   @Output() taskStatusChange = new EventEmitter<number>();
+  @Output() changeAssigneeStatus = new EventEmitter<{assignee: Assignee, status: number}>();
   @Output() removeTask = new EventEmitter<number>();
+  @Output() editTask = new EventEmitter<Task>();
   existingUser$: Observable<Object> = null;
   gradeSubCriterias: GradeSubCriterias[] = [];
   rollnumberToSearch: string;
