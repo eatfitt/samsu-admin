@@ -79,6 +79,9 @@ export class PostsComponent {
               status: "success",
             });
             this.createMode = false;
+            this.title = '';
+            this.body = '';
+            this.file = null;
             this.fetchData();
           },
           (error) => {

@@ -106,7 +106,7 @@ export class AddEventComponent implements OnInit {
   semester = "FA23";
   department = null;
   proposalId = 14;
-  startTime: Date = new Date();
+  startTime: Date = new Date(this.today);
   duration = 0;
   status = 2;
   attendScore = 0;
@@ -133,7 +133,7 @@ export class AddEventComponent implements OnInit {
       gradeSubCriteriaId: 1,
       gradeSubCriteria: null,
       assignees: [],
-      deadline: new Date()
+      deadline: { ...this.startTime }
     }
   ];
 
@@ -142,6 +142,7 @@ export class AddEventComponent implements OnInit {
   ngOnInit(): void {
     this.userService.checkLoggedIn();
     this.minDate.setDate(this.today.getDate());
+    this.startTime.setDate(this.today.getDate() + 1);
     this.semesters$ = this.semesterService.getAllSemesters().pipe(map((data: any) => data.content));
     this.departments$ = this.departmentService.getAllDepartments().pipe(map((data: any) => data.content));
   }

@@ -111,12 +111,12 @@
         <nb-list>
           <nb-list-item class="item small">
             <span>Id</span>
-            <span>Ảnh đại diện</span>
-            <span>Họ tên</span>
-            <span>MSSV</span>
+            <span>Avatar</span>
+            <span>Name</span>
+            <span>Rollnumber</span>
             <span>Username</span>
             <span>Email</span>
-            <span>Ngày sinh</span>
+            <span>DOB</span>
             <span>Department</span>
             <span></span>
           </nb-list-item>
@@ -202,17 +202,17 @@
     </nb-card-footer>
   </nb-card>
 </ng-template>
-<ng-template #deleteUserDialog let-data let-ref="dialogRef">
+<ng-template #deleteUserDialog let-data>
   <nb-card>
     <nb-card-header>Delete user</nb-card-header>
     <nb-card-body>You are deleting {{ selectedStudent?.name }} </nb-card-body>
     <nb-card-footer>
-      <button nbButton class="bg-danger text-light" (click)="ref.close()">Đóng</button>
-      <button nbButton class="bg-primary text-light ml-3" (click)="deleteUser()">Xóa</button>
+      <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
+      <button nbButton class="bg-primary text-light ml-3" (click)="deleteUser()">Delete</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>
-<ng-template #updateUserDialog let-data let-ref="dialogRef">
+<ng-template #updateUserDialog let-data>
   <nb-card *ngIf="selectedStudent" style="max-width: 40rem;">
     <nb-card-header>Update User {{ selectedStudent?.name }}</nb-card-header>
     <nb-card-body>
@@ -244,8 +244,8 @@
       </ng-container>
     </nb-card-body>
     <nb-card-footer>
-      <button nbButton class="bg-danger text-light" (click)="ref.close()">Đóng</button>
-      <button nbButton class="bg-primary text-light ml-3" (click)="updateUser()">Cập nhật</button>
+      <button nbButton class="bg-danger text-light" (click)="ref.close()">Close</button>
+      <button nbButton class="bg-primary text-light ml-3" (click)="updateUser()">Update</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>

@@ -74,18 +74,18 @@
                     <div class="event-attachments">
                         <div class="d-flex overflow-auto w-100">
                             <div class="event-fileurls mr-2 hover-pointer"
-                                (click)="openDialog(eventBannerDialog, selectedGradeTicket.evidenceUrls)">
+                                (click)="openDialog(eventBannerDialog, selectedGradeTicket?.evidenceUrls)">
                                 <nb-card style="max-width: 12rem;">
                                     <nb-card-header
                                         class="p-0 d-flex justify-content-center align-items-center"
                                         style="height: 6rem;">
-                                        <img *ngIf="isImageFile(selectedGradeTicket.evidenceUrls)"
-                                            class="mh-100 mw-100" [src]="selectedGradeTicket.evidenceUrls">
-                                        <nb-icon *ngIf="!isImageFile(selectedGradeTicket.evidenceUrls)"
+                                        <img *ngIf="isImageFile(selectedGradeTicket?.evidenceUrls)"
+                                            class="mh-100 mw-100" [src]="selectedGradeTicket?.evidenceUrls">
+                                        <nb-icon *ngIf="!isImageFile(selectedGradeTicket?.evidenceUrls)"
                                             icon="file-text" pack="eva" class="w-50 h-50"></nb-icon>
                                     </nb-card-header>
                                     <nb-card-body class="p-2">
-                                        <div class="text-truncate small">{{ selectedGradeTicket.evidenceUrls }}
+                                        <div class="text-truncate small">{{ selectedGradeTicket?.evidenceUrls }}
                                         </div>
                                     </nb-card-body>
                                 </nb-card>
@@ -94,8 +94,8 @@
                     </div>
                 </div>
                 <div class="col-md-7">
-                    <ng-container *ngIf="selectedGradeTicket.status === 0; else resolvedTicketTemplate">
-                        <nb-select [disabled]="selectedGradeTicket.status !== 0" [(selected)]="statusForSelectedGradeTicket"
+                    <ng-container *ngIf="selectedGradeTicket?.status === 0; else resolvedTicketTemplate">
+                        <nb-select [disabled]="selectedGradeTicket?.status !== 0" [(selected)]="statusForSelectedGradeTicket"
                             size="small" class="d-block w-50 mb-2" filled="true"
                             [status]="statusForSelectedGradeTicket === 0 ? 'basic' : statusForSelectedGradeTicket === 1 ? 'success' : 'danger'">
                             <nb-option [value]="0">Processing</nb-option>
@@ -107,30 +107,30 @@
                             [fieldSize]="'small'"
                             [arr]="gradeSubCriterias"
                             [property]="'content'"
-                            [disabled]="selectedGradeTicket.status !== 0"
+                            [disabled]="selectedGradeTicket?.status !== 0"
                             (selectItem)="selectSubCriteriaId($event)"
                         ></ngx-custom-autoselect>
                         <div class="label mt-3 mb-1">Score</div>
-                        <input [disabled]="selectedGradeTicket.status !== 0" type="number" min="0" nbInput fullWidth [(ngModel)]="scoreForSelectedGradeTicket" fieldSize="small">
+                        <input [disabled]="selectedGradeTicket?.status !== 0" type="number" min="0" nbInput fullWidth [(ngModel)]="scoreForSelectedGradeTicket" fieldSize="small">
                         <div class="label mt-3 mb-1">Feedback</div>
-                        <textarea [disabled]="selectedGradeTicket.status !== 0" [(ngModel)]="feedbackForSelectedGradeTicket" rows="5" nbInput fullWidth fieldSize="small" placeholder="Feedback..."></textarea>
+                        <textarea [disabled]="selectedGradeTicket?.status !== 0" [(ngModel)]="feedbackForSelectedGradeTicket" rows="5" nbInput fullWidth fieldSize="small" placeholder="Feedback..."></textarea>
                     </ng-container>
                     <ng-template #resolvedTicketTemplate>
-                        <nb-tag [text]="selectedGradeTicket.status === 1 ? 'Approved' : 'Rejected'"
-                            [status]="selectedGradeTicket.status === 1 ? 'success' : 'danger'" size="small"></nb-tag>
+                        <nb-tag [text]="selectedGradeTicket?.status === 1 ? 'Approved' : 'Rejected'"
+                            [status]="selectedGradeTicket?.status === 1 ? 'success' : 'danger'" size="small"></nb-tag>
                         <div class="label mt-4 mb-1">Criteria</div>
-                        <div>{{ selectedGradeTicket.gradeSubCriteria.content }}</div>
+                        <div>{{ selectedGradeTicket?.gradeSubCriteria.content }}</div>
                         <div class="label mt-4 mb-1">Score</div>
-                        <div>{{ selectedGradeTicket.score }}</div>
+                        <div>{{ selectedGradeTicket?.score }}</div>
                         <div class="label mt-4 mb-1">Feedback</div>
-                        <div>{{ selectedGradeTicket.feedback }}</div>
+                        <div>{{ selectedGradeTicket?.feedback }}</div>
                     </ng-template>
                 </div>
             </div>
         </nb-card-body>
         <nb-card-footer class="justify-content-between d-flex">
             <button nbButton size="small" status="danger" (click)="ref.close()">Close</button>
-            <button *ngIf="selectedGradeTicket.status === 0" nbButton size="small" status="primary" (click)="resolveTicket()">Resolve</button>
+            <button *ngIf="selectedGradeTicket?.status === 0" nbButton size="small" status="primary" (click)="resolveTicket()">Resolve</button>
         </nb-card-footer>
     </nb-card>
 </ng-template>

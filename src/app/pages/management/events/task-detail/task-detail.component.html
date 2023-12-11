@@ -61,7 +61,7 @@
                 <div class="col-4 small">Deadline</div>
                 <div class="col-8 p-0">
                     <input type="datetime" [ngClass]="{'view-only-mode': viewOnly}" [(ngModel)]="task.deadline" nbInput id="startTime"
-                        placeholder="Deadline" [nbDatepicker]="dateTimePicker">
+                        placeholder="Deadline" [nbDatepicker]="dateTimePicker" [min]="task.deadline">
                     <nb-datepicker #dateTimePicker></nb-datepicker>
                 </div>
             </div>
