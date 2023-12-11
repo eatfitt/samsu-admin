@@ -141,7 +141,7 @@ export class AddEventComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.checkLoggedIn();
-    this.minDate.setDate(this.today.getDate() - 1);
+    this.minDate.setDate(this.today.getDate());
     this.semesters$ = this.semesterService.getAllSemesters().pipe(map((data: any) => data.content));
     this.departments$ = this.departmentService.getAllDepartments().pipe(map((data: any) => data.content));
   }

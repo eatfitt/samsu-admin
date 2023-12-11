@@ -1,8 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { Observable, throwError } from "rxjs";
+import { throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { environment } from "../../../../environments/environment";
 import { Event } from "../event/event.service";
@@ -15,8 +14,12 @@ export interface Post {
   eventId: number;
   userRollnumber: string;
   image_urls: string;
-  file_urls: string;
+  file_urls?: string;
   status: number;
+}
+
+export interface PostRequest extends Post {
+  eventId: number;
 }
 export interface PostResponse {
   id: number;
@@ -42,7 +45,7 @@ export class PostService {
     this.apiEndPoint = environment.apiEndPoint;
   }
 
-  createPost(post: Post) {
+  createPost(post: PostRequest) {
     const headers = new HttpHeaders()
       .set("Content-Type", "application/json");
     const options = { headers: headers };
