@@ -140,7 +140,7 @@ export class EventComponent {
           deadline: task.deadline
         }
       }),
-      subGradeCriteriaId: this.eventToEdit.gradeSubCriteriaResponse.id,
+      subGradeCriteriaId: this.eventToEdit.gradeSubCriteriaResponse?.id ?? 1,
       processStatus: this.eventToEdit.processStatus,
     }
     this.eventService.updateEvent(eventPayload, this.event.id.toString())
