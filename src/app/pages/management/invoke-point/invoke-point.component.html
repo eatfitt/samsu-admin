@@ -119,11 +119,11 @@
                         <nb-tag [text]="selectedGradeTicket?.status === 1 ? 'Approved' : 'Rejected'"
                             [status]="selectedGradeTicket?.status === 1 ? 'success' : 'danger'" size="small"></nb-tag>
                         <div class="label mt-4 mb-1">Criteria</div>
-                        <div>{{ selectedGradeTicket?.gradeSubCriteria.content }}</div>
+                        <div>{{ selectedGradeTicket?.gradeSubCriteria?.content ?? 'N/A' }}</div>
                         <div class="label mt-4 mb-1">Score</div>
-                        <div>{{ selectedGradeTicket?.score }}</div>
+                        <div>{{ selectedGradeTicket?.score?? 'N/A' }}</div>
                         <div class="label mt-4 mb-1">Feedback</div>
-                        <div>{{ selectedGradeTicket?.feedback }}</div>
+                        <div>{{ selectedGradeTicket?.feedback?? 'N/A' }}</div>
                     </ng-template>
                 </div>
             </div>

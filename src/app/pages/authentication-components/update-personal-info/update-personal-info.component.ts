@@ -62,7 +62,10 @@ export class UpdatePersonalInfoComponent extends NbRegisterComponent {
       password: this.socialUser.password
     }
     this.userServive.initUser(bearerToken, newUser).subscribe(
-      (user) => console.log('init user', user),
+      (user) => {
+        console.log('init user', user),
+        this.router.navigate(['pages'])
+      },
       (error) => console.error(error)
     );
     console.log('update user', this.socialUser);
