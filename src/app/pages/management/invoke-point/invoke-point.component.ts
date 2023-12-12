@@ -71,8 +71,12 @@ export class InvokePointComponent {
       case 0:
         return 'Processing';
       case 1:
-        return 'Approved';
+        return 'Guarantee Approved';
       case 2:
+        return 'Guarantee Rejected';
+      case 3:
+        return 'Approved';
+      case 4:
         return 'Rejected';
     }
   }
@@ -81,8 +85,12 @@ export class InvokePointComponent {
       case 0:
         return 'basic'; // Set your color for PROCESSING status
       case 1:
-        return 'success';
+        return 'warning';
       case 2:
+        return 'warning';
+      case 3:
+        return 'success';
+      case 4:
         return 'danger';
     }
   }

@@ -8,7 +8,7 @@ import { SocialUser } from '../../../../utils/social-login/public-api';
 import { UserService } from '../../../@core/services/user/user.service';
 import { LayoutService } from '../../../@core/utils';
 import { UserState, UserSummary } from '../../../app-state/user';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'ngx-header',
   styleUrls: ['./header.component.scss'],
@@ -52,8 +52,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
               @Inject(NB_WINDOW) private window,   
               private breakpointService: NbMediaBreakpointsService,
               private userService: UserService, 
-              private store: Store<{ user: UserState }>) {
-  }
+              private store: Store<{ user: UserState }>,
+              private router: Router,  
+            ) {}
 
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
@@ -73,7 +74,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     .subscribe(title => {
       switch(title) {
         case 'Profile':
-          console.log('To be implemented');
+          this.router.navigate(['pages', 'user', this.userSummary.rollnumber]);
           break;
         case 'Log out':
           this.logout();

@@ -360,4 +360,21 @@ export class EventComponent {
   getAssigneeStatus(status: number) {
     return getAssigneeStatus(status);
   }
+
+  updateEventStatus() {
+    this.eventService.updateEventStatus(this.event.id, this.eventToEdit.processStatus).subscribe(
+      (success: any) => {
+        this.toastrService.show("Update process successfully", "Success", {
+          status: "success",
+        });
+        this.checkIn.emit();
+      },
+      (failed) => {
+        this.toastrService.show("Edit failed", "Failed", {
+          status: "danger",
+        });
+        this.eventToEdit = { ...this.event };
+      }
+    )
+  }
 }

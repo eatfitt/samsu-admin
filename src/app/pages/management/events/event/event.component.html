@@ -98,10 +98,10 @@
                                             <span>{{ participant.user.rollnumber }}</span>
                                             <span *ngIf="!viewOnly">
                                                 <button
-                                                    [disabled]="participant.checkin || participant.checkout"
+                                                    [disabled]="participant.checkin || participant.checkout || eventToEdit.processStatus !== 1"
                                                     nbButton
                                                     (click)="openDialog(checkInDialog, participant.user); rollnumberToCheckIn = participant.participant"
-                                                    size="small">{{ participant.checkin ? "Already Checked in" : participant.checkout ? "Already Checked out" : "Check in" }}</button>
+                                                    size="small">{{ participant.checkin ? "Checked in" : participant.checkout ? "Checked out" : "Check in" }}</button>
                                             </span>
                                         </div>
                                         <div *ngIf="participant.checkedIn" class="font-italic">{{
@@ -182,7 +182,7 @@
                         <nb-option [value]="2">Draft</nb-option>
                     </nb-select>
                     <label class="label">Process</label>
-                    <nb-select [(selected)]="eventToEdit.processStatus" (selectedChange)="editEvent()"
+                    <nb-select [(selected)]="eventToEdit.processStatus" (selectedChange)="updateEventStatus()"
                         [disabled]="viewOnly" size="small" class="d-block w-50 mb-2" filled="true"
                         [status]="eventToEdit.processStatus === 0 || eventToEdit.processStatus === 1 ? 'basic' : eventToEdit.processStatus === 2 || eventToEdit.processStatus === 3 ? 'warning' : 'success'">
                         <nb-option [value]="0">Coming</nb-option>

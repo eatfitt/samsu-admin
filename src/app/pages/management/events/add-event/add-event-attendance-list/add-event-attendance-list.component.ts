@@ -103,4 +103,16 @@ export class AddEventAttendanceListComponent {
     this.attendanceList.splice(index, 1);
     this.addAttendanceList.emit(this.attendanceList);
   }
+
+  importFromExcel(data: any[][]) {
+    const participantsFromExcel = data.splice(1, data.length).map((item) => {
+      return {
+        rollnumber: item[0],
+        name: item[1],
+      };
+    });
+    participantsFromExcel.forEach(participant => {
+      this.searchExistingUser(participant.rollnumber);
+    })
+  }
 }

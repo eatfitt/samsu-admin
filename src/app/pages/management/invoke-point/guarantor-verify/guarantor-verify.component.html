@@ -3,40 +3,40 @@
       <div class="d-flex w-100 h-100 justify-content-center align-items-center">
         <div class="border border-primary shadow p-5" style="max-width: 45rem;">
           <img src="../../../../assets/images/logo-modified-small.png" style="width:7rem">
-          <h1 class="text-primary">Xác nhận điểm rèn luyện</h1>
+          <h1 class="text-primary">Confirm Missing Points</h1>
           <ng-container *ngIf="!(alreadyApproved || alreadyRejected || apiCalledSuccess)">
-            <div>Hệ thống cần Thầy/Cô xác nhận các hoạt động rèn luyện mà sinh viên đã thực hiện.</div>
+            <div>SAMSU requires guarantors to confirm the achievements of the student.</div>
             <div class="border p-3 my-3">
               <div class="row mb-2">
-                <div class="col-md-4 label">Sinh viên</div>
+                <div class="col-md-4 label">Student</div>
                 <div class="col-md-8 small">{{ ticketInfo?.creator?.name }}</div>
               </div>
               <div class="row mb-2">
-                <div class="col-md-4 label">MSSV</div>
+                <div class="col-md-4 label">Roll number</div>
                 <div class="col-md-8 small">{{ ticketInfo?.creator?.rollnumber }}</div>
               </div>
               <div class="row mb-2">
-                <div class="col-md-4 label">Tiêu đề</div>
+                <div class="col-md-4 label">Title</div>
                 <div class="col-md-8 small">{{ ticketInfo?.title }}</div>
               </div>
               <div class="row mb-2">
-                <div class="col-md-4 label">Nội dung</div>
+                <div class="col-md-4 label">Content</div>
                 <div class="col-md-8 small">{{ ticketInfo?.content }}</div>
               </div>
               <div class="row mb-2">
-                <div class="col-md-4 label">Tệp đính kèm</div>
+                <div class="col-md-4 label">Attachment</div>
                 <a target="_blank" [href]="ticketInfo?.evidenceUrls" class="col-md-8 small">{{ ticketInfo?.evidenceUrls }}</a>
               </div>
             </div>
-            <div class="mb-3"> Để xác nhận, vui lòng nhấp vào nút “Xác nhận” dưới đây.</div>
+            <div class="mb-3"> To confirm the achievement, click "Confirm".</div>
             <div class="w-100 d-flex justify-content-between">
-              <button nbButton status="primary" (click)="updateTicketStatus(1)">Xác nhận</button>
-              <button nbButton status="danger" (click)="updateTicketStatus(2)">Từ chối</button>
+              <button nbButton status="primary" (click)="updateTicketStatus(1)">Confirm</button>
+              <button nbButton status="danger" (click)="updateTicketStatus(2)">Reject</button>
             </div>
           </ng-container>
-          <div *ngIf="alreadyApproved" class="text-success">Yêu cầu cập nhật điểm đã được Thầy/Cô xác nhận.</div>
-          <div *ngIf="alreadyRejected" class="text-danger">Yêu cầu cập nhật điểm đã bị từ chối.</div>
-          <div *ngIf="apiCalledSuccess" class="text-success">Cập nhật yêu cầu thành công!</div>
+          <div *ngIf="alreadyApproved" class="text-success">The request to invoke points has been accepted.</div>
+          <div *ngIf="alreadyRejected" class="text-danger">The request to invoke points has been rejected.</div>
+          <div *ngIf="apiCalledSuccess" class="text-success">Confirm successfully!</div>
         </div>
       </div>
     </nb-layout-column>

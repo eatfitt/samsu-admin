@@ -7,11 +7,11 @@
     </nb-card-header>
     <nb-card-body>
         <div class="row">
-            <div class="col-6">
+            <div class="col-12">
                 <ng-container [ngTemplateOutlet]="gradeCriteriaList"
                     [ngTemplateOutletContext]="{gradeCriterias: filteredGradeCriterias}"></ng-container>
             </div>
-            <div class="col-6">
+            <div class="d-none">
                 <ng-container [ngTemplateOutlet]="gradeSubCriteriaList"
                     [ngTemplateOutletContext]="{gradeSubCriterias: filteredGradeSubCriterias}"></ng-container>
             </div>

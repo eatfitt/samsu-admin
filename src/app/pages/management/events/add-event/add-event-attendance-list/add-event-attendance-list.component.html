@@ -7,7 +7,7 @@
             <span>Name</span>
             <span class="flex-grow-0"></span>
         </nb-list-item>
-        <nb-list-item class="item small"  *ngIf="attendanceList.length <= 0">No attendance added</nb-list-item>
+        <nb-list-item class="item small"  *ngIf="attendanceList.length <= 0">No participant added</nb-list-item>
         <nb-list-item class="item small" *ngFor="let attendance of attendanceList; let i = index">
             <span>{{ attendance?.rollnumber }}</span>
             <span>{{ attendance?.name }}</span>
@@ -20,7 +20,7 @@
 
 <ng-template #addAttendanceDialog let-ref="dialogRef">
     <nb-card>
-        <nb-card-header>Add attendance</nb-card-header>
+        <nb-card-header>Add Participant</nb-card-header>
         <nb-card-body>
             <div class="row">
                 <div class="d-none">
@@ -31,7 +31,10 @@
                             (click)="searchExistingUser(eventLeaderRollnumberToSearch)" class="hover-pointer ml-3"></nb-icon>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
+                    <ngx-excel-importer (importFromExcel)="importFromExcel($event)"></ngx-excel-importer>
+                </div>
+                <div class="col-md-6">
                     <label class="label">Select Group to Import</label>
                     <input #autoInput nbInput fullWidth="" type="text" (input)="onChange()" placeholder="Enter value"
                         [nbAutocomplete]="auto" />

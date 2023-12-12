@@ -188,5 +188,18 @@ export class EventService {
     );
   }
 
+  public updateEventStatus(eventId: number, status: number) {
+    const headers = new HttpHeaders()
+      .set("Content-Type", "application/json")
+    const options = { headers: headers };
+    return this.http
+      .put(`${this.apiEndPoint}/events/${eventId}/processStatus/${status}`, {}, options)
+      .pipe(
+        catchError((error) => {
+          console.error("Error in checkInUser:", error);
+          return throwError(error);
+        })
+      );
+  }
   
 }

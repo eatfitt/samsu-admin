@@ -34,7 +34,7 @@ export class SingleEventComponent {
     // 20s gọi 1 lần
 
     this.mySubscription = interval(20000).subscribe((x =>{
-      // this.fetchData();
+      this.fetchData();
     }));
     this.fetchData();
   }

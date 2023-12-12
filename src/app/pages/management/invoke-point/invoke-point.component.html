@@ -5,8 +5,10 @@
             size="small">
             <nb-option [value]="-1">All</nb-option>
             <nb-option [value]="0">Processing</nb-option>
-            <nb-option [value]="1">Approved</nb-option>
-            <nb-option [value]="2">Rejected</nb-option>
+            <nb-option [value]="1">Guarantee Approved</nb-option>
+            <nb-option [value]="2">Guarantee Rejected</nb-option>
+            <nb-option [value]="3">Approved</nb-option>
+            <nb-option [value]="4">Rejected</nb-option>
         </nb-select>
     </nb-card-header>
     <nb-card-body>
@@ -94,26 +96,27 @@
                     </div>
                 </div>
                 <div class="col-md-7">
-                    <ng-container *ngIf="selectedGradeTicket?.status === 0; else resolvedTicketTemplate">
-                        <nb-select [disabled]="selectedGradeTicket?.status !== 0" [(selected)]="statusForSelectedGradeTicket"
+                    <ng-container>
+                        <nb-select [(selected)]="statusForSelectedGradeTicket"
                             size="small" class="d-block w-50 mb-2" filled="true"
-                            [status]="statusForSelectedGradeTicket === 0 ? 'basic' : statusForSelectedGradeTicket === 1 ? 'success' : 'danger'">
+                            [status]="statusForSelectedGradeTicket === 0 ? 'basic' : statusForSelectedGradeTicket === 1 || statusForSelectedGradeTicket === 2 ? 'warning' : statusForSelectedGradeTicket === 3 ? 'success': 'danger'">
                             <nb-option [value]="0">Processing</nb-option>
-                            <nb-option [value]="1">Approve</nb-option>
-                            <nb-option [value]="2">Reject</nb-option>
+                            <nb-option disabled [value]="1">Guarantee Approved</nb-option>
+                            <nb-option disabled [value]="2">Guarantee Reject</nb-option>
+                            <nb-option [disabled]="selectedGradeTicket?.status === 0" [value]="3">Approved</nb-option>
+                            <nb-option [disabled]="selectedGradeTicket?.status === 0" [value]="4">Reject</nb-option>
                         </nb-select>
                         <div class="label mt-3 mb-1">Criteria</div>
                         <ngx-custom-autoselect
                             [fieldSize]="'small'"
                             [arr]="gradeSubCriterias"
                             [property]="'content'"
-                            [disabled]="selectedGradeTicket?.status !== 0"
                             (selectItem)="selectSubCriteriaId($event)"
                         ></ngx-custom-autoselect>
                         <div class="label mt-3 mb-1">Score</div>
-                        <input [disabled]="selectedGradeTicket?.status !== 0" type="number" min="0" nbInput fullWidth [(ngModel)]="scoreForSelectedGradeTicket" fieldSize="small">
+                        <input type="number" min="0" nbInput fullWidth [(ngModel)]="scoreForSelectedGradeTicket" fieldSize="small">
                         <div class="label mt-3 mb-1">Feedback</div>
-                        <textarea [disabled]="selectedGradeTicket?.status !== 0" [(ngModel)]="feedbackForSelectedGradeTicket" rows="5" nbInput fullWidth fieldSize="small" placeholder="Feedback..."></textarea>
+                        <textarea [(ngModel)]="feedbackForSelectedGradeTicket" rows="5" nbInput fullWidth fieldSize="small" placeholder="Feedback..."></textarea>
                     </ng-container>
                     <ng-template #resolvedTicketTemplate>
                         <nb-tag [text]="selectedGradeTicket?.status === 1 ? 'Approved' : 'Rejected'"
