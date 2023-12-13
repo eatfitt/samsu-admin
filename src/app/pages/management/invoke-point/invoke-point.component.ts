@@ -28,6 +28,7 @@ export class InvokePointComponent {
   feedbackForSelectedGradeTicket = ''
   statusForSelectedGradeTicket = 0;
   gradeSubCriteriaIdForSelectedGradeTicket = 0;
+  gradeSubCriteriaForSelectedGradeTicket: GradeSubCriteria = null;
   scoreForSelectedGradeTicket = 0;
 
 
@@ -130,6 +131,7 @@ export class InvokePointComponent {
 
   selectSubCriteriaId(event: GradeSubCriteria) {
     this.gradeSubCriteriaIdForSelectedGradeTicket = event.id;
+    this.gradeSubCriteriaForSelectedGradeTicket = event;
   }
 
   resetResolveFields() {
@@ -143,5 +145,13 @@ export class InvokePointComponent {
   filterByStatus(arr: GradeTicket[]): GradeTicket[] {
     if (this.statusToFilter === -1) return arr;
     return arr.filter(ticket => ticket.status === this.statusToFilter);
+  }
+
+  checkRange(event: KeyboardEvent) {
+    let input = event.target as HTMLInputElement;
+    let value = Number(input.value + event.key);
+    if (value > this.gradeSubCriteriaForSelectedGradeTicket.maxScore || value < this.gradeSubCriteriaForSelectedGradeTicket.minScore) {
+        event.preventDefault();
+    }
   }
 }

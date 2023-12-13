@@ -118,19 +118,19 @@
         <nb-card-header>Add Policy</nb-card-header>
         <nb-card-body>
             <div class="label mb-1">Name</div>
-            <input nbInput fullWidth [(ngModel)]="gradeCriteriaContent" >
+            <input nbInput fullWidth [(ngModel)]="policyName" >
             <label for="bannerImg" class="label">Attachments</label><br>
             <div class="input-group">
                 <div class="custom-file">
                     <input id="bannerImg" type="file" class="custom-file-input" 
-                        aria-describedby="inputGroupFileAddon01" [(ngModel)]="bannerUrl" (change)="onFileChange($event, 'banner')">
-                    <label class="custom-file-label" for="inputGroupFile01">{{ banner ? banner.name : 'Choose image' }}</label>
+                        aria-describedby="inputGroupFileAddon01" (change)="onFileChange($event, 'banner')">
+                    <label class="custom-file-label" for="inputGroupFile01">{{ file ? file.name : 'Choose file' }}</label>
                     <img *ngIf="imageSrc" [src]="imageSrc">
                 </div>
             </div>
         </nb-card-body>
         <nb-card-footer>
-            <button nbButton (click)="createGradeCriteria()">Create</button>
+            <button nbButton (click)="createPolicy()">Create</button>
         </nb-card-footer>
     </nb-card>
 </ng-template>

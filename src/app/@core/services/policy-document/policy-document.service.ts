@@ -8,7 +8,7 @@ import { environment } from '../../../../environments/environment';
 export interface PolicyDocument {
   name: string;
   fileUrls: string;
-  id: number;
+  id?: number;
 }
 @Injectable({
   providedIn: 'root'

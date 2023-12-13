@@ -1,10 +1,11 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { NbDialogRef, NbDialogService, NbIconLibraries, NbMenuService } from '@nebular/theme';
+import { NbDialogRef, NbDialogService, NbIconLibraries, NbMenuService, NbToastrService } from '@nebular/theme';
 import { UserService } from '../../../@core/services/user/user.service';
 import { PolicyDocument, PolicyDocumentService } from '../../../@core/services/policy-document/policy-document.service';
 import { GradeCriteria, GradeCriteriaService } from '../../../@core/services/grade-criateria/grade-criteria.service';
 import { GradeSubCriteria, GradeSubCriteriaService } from '../../../@core/services/grade-sub-criteria/grade-sub-criteria.service';
 import { Subscription, combineLatest, map } from 'rxjs';
+import { FileUploadService } from '../../../../services/file-upload.service';
 
 @Component({
   selector: 'ngx-grades',
@@ -41,6 +42,11 @@ export class GradesComponent {
   minScore: number;
   maxScore: number;
 
+  // Policy document
+  policyName: string;
+  file: File;
+  fileUrls: string;
+
 
   constructor(
     iconsLibrary: NbIconLibraries,
@@ -50,6 +56,8 @@ export class GradesComponent {
     private gradeCritService: GradeCriteriaService,
     private gradeSubCritService: GradeSubCriteriaService,
     private menuService: NbMenuService,
+    private uploadService: FileUploadService,
+    private toastrService: NbToastrService,
   ) {
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
     this.menu = this.menuService.onItemClick().subscribe((event) => {
@@ -114,5 +122,35 @@ export class GradesComponent {
 
   createGradeCriteria() {
 
+  }
+
+  onFileChange(data) {
+    this.file = data.target.files[0];
+  }
+
+  createPolicy() {
+    this.uploadService.uploadFile(this.file).subscribe(
+      (url) => {
+        console.log("File uploaded successfully. URL:", url);
+        this.fileUrls = url;
+        this.policyService.createPolicyDocument({
+          name: this.policyName,
+          fileUrls: this.fileUrls
+        }).subscribe(
+          (success) => {
+            this.toastrService.show("Policy document created successfully", "Success", {
+              status: "success",
+            });
+            this.contentTemplateRef.close();
+          },
+          (error) => {
+            this.toastrService.show("Try again", "Failed", { status: "danger" });
+          }
+        )
+      },
+      (error) => {
+        console.error("File upload failed:", error);
+      }
+    );
   }
 }

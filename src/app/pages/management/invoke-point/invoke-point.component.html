@@ -114,7 +114,14 @@
                             (selectItem)="selectSubCriteriaId($event)"
                         ></ngx-custom-autoselect>
                         <div class="label mt-3 mb-1">Score</div>
-                        <input type="number" min="0" nbInput fullWidth [(ngModel)]="scoreForSelectedGradeTicket" fieldSize="small">
+                        <nb-form-field class="w-100">
+                            <input type="number"
+                                [min]="gradeSubCriteriaForSelectedGradeTicket?.minScore"
+                                [max]="gradeSubCriteriaForSelectedGradeTicket?.maxScore" (keydown)="checkRange($event)"
+                                nbInput [(ngModel)]="scoreForSelectedGradeTicket" fieldSize="small" fullWidth>
+                            <span nbSuffix>({{ gradeSubCriteriaForSelectedGradeTicket?.minScore }} - {{
+                                gradeSubCriteriaForSelectedGradeTicket?.maxScore }})</span>
+                        </nb-form-field>
                         <div class="label mt-3 mb-1">Feedback</div>
                         <textarea [(ngModel)]="feedbackForSelectedGradeTicket" rows="5" nbInput fullWidth fieldSize="small" placeholder="Feedback..."></textarea>
                     </ng-container>
@@ -133,7 +140,7 @@
         </nb-card-body>
         <nb-card-footer class="justify-content-between d-flex">
             <button nbButton size="small" status="danger" (click)="ref.close()">Close</button>
-            <button *ngIf="selectedGradeTicket?.status === 0" nbButton size="small" status="primary" (click)="resolveTicket()">Resolve</button>
+            <button *ngIf="selectedGradeTicket?.status !== 3 || selectedGradeTicket?.status !== 4" nbButton size="small" status="primary" (click)="resolveTicket()">Resolve</button>
         </nb-card-footer>
     </nb-card>
 </ng-template>
