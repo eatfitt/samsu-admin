@@ -133,7 +133,7 @@ export class AddEventComponent implements OnInit {
       gradeSubCriteriaId: 1,
       gradeSubCriteria: null,
       assignees: [],
-      deadline: { ...this.startTime }
+      deadline: this.startTime
     }
   ];
 
@@ -217,20 +217,24 @@ export class AddEventComponent implements OnInit {
   }
 
   uploadFile(eventFileUrl: File, fileUrl: string) {
-    this.uploadService.uploadFile(eventFileUrl).subscribe(
-      (url) => {
-        console.log("File uploaded successfully. URL:", url);
-        // Do something with the URL, such as updating the event object
-        this[fileUrl] = url;
-        this.createEventReview();
-        this.aFileUploaded$.next(url);
-      },
-      (error) => {
-        console.error("File upload failed:", error);
-        this.aFileUploaded$.error(error);
-        // Handle error appropriately
-      }
-    );
+    if (!this[fileUrl].includes('digitaloceanspaces')) {
+      this.uploadService.uploadFile(eventFileUrl).subscribe(
+        (url) => {
+          console.log("File uploaded successfully. URL:", url);
+          // Do something with the URL, such as updating the event object
+          this[fileUrl] = url;
+          this.createEventReview();
+          this.aFileUploaded$.next(url);
+        },
+        (error) => {
+          console.error("File upload failed:", error);
+          this.aFileUploaded$.error(error);
+          this.createEventReview();
+          // Handle error appropriately
+        }
+      );
+    }
+    
   }
 
   createEventReview() {
@@ -241,8 +245,8 @@ export class AddEventComponent implements OnInit {
       status: Number(this.status),
       startTime: this.startTime,
       duration: Number(this.duration),
-      bannerUrl: this.bannerUrl,
-      fileUrls: this.fileUrls,
+      bannerUrl: this.bannerUrl ?? 'https://sgp1.digitaloceanspaces.com/samsu/assets/d66741de-93fc-4ca7-a393-2e75830fe34e_fpt-edu-got-talent-2023-820x1024.jpeg',
+      fileUrls: this.fileUrls ?? 'https://sgp1.digitaloceanspaces.com/samsu/assets/b94705b8-9392-4b90-8eeb-a78004fddb22_samsu_event_attachment.xlsx',
       participants: this.attendanceList,
       attendScore: Number(this.attendScore),
       creator: null,
@@ -297,7 +301,7 @@ export class AddEventComponent implements OnInit {
     this.proposalId = event.id;
   }
 
-  review() {
+  uploadBannerAndAttachment() {
     this.uploadFile(this.banner, "bannerUrl");
     this.uploadFile(this.file, "fileUrls");
   }
@@ -437,5 +441,13 @@ export class AddEventComponent implements OnInit {
 
   openDialog(dialog) {
     this.contentTemplateRef = this.dialogService.open(dialog);
+  }
+
+  checkRange(event: KeyboardEvent) {
+    let input = event.target as HTMLInputElement;
+    let value = Number(input.value + event.key);
+    if (value > this.selectedSubGradeCriteria.maxScore || value < this.selectedSubGradeCriteria.minScore) {
+        event.preventDefault();
+    }
   }
 }

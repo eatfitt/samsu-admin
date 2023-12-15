@@ -3,7 +3,7 @@
         <div>Grade Criteria</div>
         <button class="btn" [nbContextMenu]="gradeMenuItems">
             <nb-icon icon="more-vertical"></nb-icon>
-          </button>
+        </button>
     </nb-card-header>
     <nb-card-body>
         <div class="row">
@@ -18,12 +18,11 @@
         </div>
     </nb-card-body>
 </nb-card>
-
 <!-- GRADE CRITERIA -->
 <!-- TODO: CHO CASI MUI TEN -->
 <ng-template #gradeCriteriaList let-gradeCriterias="gradeCriterias">
-    <div class="font-weight-bold mb-1">Grade Criteria</div>
-    <input nbInput fullWidth (keyup)="filterGradeCriteria($event)">
+    <input nbInput fullWidth (keyup)="filterGradeCriteria($event)"
+        placeholder="Search Grade Criteria" size="small">
     <!-- <nb-list>
         <nb-list-item class="item small" *ngFor="let gradeCriteria of gradeCriterias">
             {{ gradeCriteria.content }}
@@ -31,24 +30,67 @@
     </nb-list> -->
     <nb-accordion multi class="mt-3">
         <nb-accordion-item *ngFor="let gradeCriteria of gradeCriterias">
-            <nb-accordion-item-header>{{ gradeCriteria.gradeCriteria.content }}</nb-accordion-item-header>
+            <nb-accordion-item-header>{{ gradeCriteria.gradeCriteria.content
+                }}</nb-accordion-item-header>
             <nb-accordion-item-body class="small">
-                <div class="row">
-                    <div class="col-md-4 font-weight-bold">Policy</div>
-                    <a target="_blank" [href]="gradeCriteria.policyDocument.fileUrls" class="col-md-8">{{ gradeCriteria.policyDocument.name }}</a>
+                <div class="py-3 row"
+                    style="background-color: var(--accordion-header-border-color);">
+                    <div class="col-12">
+                        <div class="font-weight-bold mr-2">Policy</div>
+                        <div class="d-flex">
+                            <a class="mr-2" target="_blank"
+                                [href]="gradeCriteria.policyDocument.fileUrls">{{
+                                gradeCriteria.policyDocument.name }}</a>
+                            <nb-icon icon="sync"
+                                (click)="openDialog(changePolicyDialog, gradeCriteria)"></nb-icon>
+                        </div>
+                    </div>
+                </div>
+                <div class="py-3 row border-top"
+                    style="background-color: var(--accordion-header-border-color);">
+                    <div class="col-md-6 d-flex">
+                        <div class="font-weight-bold mr-2">Default Score</div>
+                        <div class="">{{ gradeCriteria.gradeCriteria.defaultScore }}</div>
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-between">
+                        <div class="d-flex">
+                            <div class="font-weight-bold mr-2">Max Score</div>
+                            <div class="">{{ gradeCriteria.gradeCriteria.maxScore }}</div>
+                        </div>
+                        <nb-icon icon="edit-2-outline"
+                            (click)="openDialog(changeGradeCriteria, gradeCriteria)"></nb-icon>
+                    </div>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-md-4 font-weight-bold">Sub criteria</div>
-                    <div class="col-md-8">
-                        <div *ngFor="let sub of gradeCriteria.gradeSubCriterias">{{ sub.content }}</div>
+                    <div class="col-12">
+                        <div class="font-weight-bold">Sub criteria</div>
                         <div *ngIf="gradeCriteria.gradeSubCriterias?.length === 0">N/A</div>
+                        <nb-list *ngIf="gradeCriteria.gradeSubCriterias?.length > 0">
+                            <nb-list-item class="item px-0">
+                                <span>Content</span>
+                                <span>Min Score</span>
+                                <span>Max Score</span>
+                                <span></span>
+                            </nb-list-item>
+                            <nb-list-item class="item px-0"
+                                *ngFor="let sub of gradeCriteria.gradeSubCriterias">
+                                <span>{{ sub.content }}</span>
+                                <span>{{ sub.minScore }}</span>
+                                <span>{{ sub.maxScore }}</span>
+                                <span>
+                                    <nb-icon class="mr-2" icon="trash-2-outline"
+                                        (click)="openDialog(changePolicyDialog, sub)"></nb-icon>
+                                    <nb-icon icon="edit-2-outline"
+                                        (click)="openDialog(updateSubGradeDialog, sub)"></nb-icon>
+                                </span>
+                            </nb-list-item>
+                        </nb-list>
                     </div>
                 </div>
             </nb-accordion-item-body>
         </nb-accordion-item>
     </nb-accordion>
 </ng-template>
-
 <!-- GRADE SUB CRITERIA -->
 <ng-template #gradeSubCriteriaList let-gradeSubCriterias="gradeSubCriterias">
     <div class="font-weight-bold mb-1">Sub Grade Criteria</div>
@@ -66,71 +108,122 @@
         </nb-list-item>
     </nb-list>
 </ng-template>
-
 <ng-template #addGradeCriteriaDialog>
     <nb-card style="width: 30rem;">
         <nb-card-header>Add Grade Criteria</nb-card-header>
         <nb-card-body>
             <div class="label mb-1">Content</div>
-            <input nbInput fullWidth [(ngModel)]="gradeCriteriaContent" >
+            <input nbInput fullWidth [(ngModel)]="gradeCriteriaContent">
             <div class="mt-3 label mb-1">Policy</div>
-            <ngx-custom-autoselect
-                [arr]="policyDocuments" [placeholder]="'Policy'"
+            <ngx-custom-autoselect [arr]="policyDocuments" [placeholder]="'Policy'"
                 [property]="'name'"
-                (selectItem)="setPolicyDocuments($event)"
-            ></ngx-custom-autoselect>
+                (selectItem)="setPolicyDocuments($event)"></ngx-custom-autoselect>
             <div class="mt-3 label mb-1">Default Score</div>
-            <input [(ngModel)]="defaultScore" nbInput fullWidth type="number" min="0" onkeydown="return event.key !== '-'">
+            <input [(ngModel)]="defaultScore" nbInput fullWidth type="number" min="0"
+                onkeydown="return event.key !== '-'">
             <div class="mt-3 label mb-1">Max Score</div>
-            <input [(ngModel)]="gradeCriteriaMaxScore" nbInput fullWidth type="number" min="0" onkeydown="return event.key !== '-'">
+            <input [(ngModel)]="gradeCriteriaMaxScore" nbInput fullWidth type="number" min="0"
+                onkeydown="return event.key !== '-'">
         </nb-card-body>
         <nb-card-footer>
             <button nbButton (click)="createGradeCriteria()">Create</button>
         </nb-card-footer>
     </nb-card>
 </ng-template>
-
 <ng-template #addSubGradeCriteriaDialog>
     <nb-card style="width: 30rem;">
         <nb-card-header>Add Sub Grade Criteria</nb-card-header>
         <nb-card-body>
             <div class="label mb-1">Content</div>
-            <input nbInput fullWidth [(ngModel)]="gradeCriteriaContent" >
+            <input nbInput fullWidth [(ngModel)]="subGradeCriteriaContent">
             <div class="mt-3 label mb-1">Grade criteria</div>
-            <ngx-custom-autoselect
-                [arr]="gradeCriterias" [placeholder]="'Policy'"
+            <ngx-custom-autoselect [arr]="gradeCriterias" [placeholder]="'Policy'"
                 [property]="'content'"
-                (selectItem)="setPolicyDocuments($event)"
-            ></ngx-custom-autoselect>
+                (selectItem)="setGradeCriteria($event)"></ngx-custom-autoselect>
             <div class="mt-3 label mb-1">Min Score</div>
-            <input [(ngModel)]="minScore" nbInput fullWidth type="number" min="0" onkeydown="return event.key !== '-'">
+            <input [(ngModel)]="minScore" nbInput fullWidth type="number" min="0"
+                onkeydown="return event.key !== '-'">
             <div class="mt-3 label mb-1">Max Score</div>
-            <input [(ngModel)]="maxScore" nbInput fullWidth type="number" min="0" onkeydown="return event.key !== '-'">
+            <input [(ngModel)]="maxScore" nbInput fullWidth type="number" min="0"
+                onkeydown="return event.key !== '-'">
         </nb-card-body>
         <nb-card-footer>
-            <button nbButton (click)="createGradeCriteria()">Create</button>
+            <button nbButton (click)="createSubGradeCriteria()">Create</button>
         </nb-card-footer>
     </nb-card>
 </ng-template>
-
 <ng-template #addPolicyDialog>
     <nb-card style="width: 30rem;">
         <nb-card-header>Add Policy</nb-card-header>
         <nb-card-body>
             <div class="label mb-1">Name</div>
-            <input nbInput fullWidth [(ngModel)]="policyName" >
+            <input nbInput fullWidth [(ngModel)]="policyName">
             <label for="bannerImg" class="label">Attachments</label><br>
             <div class="input-group">
                 <div class="custom-file">
-                    <input id="bannerImg" type="file" class="custom-file-input" 
-                        aria-describedby="inputGroupFileAddon01" (change)="onFileChange($event, 'banner')">
-                    <label class="custom-file-label" for="inputGroupFile01">{{ file ? file.name : 'Choose file' }}</label>
+                    <input id="bannerImg" type="file" class="custom-file-input"
+                        aria-describedby="inputGroupFileAddon01"
+                        (change)="onFileChange($event, 'banner')">
+                    <label class="custom-file-label" for="inputGroupFile01">{{ file ? file.name :
+                        'Choose file' }}</label>
                     <img *ngIf="imageSrc" [src]="imageSrc">
                 </div>
             </div>
         </nb-card-body>
         <nb-card-footer>
             <button nbButton (click)="createPolicy()">Create</button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>
+<ng-template #changePolicyDialog let-gradeCriteria>
+    <nb-card style="width: 30rem;">
+        <nb-card-header>Update Grade Criteria Policy</nb-card-header>
+        <nb-card-body>
+            <div class="mt-3 label mb-1">Policy</div>
+            <ngx-custom-autoselect [defaultValue]="gradeCriteria.policyDocument.name"
+                [arr]="policyDocuments" [placeholder]="'Policy'" [property]="'name'"
+                (selectItem)="setPolicyDocuments($event)"></ngx-custom-autoselect>
+        </nb-card-body>
+        <nb-card-footer>
+            <button nbButton (click)="updateGradeCrit(gradeCriteria)">Update</button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>
+<ng-template #changeGradeCriteria let-gradeCriteria>
+    <nb-card style="width: 30rem;">
+        <nb-card-header>Update Grade Criteria</nb-card-header>
+        <nb-card-body>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="label mb-1">Default Score</label>
+                    <input type="number" onkeydown="return event.key !== '-'"  nbInput size="small" [(ngModel)]="gradeCriteria.gradeCriteria.defaultScore">
+                </div>
+                <div class="col-md-6">
+                    <label class="label mb-1">Max Score</label>
+                    <input type="number" onkeydown="return event.key !== '-'"  nbInput size="small" [(ngModel)]="gradeCriteria.gradeCriteria.maxScore">
+                </div>
+            </div>
+        </nb-card-body>
+        <nb-card-footer>
+            <button nbButton (click)="updateGradeCrit(gradeCriteria)">Update</button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>
+<ng-template #updateSubGradeDialog let-sub>
+    <nb-card style="width: 30rem;">
+        <nb-card-header>Update Sub Grade Criteria</nb-card-header>
+        <nb-card-body>
+            <div class="label mb-1">Content</div>
+            <input [defaultValue]="sub.content" nbInput fullWidth [(ngModel)]="sub.content">
+            <div class="mt-3 label mb-1">Min Score</div>
+            <input [defaultValue]="sub.minScore" [(ngModel)]="sub.minScore" nbInput fullWidth
+                type="number" min="0" onkeydown="return event.key !== '-'">
+            <div class="mt-3 label mb-1">Max Score</div>
+            <input [defaultValue]="sub.maxScore" [(ngModel)]="sub.maxScore" nbInput fullWidth
+                type="number" min="0" onkeydown="return event.key !== '-'">
+        </nb-card-body>
+        <nb-card-footer>
+            <button nbButton (click)="editSubGradeCrit(sub)">Update</button>
         </nb-card-footer>
     </nb-card>
 </ng-template>

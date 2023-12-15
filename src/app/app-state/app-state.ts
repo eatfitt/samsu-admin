@@ -1,11 +1,14 @@
+import { SemesterState, semesterReducer } from "./semester";
 import { UserState, userReducer } from "./user";
 
 export interface AppState {
     user: UserState;
+    semesters: SemesterState;
 }
 
 export const appReducer = {
-    user: userReducer
+    user: userReducer,
+    semesters: semesterReducer,
 }
 
 // const initialState: AppState = {

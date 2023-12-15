@@ -95,7 +95,7 @@ export class EventComponent {
             })
           }
         }),
-        feedbackQuestions: this.feedback ?? this.event.feedbackQuestions
+        feedbackQuestions: this.feedback ?? this.event?.feedbackQuestions
       };
       this.filteredParticipantList = this.participants;
       this.getDuration();

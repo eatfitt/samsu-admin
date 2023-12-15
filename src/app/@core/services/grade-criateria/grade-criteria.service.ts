@@ -6,9 +6,11 @@ import { throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 export interface GradeCriteria {
-  id: number;
+  id?: number;
   content: string;
   policyDocumentId: number;
+  defaultScore: number;
+  maxScore: number;
 }
 @Injectable({
   providedIn: 'root'
@@ -29,10 +31,19 @@ export class GradeCriteriaService {
     );
   }
 
-  public createGradeCriteria(name: string) {
-    return this.http.post(`${this.apiEndPoint}/departments`, name).pipe(
+  public createGradeCriteria(criteria: GradeCriteria) {
+    return this.http.post(`${this.apiEndPoint}/gradeCriterias`, criteria).pipe(
       catchError((error) => {
         console.error("Error in createGradeCriteria:", error);
+        return throwError(error);
+      })
+    );
+  }
+
+  public updateGradeCriteria(id: number, criteria: GradeCriteria) {
+    return this.http.put(`${this.apiEndPoint}/gradeCriterias/${id}`, criteria).pipe(
+      catchError((error) => {
+        console.error("Error in updateGradeCriteria:", error);
         return throwError(error);
       })
     );

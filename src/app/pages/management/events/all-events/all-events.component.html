@@ -10,74 +10,12 @@
                 </div>
             </nb-card-header>
             <nb-card-body>
-                <!-- <nb-tabset>
-                    <nb-tab tabTitle="List" class="p-0"> -->
-                        <ng-container [ngTemplateOutlet]="listView"
-                            [ngTemplateOutletContext]="{events: filteredEvents}"></ng-container>
-                    <!-- </nb-tab>
-                    <nb-tab tabTitle="Grid"> -->
-                        <!-- <ng-container [ngTemplateOutlet]="gridView"
-                            [ngTemplateOutletContext]="{events: mockEvents}"></ng-container> -->
-                    <!-- </nb-tab>
-                </nb-tabset> -->
+                <ng-container [ngTemplateOutlet]="listView"
+                    [ngTemplateOutletContext]="{events: filteredEvents}"></ng-container>
             </nb-card-body>
         </nb-card>
     </div>
-    <!-- <div class="col-md-3">
-        <nb-card>
-            <nb-card-header>
-                <div class="d-flex justify-content-between align-items-baseline">
-                    <div>Statistic</div>
-                    <nb-select [(selected)]="selectedStatisticTime">
-                        <nb-option value="week">Week</nb-option>
-                        <nb-option value="month">Month</nb-option>
-                        <nb-option value="year">Year</nb-option>
-                    </nb-select>
-                </div>
-            </nb-card-header>
-            <nb-card-body>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="label">Events</div>
-                        <div class="h4 text-primary">15</div>
-                    </div>
-                    <div class="col-6">
-                        <div class="label">Attendees</div>
-                        <div class="h4 text-primary">300</div>
-                    </div>
-                </div>
-            </nb-card-body>
-        </nb-card>
-        <nb-card>
-            <nb-card-header>Filter</nb-card-header>
-            <nb-card-body>
-                <label for="title" class="label">Title</label>
-                <input type="text" [(ngModel)]="filterValue.title" nbInput fullWidth id="title" placeholder="Title" class="mb-2">
-                <div class="d-flex justify-content-between">
-                    <button class="btn btn-outline-primary" (click)="filter()">Filter</button>
-                    <button class="btn btn-outline-info" (click)="filteredEvents = events">Reset</button>
-                </div>
-            </nb-card-body>
-        </nb-card>
-    </div> -->
 </div>
-<!-- <ng-template #gridView let-events="events">
-    <div class="row">
-        <div class="col-lg-4 col-md-6" *ngFor="let event of events">
-            <nb-card>
-                <nb-card-header class="banner-url px-3"
-                    [ngStyle]="{'background-image': 'url(' + event.bannerUrls + ')'}">
-                    <nb-tag [text]="event.status" class="float-right"></nb-tag>
-                </nb-card-header>
-                <nb-card-body>
-                    <h6>{{ event.title }}</h6>
-                    <div>{{ event.startTime | date:"MMM dd yyyy, hh:mm a" }}</div>
-                    <div>{{ event.attendances }} people are going</div>
-                </nb-card-body>
-            </nb-card>
-        </div>
-    </div>
-</ng-template> -->
 
 <ng-template #listView let-events="events">
     <nb-list>
@@ -96,12 +34,12 @@
             <span>{{ event.creator.name }}</span>
             <span>{{ event.eventLeader?.name }}</span>
             <span>
-                <!-- <nb-tag status="primary" appearance="filled" [text]="event.status" size="tiny"></nb-tag> -->
-                <nb-select [(selected)]="event.status" size="tiny" class="type-select"  filled="true" [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
+                <nb-tag [status]="event.status === 1 ? 'success' : 'warning'" appearance="outline" [text]="event.status === 1 ? 'Public' : 'Non Public'" size="tiny"></nb-tag>
+                <!-- <nb-select [(selected)]="event.status" size="tiny" class="type-select"  filled="true" [status]="event.status === 1 ? 'success' : 'warning' ">
                     <nb-option [value]="0">Un Public</nb-option>
                     <nb-option [value]="1">Public</nb-option>
-                    <nb-option [value]="2">Draft</nb-option>
-                </nb-select>
+                    <nb-option [value]="2">Un Public</nb-option>
+                </nb-select> -->
             </span>
             <span>{{ event.startTime | date }}</span>
             <span>{{ event.attendScore }}</span>

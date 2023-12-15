@@ -100,7 +100,7 @@ export class TaskDetailComponent {
     this.existingUser$.subscribe(
         (success: any) => {
           if (success !== undefined) {
-            this.task.assignees = [...this.task.assignees, success];
+            this.task.assignees = [...this.task.assignees, {...success, status: 0}];
             this.toastrService.show(`User: ${success.name}`, "User found", {
               status: "success",
             });

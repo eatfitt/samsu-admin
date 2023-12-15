@@ -29,7 +29,7 @@ export interface StudentGrade {
   }
 }
 export interface GradeSubCriteriaResponse {
-  id: number;
+  id?: number;
   content: string;
   minScore: number;
   maxScore: number;

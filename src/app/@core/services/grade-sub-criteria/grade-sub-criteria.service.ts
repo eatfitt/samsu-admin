@@ -6,7 +6,7 @@ import { throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 export interface GradeSubCriteria {
-  id: number;
+  id?: number;
   content: string;
   minScore: number;
   maxScore: number;
@@ -31,10 +31,19 @@ export class GradeSubCriteriaService {
     );
   }
 
-  public createGradeSubCriteria(name: string) {
-    return this.http.post(`${this.apiEndPoint}/departments`, name).pipe(
+  public createSubGradeCriteria(subCriteria: GradeSubCriteria) {
+    return this.http.post(`${this.apiEndPoint}/gradeSubCriterias`, subCriteria).pipe(
       catchError((error) => {
-        console.error("Error in createGradeSubCriteria:", error);
+        console.error("Error in createGradeCriteria:", error);
+        return throwError(error);
+      })
+    );
+  }
+
+  public updateSubGradeCriteria(id: number, criteria: GradeSubCriteria) {
+    return this.http.put(`${this.apiEndPoint}/gradeSubCriterias/${id}`, criteria).pipe(
+      catchError((error) => {
+        console.error("Error in updateSubGradeCriteria:", error);
         return throwError(error);
       })
     );

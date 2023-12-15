@@ -68,8 +68,8 @@
                                             icon="file-text" pack="eva" class="w-50 h-50"></nb-icon>
                                     </nb-card-header>
                                     <nb-card-body class="p-2">
-                                        <div class="text-truncate small">{{ eventToEdit.fileUrls }}
-                                        </div>
+                                        <a class="text-truncate small" [href]="eventToEdit.fileUrls">{{ eventToEdit.fileUrls }}
+                                        </a>
                                     </nb-card-body>
                                 </nb-card>
                             </div>
@@ -179,7 +179,6 @@
                         [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
                         <nb-option [value]="0">Non public</nb-option>
                         <nb-option [value]="1">Public</nb-option>
-                        <nb-option [value]="2">Draft</nb-option>
                     </nb-select>
                     <label class="label">Process</label>
                     <nb-select [(selected)]="eventToEdit.processStatus" (selectedChange)="updateEventStatus()"

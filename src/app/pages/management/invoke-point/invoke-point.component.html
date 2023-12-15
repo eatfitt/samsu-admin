@@ -29,7 +29,7 @@
                 <span>{{ gradeTicket.creator?.name }}</span>
                 <span>{{ gradeTicket.accepter?.name ?? 'N/A' }}</span>
                 <span>
-                    <nb-tag [text]="getStatusText(gradeTicket?.status)"
+                    <nb-tag class="text-center" [text]="getStatusText(gradeTicket?.status)"
                         [status]="getStatusColor(gradeTicket?.status)" size="tiny"></nb-tag>
                 </span>
                 <span class="d-flex justify-content-center">{{ gradeTicket.score ?? 'N/A' }}</span>

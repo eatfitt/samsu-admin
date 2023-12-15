@@ -19,6 +19,12 @@ export class GradesComponent {
   addGradeCriteriaDialog: TemplateRef<any>;
   @ViewChild("addSubGradeCriteriaDialog", { static: true })
   addSubGradeCriteriaDialog: TemplateRef<any>;
+  @ViewChild("changePolicyDialog", { static: true })
+  changePolicyDialog: TemplateRef<any>;
+  @ViewChild("updateSubGradeDialog", { static: true })
+  updateSubGradeDialog: TemplateRef<any>;
+  @ViewChild("changeGradeCriteria", { static: true })
+  changeGradeCriteria: TemplateRef<any>;
 
   private contentTemplateRef: NbDialogRef<GradesComponent>;
   policyDocuments: PolicyDocument[] = [];
@@ -112,16 +118,59 @@ export class GradesComponent {
     this.filteredGradeSubCriterias = this.gradeSubCriterias.filter(item => item.content.toLowerCase().includes(event.target.value.toLowerCase()));
   }
 
-  openDialog(dialog) {
-    this.contentTemplateRef = this.dialogService.open(dialog);
+  openDialog(dialog,  data?) {
+    console.log(data);
+    this.contentTemplateRef = this.dialogService.open(dialog,{ context: data });
   }
 
   setPolicyDocuments(event: PolicyDocument) {
     this.policyDocumentId = event.id;
   }
 
-  createGradeCriteria() {
+  setGradeCriteria(event: GradeCriteria) {
+    this.gradeCriteriaId = event.id;
+  }
 
+  createGradeCriteria() {
+    const payload: GradeCriteria = {
+      content: this.gradeCriteriaContent,
+      policyDocumentId: this.policyDocumentId,
+      defaultScore: this.defaultScore,
+      maxScore: this.gradeCriteriaMaxScore,
+    }
+    this.gradeCritService.createGradeCriteria(payload).subscribe(
+      (success) => {
+        this.toastrService.show("Grade criteria created successfully", "Success", {
+          status: "success",
+        });
+        this.contentTemplateRef.close();
+        this.fetchData();
+      },
+      (error) => {
+        this.toastrService.show("Try again", "Failed", { status: "danger" });
+      }
+    )
+  }
+
+  createSubGradeCriteria() {
+    const payload: GradeSubCriteria = {
+      content: this.subGradeCriteriaContent,
+      gradeCriteriaId: this.gradeCriteriaId,
+      minScore: this.minScore,
+      maxScore: this.maxScore,
+    }
+    this.gradeSubCritService.createSubGradeCriteria(payload).subscribe(
+      (success) => {
+        this.toastrService.show("Sub Grade Criteria created successfully", "Success", {
+          status: "success",
+        });
+        this.contentTemplateRef.close();
+        this.fetchData();
+      },
+      (error) => {
+        this.toastrService.show("Try again", "Failed", { status: "danger" });
+      }
+    )
   }
 
   onFileChange(data) {
@@ -142,6 +191,7 @@ export class GradesComponent {
               status: "success",
             });
             this.contentTemplateRef.close();
+            this.fetchData();
           },
           (error) => {
             this.toastrService.show("Try again", "Failed", { status: "danger" });
@@ -152,5 +202,46 @@ export class GradesComponent {
         console.error("File upload failed:", error);
       }
     );
+  }
+
+  updateGradeCrit(gradeCriteria) {
+    this.gradeCritService.updateGradeCriteria(gradeCriteria.gradeCriteria.id, {
+      ...gradeCriteria.gradeCriteria,
+      policyDocumentId: this.policyDocumentId ?? gradeCriteria.gradeCriteria.policyDocumentId,
+    }).subscribe(
+      (success) => {
+        this.toastrService.show("Policy document created successfully", "Success", {
+          status: "success",
+        });
+        this.contentTemplateRef.close();
+        this.fetchData();
+        this.policyDocumentId = null;
+      },
+      (error) => {
+        this.policyDocumentId = null;
+        this.toastrService.show("Try again", "Failed", { status: "danger" });
+      }
+    )
+  }
+
+  editSubGradeCrit(gradeSubCriteria: GradeSubCriteria) {
+    this.gradeSubCritService.updateSubGradeCriteria(gradeSubCriteria.id, {
+      ...gradeSubCriteria
+    }).subscribe(
+      (success) => {
+        this.toastrService.show("Sub Criteria edit successfully", "Success", {
+          status: "success",
+        });
+        this.contentTemplateRef.close();
+        this.fetchData();
+      },
+      (error) => {
+        this.toastrService.show("Try again", "Failed", { status: "danger" });
+      }
+    )
+  }
+
+  c(s) {
+    console.log(s)
   }
 }
