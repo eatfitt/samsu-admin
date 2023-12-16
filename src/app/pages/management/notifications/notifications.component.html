@@ -1,0 +1,45 @@
+<nb-card>
+    <nb-card-header>Notification Templates</nb-card-header>
+    <nb-card-body>
+        <label class="label mb-1">Cancel Event</label>
+        <div class="row">
+            <div class="col-3">
+                <nb-card (click)="openDialog(editNotificationTemplate, cancelEventNotification)">
+                    <nb-card-header class="text-center">
+                        <nb-icon icon="email-outline"></nb-icon>
+                    </nb-card-header>
+                    <nb-card-body style="background-color: var(--accordion-header-border-color);" class="text-center font-weight-bold small"> {{
+                        cancelEventNotification?.title }} </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+        <label class="label mb-1 border-top pt-3 mt-3">Reschedule Event</label>
+        <div class="row">
+            <div class="col-3">
+                <nb-card (click)="openDialog(editNotificationTemplate, rescheduleEventNotification)">
+                    <nb-card-header class="text-center">
+                        <nb-icon icon="email-outline"></nb-icon>
+                    </nb-card-header>
+                    <nb-card-body style="background-color: var(--accordion-header-border-color);" class="text-center font-weight-bold small"> {{
+                        rescheduleEventNotification?.title }} </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>
+
+<ng-template #editNotificationTemplate let-template let-ref="dialogRef">
+    <nb-card style="width: 40rem;">
+    <nb-card-header>Edit Template</nb-card-header>
+    <nb-card-body>
+        <label class="label d-block">Title</label>
+        <input nbInput fullWidth [(ngModel)]="template.title">
+        <label class="label d-block mt-3">Content</label>
+        <textarea nbInput fullWidth [(ngModel)]="template.content"></textarea>
+    </nb-card-body>
+    <nb-card-footer>
+        <button nbButton size="small" status="danger" class="mr-2" (click)="ref.close()">Cancel</button>
+        <button nbButton size="small" status="primary" (click)="editNotification(template)">Edit</button>
+    </nb-card-footer>
+    </nb-card>
+</ng-template>

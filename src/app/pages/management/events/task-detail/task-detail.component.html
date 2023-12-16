@@ -81,11 +81,11 @@
                         [disabled]="viewOnly" size="small" class="d-block w-50 mb-2" filled="true"
                         [status]="assignee.status === 0 ? 'basic' : assignee.status === 1 || assignee.status === 3 ? 'primary' : assignee.status === 2 || assignee.status === 5 ? 'danger': 'success'">
                         <nb-option [value]="0">Pending</nb-option>
-                        <nb-option [value]="1" disabled>Accepted</nb-option>
-                        <nb-option [value]="2" disabled>Rejected</nb-option>
-                        <nb-option [value]="3" disabled>Completed</nb-option>
-                        <nb-option [value]="4">Approved</nb-option>
-                        <nb-option [value]="5">Disapproved</nb-option>
+                        <nb-option class="d-none" [value]="1" disabled>Accepted</nb-option>
+                        <nb-option class="d-none" [value]="2" disabled>Rejected</nb-option>
+                        <nb-option class="d-none" [value]="3" disabled>Completed</nb-option>
+                        <nb-option [disabled]="assignee.status < 3" [value]="4">Approved</nb-option>
+                        <nb-option [disabled]="assignee.status < 3" [value]="5">Disapproved</nb-option>
                     </nb-select>
                     <!-- <th>{{ (assignee.status === 'ENABLE' || assignee.status === 'DISABLE') ? 'Pending' : getAssigneeStatus(assignee.status) }}</th> -->
                 </nb-list-item>

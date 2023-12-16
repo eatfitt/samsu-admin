@@ -16,10 +16,11 @@
                         banner<input class="upload" (change)="uploadFile($event, 'bannerUrl')"
                             type="file" />
                     </button>
-                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload">Update
+                    <!-- <button nbButton size="small" class="text-capitalize mr-2 fileUpload">Update
                         attachments<input class="upload" (change)="uploadFile($event, 'fileUrls')"
                             type="file" />
-                    </button>
+                    </button> -->
+                    <button nbButton size="small" class="text-capitalize mr-2 fileUpload" (click)="openDialog(rescheduleDialog)">Reschedule Event</button>
                     <button nbButton size="small" class="text-capitalize mr-2 fileUpload"
                         (click)="isShowStatistic = !isShowStatistic; isShowPosts = false;"> {{ isShowStatistic ? 'Hide statistics' : 'Show Statistics'}} </button>
                     <button nbButton size="small" class="text-capitalize mr-2 fileUpload"
@@ -183,14 +184,15 @@
                     <label class="label">Process</label>
                     <nb-select [(selected)]="eventToEdit.processStatus" (selectedChange)="updateEventStatus()"
                         [disabled]="viewOnly" size="small" class="d-block w-50 mb-2" filled="true"
-                        [status]="eventToEdit.processStatus === 0 || eventToEdit.processStatus === 1 ? 'basic' : eventToEdit.processStatus === 2 || eventToEdit.processStatus === 3 ? 'warning' : 'success'">
+                        [status]="eventToEdit.processStatus === 0 || eventToEdit.processStatus === 1 ? 'basic' : eventToEdit.processStatus === 2 || eventToEdit.processStatus === 3 ? 'warning' : eventToEdit.processStatus === 7 ? 'danger' : 'success'">
                         <nb-option [value]="0">Coming</nb-option>
                         <nb-option [value]="1">Check in</nb-option>
                         <nb-option [value]="2">Processing</nb-option>
                         <nb-option [value]="3">Check out</nb-option>
                         <nb-option [value]="4">Complete</nb-option>
                         <nb-option [value]="5">Reviewed</nb-option>
-                        <nb-option [value]="6">Finish</nb-option>
+                        <nb-option [value]="6">Finished</nb-option>
+                        <nb-option [value]="7" (click)="openDialog(sendCancelNotification, 117)">Canceled</nb-option>
                     </nb-select>
                     <nb-card>
                         <nb-card-header>Details</nb-card-header>
@@ -278,10 +280,10 @@
 </ng-template>
 <ng-template #addFeedbackQuestionDialog let-data>
     <nb-card style="width: 60vw;">
-        <nb-card-header *ngIf="data === 'Add'">Thêm câu hỏi feedback</nb-card-header>
-        <nb-card-header *ngIf="data === 'Edit'">Chỉnh sửa câu hỏi feedback</nb-card-header>
+        <nb-card-header *ngIf="data === 'Add'">Add Feedback Question</nb-card-header>
+        <nb-card-header *ngIf="data === 'Edit'">Edit Feedback Question</nb-card-header>
         <nb-card-body>
-            <div class="label mb-1">Câu hỏi</div>
+            <div class="label mb-1">Question</div>
             <div class="feedback-question d-flex justify-content-between mb-3">
                 <input class="flex-grow-1 mw-100" nbInput [(ngModel)]="selectedFeedback.question"
                     style="border-radius: 0.25rem 0 0 0.25rem;">
@@ -291,7 +293,7 @@
                     <nb-option [value]="2">Open Ended</nb-option>
                 </nb-select>
             </div>
-            <div class="label mb-1">Trả lời</div>
+            <div class="label mb-1">Answers</div>
             <ng-container *ngIf="selectedFeedback.answer?.length > 0">
                 <div class="d-flex mb-2 align-items-center"
                     *ngFor="let answer of selectedFeedback.answer; let i = index; trackBy: trackByFn">
@@ -304,13 +306,30 @@
             <button (click)="addAnswer()" class="btn btn-link mb-3">
                 <nb-icon status="primary" class="small mr-2 hover-pointer" icon="plus-outline"
                     pack="eva"></nb-icon>
-                <span class="label">Thêm câu trả lời</span>
+                <span class="label">Add Answer</span>
             </button>
         </nb-card-body>
         <nb-card-footer>
-            <button *ngIf="data === 'Add'" (click)="addQuestion()" nbButton>Thêm câu hỏi</button>
-            <button *ngIf="data === 'Edit'" (click)="editQuestion()" nbButton>Chỉnh sửa câu
-                hỏi</button>
+            <button *ngIf="data === 'Add'" (click)="addQuestion()" nbButton>Add Question</button>
+            <button *ngIf="data === 'Edit'" (click)="editQuestion()" nbButton>Edit Question</button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>
+
+<ng-template #sendCancelNotification let-notificationId>
+    <ngx-notification-configuration [notificationId]="notificationId" [eventTitle]="eventToEdit.title" [rollnumbers]="rollnumbers" [rescheduleDate]="eventToEdit.startTime" (send)="contentTemplateRef.close()"></ngx-notification-configuration>
+</ng-template>
+
+<ng-template #rescheduleDialog>
+    <nb-card>
+        <nb-card-header>Reschedule Event</nb-card-header>
+        <nb-card-body>
+            <label for="startTime" class="label">Start time</label>
+            <input fullWidth type="datetime" [(ngModel)]="eventToEdit.startTime" nbInput id="startTime" placeholder="Start time" [nbDatepicker]="dateTimePicker">
+            <nb-datepicker [min]="minDate" #dateTimePicker></nb-datepicker>
+        </nb-card-body>
+        <nb-card-footer>
+            <button nbButton (click)="editEvent(); openDialog(sendCancelNotification, 120)">Reschedule</button>
         </nb-card-footer>
     </nb-card>
 </ng-template>

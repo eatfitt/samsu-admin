@@ -72,6 +72,8 @@ import { SplitStringPipe } from "./pipes/splitstring.pipe";
 import { GuarantorVerifyComponent } from './management/invoke-point/guarantor-verify/guarantor-verify.component';
 import { AllGradesComponent } from './management/all-grades/all-grades.component';
 import { PostsComponent } from './management/events/posts/posts.component';
+import { NotificationsComponent } from './management/notifications/notifications.component';
+import { NotificationConfigurationComponent } from './management/notifications/notification-configuration/notification-configuration.component';
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 const PIPES = [
@@ -156,7 +158,9 @@ const PIPES = [
     FeedbackFormComponent,
     GuarantorVerifyComponent,
     AllGradesComponent,
-    PostsComponent
+    PostsComponent,
+    NotificationsComponent,
+    NotificationConfigurationComponent
     // TasksComponent,
   ],
 })

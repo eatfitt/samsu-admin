@@ -22,6 +22,7 @@ import { SingleEventComponent } from './management/events/single-event/single-ev
 import { EventComponent } from './management/events/event/event.component';
 import { InvokePointComponent } from './management/invoke-point/invoke-point.component';
 import { AllGradesComponent } from './management/all-grades/all-grades.component';
+import { NotificationsComponent } from './management/notifications/notifications.component';
 
 const routes: Routes = [{
   path: '',
@@ -86,6 +87,10 @@ const routes: Routes = [{
     {
       path: 'all-grades',
       component: AllGradesComponent
+    },
+    {
+      path: 'notifications',
+      component: NotificationsComponent
     },
     {
       path: 'user/:id',

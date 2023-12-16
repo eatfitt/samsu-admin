@@ -3,10 +3,13 @@ import {
   Input,
   SimpleChanges,
   ChangeDetectionStrategy,
+  ViewChild,
+  TemplateRef,
 } from "@angular/core";
 import {
   Event,
   EventParticipant,
+  EventService,
 } from "../../../../@core/services/event/event.service";
 import _ from "lodash";
 import { UserService } from "../../../../@core/services/user/user.service";
@@ -19,6 +22,8 @@ import { Observable, forkJoin, map, switchMap } from "rxjs";
 import { ECharts } from "echarts";
 import { utils, writeFileXLSX } from "xlsx";
 import { convertMilliToDate, convertMillisToTime } from "../../../../@core/utils/data-util";
+import { NbDialogRef, NbDialogService } from "@nebular/theme";
+import { Post } from "../../../../@core/services/post/post.service";
 
 export interface MappedQuestionsAnswers {
   question: GetAllQuestionsByEventIdResponse;
@@ -34,6 +39,7 @@ export interface MappedQuestionsAnswers {
 export class EventStatisticComponent {
   @Input() event: Event = null;
   @Input() participants: EventParticipant[] = [];
+  @ViewChild("exportStatisticsConfigurationDialog", { static: true }) exportStatisticsConfigurationDialog: TemplateRef<any>;
 
   allQuestionsAndAnswers = new Observable<any>();
   _allQuestionsAndAnswers: any = null;
@@ -47,9 +53,20 @@ export class EventStatisticComponent {
   checkInCount: number;
   checkOutCount: number;
 
+  posts: Post[];
+
+  // EXPORT CONFIG
+  shouldIncludeAttendance = true;
+  shouldIncludeFeedback = true;
+  shouldIncludePost = true;
+
+  private contentTemplateRef: NbDialogRef<EventStatisticComponent>;
+
   constructor(
     private userService: UserService,
-    private feedbackService: FeedbackService
+    private feedbackService: FeedbackService,
+    private dialogService: NbDialogService,
+    private eventService: EventService,
   ) {}
 
   ngOnInit() {
@@ -57,6 +74,7 @@ export class EventStatisticComponent {
       this.studentCount = data.totalElements;
       this.calculateStat();
     });
+    this.eventService.getPostsByEventId(this.event.id).subscribe((data: any) => this.posts = data);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -72,6 +90,12 @@ export class EventStatisticComponent {
       this.calculateStat();
       this.fetchData();
     }
+  }
+
+  openDialog(dialog, data?) {
+    console.log(data)
+    this.contentTemplateRef = this.dialogService.open(dialog,
+      { context: data });
   }
 
   createChartOption(item) {
@@ -265,85 +289,107 @@ export class EventStatisticComponent {
       {}
     ])
 
-    rows = rows.concat([
-      {
-        ROLLNUMBER:
-          "---------------------------------------------------------------------------------------------------------------",
-        NAME: "---------------------------------------------------------------------------------------------------------------",
-        CHECKIN:
-          "---------------------------------------------------------------------------------------------------------------",
-        CHECKOUT:
-          "---------------------------------------------------------------------------------------------------------------",
-      },
-      { NAME: 'PARTICIPANTS' }, {},
-      {
-        ROLLNUMBER: "ROLLNUMBER",
-        NAME: "NAME",
-        CHECKIN: "CHECKIN",
-        CHECKOUT: "CHECKOUT",
-      },
-      {},
-    ]);
+    if (this.shouldIncludeAttendance) {
+      rows = rows.concat([
+        {
+          ROLLNUMBER:
+            "---------------------------------------------------------------------------------------------------------------",
+          NAME: "---------------------------------------------------------------------------------------------------------------",
+          CHECKIN:
+            "---------------------------------------------------------------------------------------------------------------",
+          CHECKOUT:
+            "---------------------------------------------------------------------------------------------------------------",
+        },
+        { NAME: 'PARTICIPANTS' }, {},
+        {
+          ROLLNUMBER: "ROLLNUMBER",
+          NAME: "NAME",
+          CHECKIN: "CHECKIN",
+          CHECKOUT: "CHECKOUT",
+        },
+        {},
+      ]);
 
-    let participantRows = this.participants.map((participant) => {
-      return {
-        ROLLNUMBER: participant.user.rollnumber,
-        NAME: participant.user.name,
-        CHECKIN: participant.checkin ? "✔" : participant.checkout ? "✔" : "",
-        CHECKOUT: participant.checkout ? "✔" : "",
-      };
-    });
-    rows = rows.concat(participantRows).concat([{}, {}]);
+      let participantRows = this.participants.map((participant) => {
+        return {
+          ROLLNUMBER: participant.user.rollnumber,
+          NAME: participant.user.name,
+          CHECKIN: participant.checkin ? "✔" : participant.checkout ? "✔" : "",
+          CHECKOUT: participant.checkout ? "✔" : "",
+        };
+      });
+      rows = rows.concat(participantRows).concat([{}, {}]);
+    }
 
-    rows = rows.concat([
-      {
-        ROLLNUMBER:
-          "---------------------------------------------------------------------------------------------------------------",
-        NAME: "---------------------------------------------------------------------------------------------------------------",
-        CHECKIN:
-          "---------------------------------------------------------------------------------------------------------------",
-        CHECKOUT:
-          "---------------------------------------------------------------------------------------------------------------",
-      },
-    ], { NAME: 'FEEDBACK' }, {});
-
-    rows.push({ ROLLNUMBER: "ANSWERS", NAME: 'COUNT', CHECKIN: "PERCENTAGE (%)", });
-    rows = rows.concat([{}]);
-
-    this._allQuestionsAndAnswers.forEach((qna) => {
-      rows.push({ ROLLNUMBER: "QUESTION", NAME: qna.question.question });
-      if (
-        qna.question.type === 0 ||
-        qna.question.type === 1 ||
-        qna.question.type === 3
-      ) {
-        for (let i = 0; i < qna.chart.series[0].data.length; i++) {
-          rows.push({
-            ROLLNUMBER: qna.chart.xAxis[0].data[i],
-            NAME: qna.chart.series[0].data[i],
-            CHECKIN: +(
-              (qna.chart.series[0].data[i] / qna.chart.series[0].data.length) *
-              100
-            ).toFixed(2),
+    if (this.shouldIncludeFeedback) {
+      rows = rows.concat([
+        {
+          ROLLNUMBER:
+            "---------------------------------------------------------------------------------------------------------------",
+          NAME: "---------------------------------------------------------------------------------------------------------------",
+          CHECKIN:
+            "---------------------------------------------------------------------------------------------------------------",
+          CHECKOUT:
+            "---------------------------------------------------------------------------------------------------------------",
+        },
+      ], { NAME: 'FEEDBACK' }, {});
+  
+      rows.push({ ROLLNUMBER: "ANSWERS", NAME: 'COUNT', CHECKIN: "PERCENTAGE (%)", });
+      rows = rows.concat([{}]);
+  
+      this._allQuestionsAndAnswers.forEach((qna) => {
+        rows.push({ ROLLNUMBER: "QUESTION", NAME: qna.question.question });
+        if (
+          qna.question.type === 0 ||
+          qna.question.type === 1 ||
+          qna.question.type === 3
+        ) {
+          for (let i = 0; i < qna.chart.series[0].data.length; i++) {
+            rows.push({
+              ROLLNUMBER: qna.chart.xAxis[0].data[i],
+              NAME: qna.chart.series[0].data[i],
+              CHECKIN: +(
+                (qna.chart.series[0].data[i] / qna.chart.series[0].data.length) *
+                100
+              ).toFixed(2),
+            });
+          }
+          if (qna.question.type === 3) {
+            const sumRating = qna.answers.reduce(
+              (a, b) => a + Number(b.content),
+              0
+            );
+            const avgRating = qna.answers.length === 0 ? 0 : +(sumRating / qna.answers.length).toFixed(2);
+  
+            rows.push({ ROLLNUMBER: "", NAME: "AVERAGE", CHECKIN: avgRating });
+          }
+        }
+        if (qna.question.type === 2) {
+          qna.answers.forEach((item) => {
+            rows.push({ ROLLNUMBER: item.content });
           });
         }
-        if (qna.question.type === 3) {
-          const sumRating = qna.answers.reduce(
-            (a, b) => a + Number(b.content),
-            0
-          );
-          const avgRating = qna.answers.length === 0 ? 0 : +(sumRating / qna.answers.length).toFixed(2);
+        rows = rows.concat([{}]);
+      });
+    }
 
-          rows.push({ ROLLNUMBER: "", NAME: "AVERAGE", CHECKIN: avgRating });
-        }
-      }
-      if (qna.question.type === 2) {
-        qna.answers.forEach((item) => {
-          rows.push({ ROLLNUMBER: item.content });
-        });
-      }
-      rows = rows.concat([{}]);
-    });
+    if (this.shouldIncludePost) {
+      rows = rows.concat([
+        {
+          ROLLNUMBER:
+            "---------------------------------------------------------------------------------------------------------------",
+          NAME: "---------------------------------------------------------------------------------------------------------------",
+          CHECKIN:
+            "---------------------------------------------------------------------------------------------------------------",
+          CHECKOUT:
+            "---------------------------------------------------------------------------------------------------------------",
+        },
+      ], { NAME: 'POSTS' }, {});
+      rows.push({ ROLLNUMBER: "TITLE", NAME: 'KUDOS' });
+      this.posts.forEach((post) => {
+        rows.push({ROLLNUMBER: post.title, NAME: post.kudos})
+      })
+    }    
 
     const ws = utils.json_to_sheet(rows);
     const wb = utils.book_new();

@@ -29,7 +29,7 @@
                 <span>{{ gradeTicket.creator?.name }}</span>
                 <span>{{ gradeTicket.accepter?.name ?? 'N/A' }}</span>
                 <span>
-                    <nb-tag class="text-center" [text]="getStatusText(gradeTicket?.status)"
+                    <nb-tag [text]="getStatusText(gradeTicket?.status)"
                         [status]="getStatusColor(gradeTicket?.status)" size="tiny"></nb-tag>
                 </span>
                 <span class="d-flex justify-content-center">{{ gradeTicket.score ?? 'N/A' }}</span>
@@ -59,7 +59,7 @@
         <nb-card-header>
             <span class="font-weight-bold h6">{{ selectedGradeTicket?.title }}</span>
         </nb-card-header>
-        <nb-card-body style="max-width: 45rem;">
+        <nb-card-body>
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="label mb-1">Content</div>
@@ -101,8 +101,8 @@
                             size="small" class="d-block w-50 mb-2" filled="true"
                             [status]="statusForSelectedGradeTicket === 0 ? 'basic' : statusForSelectedGradeTicket === 1 || statusForSelectedGradeTicket === 2 ? 'warning' : statusForSelectedGradeTicket === 3 ? 'success': 'danger'">
                             <nb-option [value]="0">Processing</nb-option>
-                            <nb-option disabled [value]="1">Guarantee Approved</nb-option>
-                            <nb-option disabled [value]="2">Guarantee Reject</nb-option>
+                            <nb-option class="d-none" disabled [value]="1">Guarantee Approved</nb-option>
+                            <nb-option class="d-none" disabled [value]="2">Guarantee Reject</nb-option>
                             <nb-option [disabled]="selectedGradeTicket?.status === 0" [value]="3">Approved</nb-option>
                             <nb-option [disabled]="selectedGradeTicket?.status === 0" [value]="4">Reject</nb-option>
                         </nb-select>

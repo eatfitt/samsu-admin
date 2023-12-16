@@ -1,0 +1,20 @@
+<nb-card style="    width: 40rem;">
+    <nb-card-header>Send Notification</nb-card-header>
+    <nb-card-body>
+        <label class="label d-block">Template</label>
+        <div class="border p-3">
+            <label class="label d-block">Title</label>
+            <input nbInput fullWidth [(ngModel)]="notification.title">
+            <label class="label d-block mt-3">Content</label>
+            <textarea nbInput fullWidth [(ngModel)]="notification.content"></textarea>
+        </div>
+        <label class="label d-block mt-3">Notification Mode</label>
+        <div class="border p-3 d-flex">
+            <nb-checkbox status="success" [(checked)]="isSendNotification">Send via mobile app</nb-checkbox>
+            <nb-checkbox status="success" class="ml-5" [(checked)]="isSendEmail">Send via email</nb-checkbox>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button nbButton status="primary" (click)="sendNotification()">Send Notification</button>
+    </nb-card-footer>
+</nb-card>

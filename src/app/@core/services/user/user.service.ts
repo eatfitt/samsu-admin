@@ -7,10 +7,13 @@ import { catchError } from "rxjs/operators";
 import { environment } from "../../../../environments/environment";
 import { SocialAuthService, SocialUser } from "../../../../utils/social-login/public-api";
 import {
+  UserState,
+  UserSummary,
   setUserJwt,
   setUserSocialUser,
   setUserUserSummary,
 } from "../../../app-state/user";
+import { getUserUserSummaryState } from "../../../app-state/user";
 
 export enum RoleEnum {
   ROLE_ADMIN = 0,
@@ -95,7 +98,8 @@ export class UserService {
     private http: HttpClient,
     protected router: Router,
     private socialAuthService: SocialAuthService,
-    private store: Store<{ user: SocialUser }>
+    private store: Store<{ user: SocialUser }>,
+    private appStore: Store<{user: UserState}>
   ) {
     this.apiEndPoint = environment.apiEndPoint;
   }
@@ -234,6 +238,12 @@ export class UserService {
     } else {
       this.router.navigate(["/"]);
     }
+  }
+
+  checkRole() {
+    this.appStore.select(state => state.user.userSummary).subscribe((userSummary: UserSummary) => {
+      return userSummary.rollnumber;
+    });
   }
 
   logOut() {

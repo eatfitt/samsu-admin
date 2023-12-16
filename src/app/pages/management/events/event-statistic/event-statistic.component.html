@@ -1,4 +1,4 @@
-<button nbButton size="small" class="text-capitalize mr-2 my-3" (click)="exportToExcel()">Export thống kê</button>
+<button nbButton size="small" class="text-capitalize mr-2 my-3" (click)="openDialog(exportStatisticsConfigurationDialog)">Export Statistics</button>
 
 <nb-card>
     <nb-card-body class="row d-flex">
@@ -37,4 +37,17 @@
         </nb-accordion>
     </nb-card-body>
 </nb-card>
-  
+
+<ng-template #exportStatisticsConfigurationDialog>
+    <nb-card>
+        <nb-card-header>Export Statistics Configuration</nb-card-header>
+        <nb-card-body>
+            <nb-checkbox status="primary" class="d-block mb-2" [(checked)]="shouldIncludeAttendance">Include Attendance</nb-checkbox>
+            <nb-checkbox status="primary" class="d-block mb-2" [(checked)]="shouldIncludeFeedback">Include Feedback</nb-checkbox>
+            <nb-checkbox status="primary" class="d-block mb-2" [(checked)]="shouldIncludePost">Include Posts</nb-checkbox>
+        </nb-card-body>
+        <nb-card-footer>
+            <button nbButton size="small" (click)="exportToExcel()">Export</button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>

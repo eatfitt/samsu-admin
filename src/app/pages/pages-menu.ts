@@ -72,6 +72,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'book-open',
     link: '/pages/all-grades',
     home: true
+  },
+  {
+    title: 'Notifications',
+    icon: 'message-square-outline',
+    link: '/pages/notifications',
+    home: true
   }
   // {
   //   title: 'Layout',

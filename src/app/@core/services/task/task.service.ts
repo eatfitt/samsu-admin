@@ -47,11 +47,8 @@ export class TaskService {
     const headers = new HttpHeaders()
       .set("Content-Type", "application/json")
     const options = { headers: headers };
-    const payload = {
-      rollnumber: rollnumber,
-    }
     return this.http
-      .put(`${this.apiEndPoint}/tasks/${ taskId }/assignee/${ status }`, JSON.stringify(payload), options)
+      .put(`${this.apiEndPoint}/tasks/${ taskId }/users/${rollnumber}/assignee/${ status }`, {}, options)
       .pipe(
         catchError((error) => {
           console.error("Error in updateAssigneeStatusByTaskId:", error);

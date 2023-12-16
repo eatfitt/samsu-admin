@@ -45,10 +45,12 @@
         &:last-child {
             max-width: 3rem !important;
         }
-        &:nth-child(2), 
-        &:nth-child(7) {
-        flex: 2 !important;
-      }
+        &:nth-child(6) {
+          max-width: 5rem !important;
+        }
+      //   &:nth-child(2){
+      //   flex: 2 !important;
+      // }
     }
   }
 

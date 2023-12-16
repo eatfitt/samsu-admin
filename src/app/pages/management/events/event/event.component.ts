@@ -16,6 +16,8 @@ export class EventComponent {
   @ViewChild("eventBannerDialog", { static: true }) eventBannerDialog: TemplateRef<any>;
   @ViewChild('saveEditTemplate') saveEditTemplate: TemplateRef<any>;
   @ViewChild('addFeedbackQuestionDialog') addFeedbackQuestionDialog: TemplateRef<any>;
+  @ViewChild('sendCancelNotification') sendCancelNotification: TemplateRef<any>;
+  @ViewChild('rescheduleDialog') rescheduleDialog: TemplateRef<any>;
 
   @Input() event: Event = null;
   @Input() participants: EventParticipant[] = [];
@@ -64,6 +66,11 @@ export class EventComponent {
     type: 2
   };
 
+  //CANCEL EVENT
+  rollnumbers: string[] = [];
+  today = new Date();
+  minDate = new Date(this.today);
+
   selectedFeedback = null;
 
   private contentTemplateRef: NbDialogRef<EventComponent>;
@@ -76,6 +83,10 @@ export class EventComponent {
     private feedbackService: FeedbackService,
     private taskService: TaskService,
   ) {}
+
+  ngOnInit() {
+    this.minDate.setDate(this.today.getDate());
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     const { event, participants, feedback } = changes;
@@ -98,6 +109,7 @@ export class EventComponent {
         feedbackQuestions: this.feedback ?? this.event?.feedbackQuestions
       };
       this.filteredParticipantList = this.participants;
+      this.rollnumbers = this.participants.map(p => p?.user?.rollnumber);
       this.getDuration();
     }
   }
@@ -217,6 +229,7 @@ export class EventComponent {
           this.toastrService.show("Checked in Successfully", "Checked in", {
             status: "success",
           });
+          this.checkIn.emit();
         },
         (failed: any) => {
           this.toastrService.show("Checked in Failed", "Failed", {
@@ -250,19 +263,6 @@ export class EventComponent {
   }
 
   editTaskStatus(index: number) {
-    // this.eventToEdit.tasks[this.selectedIndex].status = index;
-    // this.taskService.updateTaskById(this.selectedTask.id,
-    //   {
-    //     ...this.eventToEdit.tasks[this.selectedIndex],
-    //     gradeSubCriteriaId: this.eventToEdit.tasks[this.selectedIndex].gradeSubCriteria.id
-    //   }).subscribe(
-    //     (data: any) => this.toastrService.show("Feedback updated successfully", "Success", {
-    //       status: "success",
-    //     }),
-    //     (failed: any) => this.toastrService.show(failed, "Failed", {
-    //       status: "danger",
-    //     })
-    //   )
     this.taskService.updateEventStatusByTaskId(this.selectedTask.id, index)
     .subscribe(
       (data: any) => this.toastrService.show("Asignee status updated successfully", "Success", {
