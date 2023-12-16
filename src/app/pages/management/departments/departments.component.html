@@ -4,33 +4,26 @@
         <div class="col-12">
             <nb-card>
                 <nb-card-header>
-                    <div class="d-flex justify-content-between">
-                        <h5>Departments</h5>
-                        <button class="btn btn-outline-primary" (click)="openDialog(createDepartmentDialog)">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>Departments</div>
+                        <button size="small" class="btn btn-outline-primary" (click)="openDialog(createDepartmentDialog)">
                             <nb-icon [icon]="'plus-round'" pack="ion"></nb-icon>
                         </button>
                     </div>
                 </nb-card-header>
                 <nb-card-body class="p-0">
                     <nb-list>
-                        <nb-list-item class="py-2" *ngFor="let department of departments" (click)="selectedDepartment = department">
-                            <div class="row w-100 ">
-                                <div class="col-6 pl-4">
-                                    <div class="font-weight-bold">{{ department.name }}</div>
-                                </div>
-                                <div class="col-2">
-                                    <div class="font-weight-bold fs-12">12</div>
-                                    <div class="small">Collabs</div>
-                                </div>
-                                <div class="col-2 border-left border-right">
-                                    <div class="font-weight-bold fs-12">30</div>
-                                    <div class="small">People</div>
-                                </div>
-                                <div class="col-2">
-                                    <a class="small" href="#">View Department</a>
-                                </div>
-                            </div>
-                           
+                        <nb-list-item class="item small" *ngFor="let department of departments; let i = index" (click)="selectedDepartment = department">
+                            <span *ngIf="!editMode[i]">{{ department.name }}</span>
+                            <span *ngIf="editMode[i]">
+                                <input nbInput size="tiny" [(ngModel)]="department.name" >
+                            </span>
+                           <span>
+                                <button *ngIf="!editMode[i]" class="btn btn-link" (click)="editMode[i] = true">Edit</button>
+                                <button *ngIf="editMode[i]" class="btn btn-link" (click)="editMode[i] = false">Save</button>
+                           </span>
+                           <span>View</span>
+                           <span>Delete</span>
                         </nb-list-item>
                     </nb-list>
                 </nb-card-body>

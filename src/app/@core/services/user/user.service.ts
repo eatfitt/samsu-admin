@@ -240,12 +240,6 @@ export class UserService {
     }
   }
 
-  checkRole() {
-    this.appStore.select(state => state.user.userSummary).subscribe((userSummary: UserSummary) => {
-      return userSummary.rollnumber;
-    });
-  }
-
   logOut() {
     localStorage.removeItem("jwt");
     this.store.dispatch(setUserSocialUser(null));

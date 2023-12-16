@@ -420,7 +420,7 @@ export class AllStudentsComponent {
   }
 
   updateUser() {
-    let studentPayload: any = this.selectedStudent;
+    let {department, ...studentPayload}: any = this.selectedStudent;
     // studentPayload.role = RoleEnum[studentPayload.role];
     studentPayload.role = this.getUserRoleString(this.selectedStudent.role as number);
     studentPayload.status = 1;

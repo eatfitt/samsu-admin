@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
@@ -34,5 +34,19 @@ export class DepartmentService {
         return throwError(error);
       })
     );
+  }
+
+  public updateDepartment(id: number, de: Department) {
+    const headers = new HttpHeaders()
+      .set("Content-Type", "application/json")
+    const options = { headers: headers };
+    return this.http
+      .put(`${this.apiEndPoint}/departments/${id}`, JSON.stringify(de), options)
+      .pipe(
+        catchError((error) => {
+          console.error("Error in checkInUser:", error);
+          return throwError(error);
+        })
+      );
   }
 }

@@ -17,6 +17,7 @@ export class DepartmentsComponent {
   departments: Department[] = [];
   newDepartmentName = '';
   selectedDepartment: Department = null;
+  editMode: boolean[] = [];
 
   private contentTemplateRef: NbDialogRef<DepartmentsComponent>;
 

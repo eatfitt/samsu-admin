@@ -123,6 +123,11 @@ export class LoginComponent extends NbLoginComponent implements OnInit, OnDestro
         this.store.dispatch(setUserJwt({jwt: jwt}));
         this.userService.getMe(`${token.tokenType} ${token.accessToken}`).subscribe((userSummary: UserSummary) => {
           localStorage.setItem('userSummary', JSON.stringify(userSummary));
+          if (userSummary.role === 'ROLE_STUDENT') {
+            this.loginFail = true;
+            this.errorMessage = 'User is not authorised';
+            return;
+          }
           this.store.dispatch(setUserUserSummary({userSummary: userSummary}));
           this.router.navigate(['pages']);
         });

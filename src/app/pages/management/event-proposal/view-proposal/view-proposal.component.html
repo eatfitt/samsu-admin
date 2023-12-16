@@ -63,7 +63,7 @@
                     No feedback
                 </ng-template>
             </nb-card-body>
-            <button nbButton size="small" status="primary" (click)="openFeedbackModal(modalFeedBack)">Add
+            <button  *ngIf="isAdmin" nbButton size="small" status="primary" (click)="openFeedbackModal(modalFeedBack)">Add
                 Feedback</button>
         </ng-container>
 

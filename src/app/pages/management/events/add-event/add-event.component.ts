@@ -13,7 +13,7 @@ import {
   NbIconLibraries,
   NbToastrService,
 } from "@nebular/theme";
-import { BehaviorSubject, Observable, map } from "rxjs";
+import { BehaviorSubject, Observable, combineLatest, map, switchMap } from "rxjs";
 import { FileUploadService } from "../../../../../services/file-upload.service";
 import {
   CreateEventRequest,
@@ -34,6 +34,8 @@ import { SemesterService } from "../../../../@core/services/semester/semester.se
 import _ from "lodash";
 import { Task } from "../task-detail/task-detail.component";
 import { DepartmentService } from "../../../../@core/services/department/department.service";
+import { UserState, UserSummary } from "../../../../app-state/user";
+import { Store } from "@ngrx/store";
 
 enum FeedbackType {
   MultipleSelect = 0,
@@ -80,9 +82,7 @@ export class AddEventComponent implements OnInit {
   selectedMinute = 0;
   gradeSubCriterias: GradeSubCriteria[] = [];
   imageSrc: string | ArrayBuffer;
-  myEventProposals$ = this.eventProposalService.getAllEventProposals().pipe(
-    map(data => (data as any)?.content.filter(content => content.status === "APPROVED")),
-  );
+  myEventProposals$: Observable<any>;
   eventLeaderRollnumberToSearch: string;
   eventLeader$: Observable<Object> = null;
   semesters$: Observable<Object> = null;
@@ -137,10 +137,24 @@ export class AddEventComponent implements OnInit {
     }
   ];
 
+  // CHECK ROLE
+  isAdmin = false;
+
   private contentTemplateRef: NbDialogRef<AddEventComponent>;
 
   ngOnInit(): void {
     this.userService.checkLoggedIn();
+    this.store.select(state => state.user.userSummary).subscribe(userSummary => {
+      this.isAdmin = (userSummary.role === 'ROLE_ADMIN');
+    });
+    this.myEventProposals$ = this.store.select(state => state.user.userSummary).pipe(
+      switchMap((userSummary: UserSummary) => {
+        return userSummary.role === 'ROLE_ADMIN'
+          ? this.eventProposalService.getAllEventProposals()
+          : this.eventProposalService.getMyEventProposal();
+      }),
+      map(data => (data as any)?.content.filter(content => content.status === "APPROVED")),
+    );
     this.minDate.setDate(this.today.getDate());
     this.startTime.setDate(this.today.getDate() + 1);
     this.semesters$ = this.semesterService.getAllSemesters().pipe(map((data: any) => data.content));
@@ -160,6 +174,8 @@ export class AddEventComponent implements OnInit {
     private semesterService: SemesterService,
     private departmentService: DepartmentService,
     private gradeSubCritService: GradeSubCriteriaService,
+    private store: Store<{ user: UserState }>,
+
   ) {
     iconsLibrary.registerFontPack("ion", { iconClassPrefix: "ion" });
   }
@@ -375,7 +391,7 @@ export class AddEventComponent implements OnInit {
         deadline: task.deadline
       }
     })
-    const departmentIdsPayload = this.department.map(de => de.id);
+    const departmentIdsPayload = this.department?.map(de => de.id);
     const createEventPayload: CreateEventRequest = {
       status: Number(this.status),
       duration: Number(this.duration),

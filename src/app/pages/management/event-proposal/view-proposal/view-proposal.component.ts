@@ -4,6 +4,9 @@ import { NbDialogRef, NbDialogService, NbGlobalPhysicalPosition, NbToastRef, NbT
 import { isString } from 'lodash';
 import { catchError, throwError } from 'rxjs';
 import { EventProposal, EventProposalService, EventProposalStatus } from '../../../../../services/event-propsal.service';
+import { Store } from '@ngrx/store';
+import { UserState } from '../../../../app-state/user';
+import { UserService } from '../../../../@core/services/user/user.service';
 
 interface Feedback {
   content: string;
@@ -22,9 +25,19 @@ export class ViewProposalComponent implements OnInit {
   selectedStatus = EventProposalStatus.REVIEWED.toString();
   statusOptions: string[];
   mockFeedback = '1699927012002|Myfeedback$$$1699927012099|My content$$$1700502118009|My feedbacks ahhsdasj';
-  constructor(private toastrService: NbToastrService, private router: Router, private eventProposalService: EventProposalService, private activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { }
+  constructor(private toastrService: NbToastrService, private router: Router, private eventProposalService: EventProposalService, private activatedRoute: ActivatedRoute, private dialogService: NbDialogService,
+    private store: Store<{ user: UserState }>,
+    private userService: UserService,
+    ) { }
+
+  // CHECK ROLE
+  isAdmin = false;
 
   ngOnInit(): void {
+    this.userService.checkLoggedIn();
+    this.store.select(state => state.user.userSummary).subscribe(userSummary => {
+      this.isAdmin = (userSummary.role === 'ROLE_ADMIN');
+    });
     this.statusOptions = [
       EventProposalStatus.REVIEWED,
       EventProposalStatus.APPROVED,
