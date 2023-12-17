@@ -63,7 +63,13 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'message-square-outline',
     link: '/pages/notifications',
     home: true
-  }
+  },
+  {
+    title: 'Semester',
+    icon: 'book-outline',
+    link: '/pages/semesters',
+    home: true,
+  },
 ];
 
 export const ADMIN_MENU_ITEMS: NbMenuItem[] = [

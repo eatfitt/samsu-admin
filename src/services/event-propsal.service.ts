@@ -94,4 +94,22 @@ export class EventProposalService {
         console.error('An error occurred:', error);
         return throwError('Something went wrong. Please try again later.');
     }
+
+    // GET AVAILABLE PROPOSALS
+    
+    getMyAvailableEventProposal() {
+        return this.http.get(`${this.apiEndPoint}/event/proposals/me/available`).pipe(
+            catchError((error) => {
+                console.error("Error in get event proposal:", error);
+                return throwError(error);
+            })
+        )
+    }
+
+    getAllAvailableEventProposals(): Observable<any> {
+        const url = `${this.apiEndPoint}/event/proposals/available`;
+        return this.http.get(url).pipe(
+            catchError(this.handleError)
+        );
+    }
 }

@@ -265,9 +265,17 @@ export class EventComponent {
   editTaskStatus(index: number) {
     this.taskService.updateEventStatusByTaskId(this.selectedTask.id, index)
     .subscribe(
-      (data: any) => this.toastrService.show("Asignee status updated successfully", "Success", {
-        status: "success",
-      }),
+      (data: any) => {
+        this.toastrService.show("Asignee status updated successfully", "Success", {
+          status: "success",
+        })
+        const selectedTaskIndex = this.eventToEdit.tasks.findIndex(task => task.id === this.selectedTask.id);
+        this.eventToEdit.tasks[selectedTaskIndex].status = index;
+        if (this.eventToEdit.tasks.every(task => task.status === 1) && this.eventToEdit.processStatus === 4) {
+          this.eventToEdit.status = 5;
+          this.updateEventStatus();
+        }
+      },
       (failed: any) => this.toastrService.show(failed, "Failed", {
         status: "danger",
       })

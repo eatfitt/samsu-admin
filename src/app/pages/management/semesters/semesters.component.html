@@ -1,0 +1,41 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between align-items-baseline">
+        <div>Semesters</div>
+        <button class="btn btn-outline-primary" (click)="openDialog(addSemesterDialog)">
+            <nb-icon [icon]="'plus'"></nb-icon>
+          </button>
+    </nb-card-header>
+    <nb-card-body>
+        <ng-container *ngIf="years$ | async as years">
+            <ng-container *ngIf="semesters$ | async as semesters">
+                <div *ngFor="let year of years">
+                    <label class="pb-2 w-100 label">{{year}}</label>
+                    <div class="container mb-3 pb-4 border-bottom ">
+                        <div class="row" style="gap: 1rem;">
+                            <div *ngFor="let semester of semesters[year]"
+                                class="col-sm-3 text-center py-3 border rounded label text-primary"
+                                style="background-color: #fafafa;;">{{semester.name}}</div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </nb-card-body>
+</nb-card>
+
+<ng-template #addSemesterDialog>
+    <nb-card>
+        <nb-card-header>Add Semester</nb-card-header>
+        <nb-card-body>
+            <input nbInput type="number" [(ngModel)]="newSemYear" min="2000" fieldSize="small">
+            <nb-select [(selected)]="newSemSeason" size="small">
+                <nb-option value="SP">Spring</nb-option>
+                <nb-option value="SU">Summer</nb-option>
+                <nb-option value="FA">Fall</nb-option>
+            </nb-select>
+        </nb-card-body>
+        <nb-card-footer>
+            <button nbButton size="small" (click)="addSemester()">Add</button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>

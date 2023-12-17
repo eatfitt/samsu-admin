@@ -10,4 +10,9 @@
     &:first-child {
       border-top: none;
     }
+    span {
+      &:first-child {
+        flex: 3 !important;
+      }
+    }
   }

@@ -4,7 +4,7 @@
             <nb-card-header>
                 <div class="d-flex justify-content-between">
                     <h5>Events</h5>
-                    <button class="btn btn-outline-primary" (click)="navigateTo('/pages/events/add')">
+                    <button class="btn btn-outline-primary" (click)="approvedAroposalListLength > 0 ? navigateTo('/pages/events/add') : openDialog(noAvailableProposalDialog)">
                         <nb-icon [icon]="'plus-round'" pack="ion"></nb-icon>
                     </button>
                 </div>
@@ -24,7 +24,8 @@
             <span>Title</span>
             <span>Creator</span>
             <span>Event Leader</span>
-            <span>Status</span>
+            <span>Type</span>
+            <!-- <span>Process</span> -->
             <span>Time</span>
             <span>Score</span>
         </nb-list-item>
@@ -34,15 +35,23 @@
             <span>{{ event.creator.name }}</span>
             <span>{{ event.eventLeader?.name }}</span>
             <span>
-                <nb-tag [status]="event.status === 1 ? 'success' : 'warning'" appearance="outline" [text]="event.status === 1 ? 'Public' : 'Non Public'" size="tiny"></nb-tag>
-                <!-- <nb-select [(selected)]="event.status" size="tiny" class="type-select"  filled="true" [status]="event.status === 1 ? 'success' : 'warning' ">
-                    <nb-option [value]="0">Un Public</nb-option>
-                    <nb-option [value]="1">Public</nb-option>
-                    <nb-option [value]="2">Un Public</nb-option>
-                </nb-select> -->
+                <nb-tag [status]="event.status === 1 ? 'success' : 'warning'" appearance="outline" [text]="event.status === 1 ? 'Public' : 'Mandatory'" size="tiny"></nb-tag>
             </span>
+            <!-- <span>
+                <nb-tag appearance="outline" [text]="getProcessStatus(event.processStatus)" size="tiny"></nb-tag>
+            </span> -->
             <span>{{ event.startTime | date }}</span>
             <span>{{ event.attendScore }}</span>
         </nb-list-item>
     </nb-list>
+</ng-template>
+
+<ng-template #noAvailableProposalDialog>
+    <nb-card>
+        <nb-card-header class="bg-danger text-white">No Available Approved Proposal</nb-card-header>
+        <nb-card-body>Do you want to create a proposal?</nb-card-body>
+        <nb-card-footer>
+            <button class="btn btn-outline-primary" (click)="navigateTo('/pages/event-proposal/add')" size="small">Create Proposal</button>
+        </nb-card-footer>
+    </nb-card>
 </ng-template>

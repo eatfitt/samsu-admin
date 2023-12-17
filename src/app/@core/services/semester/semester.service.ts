@@ -24,4 +24,13 @@ export class SemesterService {
       })
     );
   }
+
+  addSemester(sem: Semester) {
+    return this.http.post(`${this.apiEndPoint}/semesters`, sem).pipe(
+      catchError((error) => {
+        console.error("Error in addSemester:", error);
+        return throwError(error);
+      })
+    );
+  }
 }

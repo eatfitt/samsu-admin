@@ -177,24 +177,25 @@
             </div>
             <div class="col-md-4 overflow-auto" style="max-height: 45rem;">
                 <ng-container *ngIf="selectedTask === null; else selectedTaskTemplate">
-                    <label class="label">Status</label>
+                    <label class="label">Type</label>
                     <nb-select [(selected)]="eventToEdit.status" (selectedChange)="editEvent()"
                         [disabled]="viewOnly" size="small" class="d-block w-50 mb-2" filled="true"
                         [status]="event.status === 0 ? 'warning' : event.status === 1 ? 'success' : 'basic'">
-                        <nb-option [value]="0">Non public</nb-option>
+                        <nb-option [value]="0">Mandatory</nb-option>
                         <nb-option [value]="1">Public</nb-option>
+                        <nb-option [value]="2">Draft</nb-option>
                     </nb-select>
-                    <label class="label">Process</label>
+                    <label class="label">Process Status</label>
                     <nb-select [(selected)]="eventToEdit.processStatus" (selectedChange)="updateEventStatus()"
                         [disabled]="viewOnly" size="small" class="d-block w-50 mb-2" filled="true"
                         [status]="eventToEdit.processStatus === 0 || eventToEdit.processStatus === 1 ? 'basic' : eventToEdit.processStatus === 2 || eventToEdit.processStatus === 3 ? 'warning' : eventToEdit.processStatus === 7 ? 'danger' : 'success'">
-                        <nb-option [value]="0">Coming</nb-option>
-                        <nb-option [value]="1">Check in</nb-option>
-                        <nb-option [value]="2">Processing</nb-option>
-                        <nb-option [value]="3">Check out</nb-option>
-                        <nb-option [value]="4">Complete</nb-option>
-                        <nb-option [value]="5">Reviewed</nb-option>
-                        <nb-option [value]="6">Finished</nb-option>
+                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="0">Coming</nb-option>
+                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="1">Check in</nb-option>
+                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="2">Processing</nb-option>
+                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="3">Check out</nb-option>
+                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="4">Complete</nb-option>
+                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="5">Reviewed</nb-option>
+                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="6">Finished</nb-option>
                         <nb-option [value]="7" (click)="openDialog(sendCancelNotification, 117)">Canceled</nb-option>
                     </nb-select>
                     <nb-card>

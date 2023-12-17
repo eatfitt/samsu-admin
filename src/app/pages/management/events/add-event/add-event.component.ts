@@ -150,10 +150,10 @@ export class AddEventComponent implements OnInit {
     this.myEventProposals$ = this.store.select(state => state.user.userSummary).pipe(
       switchMap((userSummary: UserSummary) => {
         return userSummary.role === 'ROLE_ADMIN'
-          ? this.eventProposalService.getAllEventProposals()
-          : this.eventProposalService.getMyEventProposal();
+          ? this.eventProposalService.getAllAvailableEventProposals()
+          : this.eventProposalService.getMyAvailableEventProposal();
       }),
-      map(data => (data as any)?.content.filter(content => content.status === "APPROVED")),
+      map(data => (data as any)?.filter(content => content.status === "APPROVED")),
     );
     this.minDate.setDate(this.today.getDate());
     this.startTime.setDate(this.today.getDate() + 1);

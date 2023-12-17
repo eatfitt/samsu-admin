@@ -28,6 +28,7 @@ export class DepartmentsComponent {
     iconsLibrary: NbIconLibraries,
     private dialogService: NbDialogService,
     private toastrService: NbToastrService,
+    
   ) {
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
   }
@@ -60,11 +61,16 @@ export class DepartmentsComponent {
       }
     )
   }
-
-  mockEvents = [
-    'Build a house',
-    'Seminar EXE',
-    'Volunteer for environment',
-    'Music show'
-  ]
+  editDepartment(department: Department) {
+    this.departmentService.updateDepartment(department.id, department.name)
+      .subscribe(
+        success => {
+          this.toastrService.show('Edit Department Successfully', `Success`, { status: 'success'});
+          this.fetchData();
+        },
+        failed => {
+          this.toastrService.show('Edit Department Failed', `Failed`, { status: 'danger'});
+        }
+      )
+  }
 }

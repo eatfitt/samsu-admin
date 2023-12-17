@@ -23,6 +23,7 @@ import { EventComponent } from './management/events/event/event.component';
 import { InvokePointComponent } from './management/invoke-point/invoke-point.component';
 import { AllGradesComponent } from './management/all-grades/all-grades.component';
 import { NotificationsComponent } from './management/notifications/notifications.component';
+import { SemestersComponent } from './management/semesters/semesters.component';
 
 const routes: Routes = [{
   path: '',
@@ -91,6 +92,10 @@ const routes: Routes = [{
     {
       path: 'notifications',
       component: NotificationsComponent
+    },
+    {
+      path: 'semesters',
+      component: SemestersComponent
     },
     {
       path: 'user/:id',

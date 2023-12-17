@@ -1,62 +1,33 @@
-<div class="container">
-    <div class="row">
-        <!-- DEPARTMENT LIST -->
-        <div class="col-12">
-            <nb-card>
-                <nb-card-header>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>Departments</div>
-                        <button size="small" class="btn btn-outline-primary" (click)="openDialog(createDepartmentDialog)">
-                            <nb-icon [icon]="'plus-round'" pack="ion"></nb-icon>
-                        </button>
-                    </div>
-                </nb-card-header>
-                <nb-card-body class="p-0">
-                    <nb-list>
-                        <nb-list-item class="item small" *ngFor="let department of departments; let i = index" (click)="selectedDepartment = department">
-                            <span *ngIf="!editMode[i]">{{ department.name }}</span>
-                            <span *ngIf="editMode[i]">
-                                <input nbInput size="tiny" [(ngModel)]="department.name" >
-                            </span>
-                           <span>
-                                <button *ngIf="!editMode[i]" class="btn btn-link" (click)="editMode[i] = true">Edit</button>
-                                <button *ngIf="editMode[i]" class="btn btn-link" (click)="editMode[i] = false">Save</button>
-                           </span>
-                           <span>View</span>
-                           <span>Delete</span>
-                        </nb-list-item>
-                    </nb-list>
-                </nb-card-body>
-            </nb-card>
+<nb-card>
+    <nb-card-header>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>Departments</div>
+            <button size="small" class="btn btn-outline-primary" (click)="openDialog(createDepartmentDialog)">
+                <nb-icon [icon]="'plus-round'" pack="ion"></nb-icon>
+            </button>
         </div>
-        <!-- DEPARTMENT COLLAB EVENTS -->
-        <!-- <div class="col-md-5">
-            <nb-card>
-                <nb-card-header>{{ selectedDepartment?.name }}</nb-card-header>
-                <nb-card-body>
-                    <nb-card size="tiny">
-                        <nb-card-header>Upcoming Collaboration</nb-card-header>
-                        <nb-list>
-                          <nb-list-item *ngFor="let event of mockEvents">{{ event }}</nb-list-item>
-                        </nb-list>
-                    </nb-card>
-                    <nb-card size="tiny">
-                        <nb-card-header>Past Collaboration</nb-card-header>
-                        <nb-list>
-                          <nb-list-item  *ngFor="let event of mockEvents">{{ event }}</nb-list-item>
-                        </nb-list>
-                    </nb-card>
-                    <nb-card size="tiny">
-                        <nb-card-header>People</nb-card-header>
-                        <nb-list>
-                          <nb-list-item  *ngFor="let event of mockEvents">{{ event }}</nb-list-item>
-                        </nb-list>
-                    </nb-card>
-                </nb-card-body>
-            </nb-card>
-        </div> -->
-    </div>
-</div>
+    </nb-card-header>
+    <nb-card-body class="py-0">
+        <nb-list>
+            <nb-list-item class="item small" *ngFor="let department of departments; let i = index" (click)="selectedDepartment = department">
+                <span *ngIf="!editMode[i]">{{ department.name }}</span>
+                <span *ngIf="editMode[i]">
+                    <input nbInput size="tiny" [(ngModel)]="department.name" >
+                </span>
+                <span>
+                    <button *ngIf="!editMode[i]" class="btn btn-link" (click)="editMode[i] = true" style="font-size: .75rem;">Edit</button>
+                    <div  *ngIf="editMode[i]"  class="d-flex align-items-baseline">
+                        <button class="btn btn-link" (click)="editDepartment(department); editMode[i] = false;" style="font-size: .75rem;" >Save</button>
+                        <div>|</div>
+                        <button class="btn btn-link" (click)="editMode[i] = false" style="font-size: .75rem;">Cancel</button>
+                    </div>
+                </span>
+                <span>View</span>
+                <span>Delete</span>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+</nb-card>
 
 <ng-template #createDepartmentDialog let-data let-ref="dialogRef">
     <nb-card style="width: 30rem;">

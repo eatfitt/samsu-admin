@@ -74,6 +74,7 @@ import { AllGradesComponent } from './management/all-grades/all-grades.component
 import { PostsComponent } from './management/events/posts/posts.component';
 import { NotificationsComponent } from './management/notifications/notifications.component';
 import { NotificationConfigurationComponent } from './management/notifications/notification-configuration/notification-configuration.component';
+import { SemestersComponent } from './management/semesters/semesters.component';
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 const PIPES = [
@@ -160,7 +161,8 @@ const PIPES = [
     AllGradesComponent,
     PostsComponent,
     NotificationsComponent,
-    NotificationConfigurationComponent
+    NotificationConfigurationComponent,
+    SemestersComponent
     // TasksComponent,
   ],
 })

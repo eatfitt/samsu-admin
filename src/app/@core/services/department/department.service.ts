@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 
 export interface Department {
   name: string;
+  id?: number;
 }
 @Injectable({
   providedIn: 'root'
@@ -36,12 +37,12 @@ export class DepartmentService {
     );
   }
 
-  public updateDepartment(id: number, de: Department) {
+  public updateDepartment(id: number, de: string) {
     const headers = new HttpHeaders()
       .set("Content-Type", "application/json")
     const options = { headers: headers };
     return this.http
-      .put(`${this.apiEndPoint}/departments/${id}`, JSON.stringify(de), options)
+      .put(`${this.apiEndPoint}/departments/${id}`, de, options)
       .pipe(
         catchError((error) => {
           console.error("Error in checkInUser:", error);

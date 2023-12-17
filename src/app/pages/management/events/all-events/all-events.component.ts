@@ -1,21 +1,25 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild, TemplateRef } from "@angular/core";
 import { Router } from "@angular/router";
-import { NbIconLibraries } from "@nebular/theme";
+import { NbDialogRef, NbDialogService, NbIconLibraries } from "@nebular/theme";
 import { Store } from "@ngrx/store";
 import {
   Event,
   EventService,
 } from "../../../../@core/services/event/event.service";
-import { getRandomDate } from "../../../../@core/utils/data-util";
-import { UserState } from "../../../../app-state/user";
+import { UserState, UserSummary } from "../../../../app-state/user";
 import { UserService } from "../../../../@core/services/user/user.service";
 import { isEmpty } from "lodash";
+import { map, switchMap } from "rxjs";
+import { EventProposalService } from "../../../../../services/event-propsal.service";
 @Component({
   selector: "ngx-all-events",
   templateUrl: "./all-events.component.html",
   styleUrls: ["./all-events.component.scss"],
 })
 export class AllEventsComponent {
+  @ViewChild("noAvailableProposalDialog", { static: true })
+  noAvailableProposalDialog: TemplateRef<any>;
+  
   selectedStatisticTime = "week";
   events: Event[] = [];
   filteredEvents: Event[] = [];
@@ -28,12 +32,17 @@ export class AllEventsComponent {
     time: null,
     score: 0,
   };
+  approvedAroposalListLength = 0;
+  private contentTemplateRef: NbDialogRef<AllEventsComponent>;
+
   constructor(
     private userService: UserService,
     private eventService: EventService,
     private store: Store<{ user: UserState }>,
     private router: Router,
-    iconsLibrary: NbIconLibraries
+    iconsLibrary: NbIconLibraries,
+    private eventProposalService: EventProposalService,
+    private dialogService: NbDialogService,
   ) {
     iconsLibrary.registerFontPack("ion", { iconClassPrefix: "ion" });
   }
@@ -41,6 +50,14 @@ export class AllEventsComponent {
   ngOnInit() {
     this.userService.checkLoggedIn();
     this.fetchData();
+    this.store.select(state => state.user.userSummary).pipe(
+      switchMap((userSummary: UserSummary) => {
+        return userSummary.role === 'ROLE_ADMIN'
+          ? this.eventProposalService.getAllAvailableEventProposals()
+          : this.eventProposalService.getMyAvailableEventProposal();
+      }),
+      map(data => (data as any)?.filter(content => content.status === "APPROVED")),
+    ).subscribe(data => this.approvedAroposalListLength = data.length);
   }
 
   fetchData() {
@@ -53,7 +70,8 @@ export class AllEventsComponent {
 
   navigateTo(url: string) {
     console.log(this.router.url);
-    this.router.navigate(["pages", "events", "add"]);
+    this.router.navigate([url]);
+    this.contentTemplateRef.close();
   }
 
   filter() {
@@ -76,60 +94,28 @@ export class AllEventsComponent {
     }
   }
 
-  // mockEvents: Event[] = [
-  //   {
-  //     semestersName: 'SUMMER2023',
-  //     title: 'Capstone Review 2',
-  //     status: 1,
-  //     startTime: getRandomDate(),
-  //     bannerUrls: 'https://images.unsplash.com/photo-1683009427513-28e163402d16?auto=format&fit=crop&q=80&w=1470&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  //     duration: '2',
-  //     attendances: 1
-  //   },
-  //   {
-  //     semestersName: 'FALL2023',
-  //     title: 'Taylor Swift Red Tour',
-  //     status: 1,
-  //     startTime: getRandomDate(),
-  //     bannerUrls: 'https://images.unsplash.com/photo-1683009427513-28e163402d16?auto=format&fit=crop&q=80&w=1470&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  //     duration: '1',
-  //     attendances: 300
-  //   },
-  //   {
-  //     semestersName: 'SUMMER2023',
-  //     title: 'Entrepeuneurship Seminar',
-  //     status: 2,
-  //     startTime: getRandomDate(),
-  //     bannerUrls: 'https://images.unsplash.com/photo-1683009427513-28e163402d16?auto=format&fit=crop&q=80&w=1470&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  //     duration: '1.5',
-  //     attendances: 27
-  //   },
-  //   {
-  //     semestersName: 'SPRING2023',
-  //     title: 'Capstone Review 3',
-  //     status: 2,
-  //     startTime: getRandomDate(),
-  //     bannerUrls: 'https://images.unsplash.com/photo-1683009427513-28e163402d16?auto=format&fit=crop&q=80&w=1470&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  //     duration: '2',
-  //     attendances: 160
-  //   },
-  //   {
-  //     semestersName: 'FALL2023',
-  //     title: 'Hackathon',
-  //     status: 3,
-  //     startTime: getRandomDate(),
-  //     bannerUrls: 'https://images.unsplash.com/photo-1683009427513-28e163402d16?auto=format&fit=crop&q=80&w=1470&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  //     duration: '1',
-  //     attendances: 75
-  //   },
-  //   {
-  //     semestersName: 'SPRING2023',
-  //     title: 'Ho Sen Cho Ai',
-  //     status: 1,
-  //     startTime: getRandomDate(),
-  //     bannerUrls: 'https://images.unsplash.com/photo-1683009427513-28e163402d16?auto=format&fit=crop&q=80&w=1470&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  //     duration: '1.5',
-  //     attendances: 60
-  //   },
-  // ]
+  openDialog(dialog) {
+    this.contentTemplateRef = this.dialogService.open(dialog);
+  }
+
+  getProcessStatus(status: number): string {
+    switch(status) {
+      case 0:
+        return 'Coming';
+        case 1:
+        return 'Check in';
+        case 2:
+        return 'Processing';
+        case 3:
+        return 'Check out';
+        case 4:
+        return 'Complete';
+        case 5:
+        return 'Reviewed';
+        case 6:
+        return 'Finished';
+        case 0:
+        return 'Canceled';
+    }
+  }
 }
