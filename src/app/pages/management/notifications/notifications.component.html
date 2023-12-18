@@ -1,15 +1,15 @@
 <nb-card>
     <nb-card-header>Notification Templates</nb-card-header>
     <nb-card-body>
-        <label class="label mb-1">Cancel Event</label>
+        <label class="label mb-1">Event Process Status</label>
         <div class="row">
-            <div class="col-3">
-                <nb-card (click)="openDialog(editNotificationTemplate, cancelEventNotification)">
+            <div class="col-2" *ngFor="let noti of [cancelEventNotification, checkInEventNotification, processingEventNotification, checkoutEventNotification, completeEventNotification]">
+                <nb-card (click)="openDialog(editNotificationTemplate, noti)">
                     <nb-card-header class="text-center">
                         <nb-icon icon="email-outline"></nb-icon>
                     </nb-card-header>
                     <nb-card-body style="background-color: var(--accordion-header-border-color);" class="text-center font-weight-bold small"> {{
-                        cancelEventNotification?.title }} </nb-card-body>
+                        noti?.title }} </nb-card-body>
                 </nb-card>
             </div>
         </div>

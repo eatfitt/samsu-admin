@@ -11,6 +11,11 @@ export class NotificationsComponent {
 
   @ViewChild("editNotificationTemplate", { static: true }) editNotificationTemplate: TemplateRef<any>;
   cancelEventNotification: Notification = null;
+  checkInEventNotification: Notification = null;
+  processingEventNotification: Notification = null;
+  checkoutEventNotification: Notification = null;
+  completeEventNotification: Notification = null;
+  
   rescheduleEventNotification: Notification = null;
   private contentTemplateRef: NbDialogRef<NotificationsComponent>;
 
@@ -24,8 +29,22 @@ export class NotificationsComponent {
     this.fetchData();
   }
 
+  // NOTE:
+  // PROCESS
+  // cancel - 117
+  // check in - 125
+  // processing - 126
+  // check out - 127
+  // complete - 128
+
   fetchData() {
     this.notiService.getCancelEventTemplate().subscribe((data: any) => this.cancelEventNotification = data);
+    this.notiService.getNotification(125).subscribe((data: any) => this.checkInEventNotification = data);
+    this.notiService.getNotification(126).subscribe((data: any) => this.processingEventNotification = data);
+    this.notiService.getNotification(127).subscribe((data: any) => this.checkoutEventNotification = data);
+    this.notiService.getNotification(128).subscribe((data: any) => this.completeEventNotification = data);
+
+
     this.notiService.getNotification(120).subscribe((data: any) => this.rescheduleEventNotification = data);
   }
 
