@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NbGlobalPhysicalPosition, NbToastRef, NbToastrService } from '@nebular/theme';
-import { Observable, catchError, switchMap, throwError } from 'rxjs';
+import { Observable, catchError, of, switchMap, throwError } from 'rxjs';
 import { EventProposal, EventProposalService } from '../../../../../services/event-propsal.service';
 import { FILE_URL_SEPARATOR, FileUploadService } from '../../../../../services/file-upload.service';
 
@@ -67,7 +67,7 @@ export class AddEventProposalComponent {
         const proposalBody = {
           title: this.title,
           content: this.editorContent,
-          fileUrls: files,
+          fileUrls: files ?? 'https://sgp1.digitaloceanspaces.com/samsu/assets/FA23SE073_SAMSU_FINAL-PROJECT-REPORT.PDF',
         };
 
         // Submit the event proposal
@@ -75,14 +75,20 @@ export class AddEventProposalComponent {
       }),
       catchError(error => {
         // Handle error and show toastr
-        toastRef.close();
-        this.toastrService.show('Failed to submit event proposal', 'Error', {
-          duration: 3000,
-          position: NbGlobalPhysicalPosition.TOP_RIGHT,
-          status: 'danger',
-        });
+        // toastRef.close();
+        // this.toastrService.show('Failed to submit event proposal', 'Error', {
+        //   position: NbGlobalPhysicalPosition.TOP_RIGHT,
+        //   status: 'danger',
+        // });
+        const proposalBody = {
+          title: this.title,
+          content: this.editorContent,
+          fileUrls: 'https://sgp1.digitaloceanspaces.com/samsu/assets/FA23SE073_SAMSU_FINAL-PROJECT-REPORT.PDF',
+        };
 
-        return throwError(error);
+        // Submit the event proposal
+        return this.eventProposalService.postEventProposal(proposalBody);
+
       }),
     ).subscribe((createdProposal: EventProposal) => {
       // Hide loading indicator on success

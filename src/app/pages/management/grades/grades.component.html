@@ -22,7 +22,7 @@
 <!-- TODO: CHO CASI MUI TEN -->
 <ng-template #gradeCriteriaList let-gradeCriterias="gradeCriterias">
     <input nbInput fullWidth (keyup)="filterGradeCriteria($event)"
-        placeholder="Search Grade Criteria" size="small">
+        placeholder="Search Grade Criteria">
     <!-- <nb-list>
         <nb-list-item class="item small" *ngFor="let gradeCriteria of gradeCriterias">
             {{ gradeCriteria.content }}
@@ -32,7 +32,7 @@
         <nb-accordion-item *ngFor="let gradeCriteria of gradeCriterias">
             <nb-accordion-item-header>{{ gradeCriteria.gradeCriteria.content
                 }}</nb-accordion-item-header>
-            <nb-accordion-item-body class="small">
+            <nb-accordion-item-body>
                 <div class="py-3 row"
                     style="background-color: var(--accordion-header-border-color);">
                     <div class="col-12">
@@ -96,12 +96,12 @@
     <div class="font-weight-bold mb-1">Sub Grade Criteria</div>
     <input nbInput fullWidth (keyup)="filterGradeSubCriteria($event)">
     <nb-list>
-        <nb-list-item class="item small bg-light mt-3">
+        <nb-list-item class="item bg-light mt-3">
             <span class="label">Content</span>
             <span class="label">Min score</span>
             <span class="label">Max score</span>
         </nb-list-item>
-        <nb-list-item class="item small" *ngFor="let gradeSubCriteria of gradeSubCriterias">
+        <nb-list-item class="item" *ngFor="let gradeSubCriteria of gradeSubCriterias">
             <span>{{ gradeSubCriteria.content }}</span>
             <span>{{ gradeSubCriteria.minScore }}</span>
             <span>{{ gradeSubCriteria.maxScore }}</span>
@@ -196,11 +196,11 @@
             <div class="row">
                 <div class="col-md-6">
                     <label class="label mb-1">Default Score</label>
-                    <input type="number" onkeydown="return event.key !== '-'"  nbInput size="small" [(ngModel)]="gradeCriteria.gradeCriteria.defaultScore">
+                    <input type="number" onkeydown="return event.key !== '-'"  nbInput [(ngModel)]="gradeCriteria.gradeCriteria.defaultScore">
                 </div>
                 <div class="col-md-6">
                     <label class="label mb-1">Max Score</label>
-                    <input type="number" onkeydown="return event.key !== '-'"  nbInput size="small" [(ngModel)]="gradeCriteria.gradeCriteria.maxScore">
+                    <input type="number" onkeydown="return event.key !== '-'"  nbInput [(ngModel)]="gradeCriteria.gradeCriteria.maxScore">
                 </div>
             </div>
         </nb-card-body>

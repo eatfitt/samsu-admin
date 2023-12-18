@@ -81,8 +81,8 @@
                                     <nb-card-header
                                         class="p-0 d-flex justify-content-center align-items-center"
                                         style="height: 6rem;">
-                                        <img *ngIf="isImageFile(selectedGradeTicket?.evidenceUrls)"
-                                            class="mh-100 mw-100" [src]="selectedGradeTicket?.evidenceUrls">
+                                        <img *ngIf="isImageFile(selectedGradeTicket?.evidenceUrls ?? 'https://simplecert.net/wp-content/uploads/elementor/thumbs/Acamedic-Achievement-tempate-p2adif7uymj5vx15nb5c0isw92a5epu13ix5kmldeq.png')"
+                                            class="mh-100 mw-100" [src]="selectedGradeTicket?.evidenceUrls ?? 'https://simplecert.net/wp-content/uploads/elementor/thumbs/Acamedic-Achievement-tempate-p2adif7uymj5vx15nb5c0isw92a5epu13ix5kmldeq.png'">
                                         <nb-icon *ngIf="!isImageFile(selectedGradeTicket?.evidenceUrls)"
                                             icon="file-text" pack="eva" class="w-50 h-50"></nb-icon>
                                     </nb-card-header>
@@ -146,7 +146,7 @@
 </ng-template>
 
 <ng-template #eventBannerDialog let-data let-ref="dialogRef">
-    <img *ngIf="isImageFile(data)" [src]="data">
+    <img *ngIf="isImageFile(data)" [src]="data" style="height: 50vh">
     <iframe *ngIf="!isImageFile(data)"
         [src]="'https://docs.google.com/viewer?url=' + data + '&embedded=true' | safe:'resourceUrl'"
         height="700" width="500"></iframe>

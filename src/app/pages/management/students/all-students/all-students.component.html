@@ -183,13 +183,13 @@
     </nb-card-body>
     <nb-card-footer>
       <button *ngIf="importFailed > 0" class="btn btn-danger size-small mt-2"
-        (click)="openFailedList()">Xem người dùng nhập lỗi</button>
+        (click)="openFailedList()">View error</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>
 <ng-template #failedImportListDialog let-data let-ref="dialogRef">
   <nb-card>
-    <nb-card-header>Lỗi thêm người dùng</nb-card-header>
+    <nb-card-header>Error Add Users</nb-card-header>
     <nb-card-body>
       <div class="failed-import-list">
         <ng2-smart-table [settings]="reimportFailSetting" [source]="sourceAddingStudents">
