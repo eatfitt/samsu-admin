@@ -1,0 +1,57 @@
+::ng-deep .table-avatar-img {
+    height: 30px;
+    width: 30px;
+    object-fit: cover;
+}
+
+::ng-deep .hover-pointer {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+::ng-deep ng2-smart-table,
+::ng-deep ng2-smart-table table tr th a {
+    font-size: small !important;
+}
+
+::ng-deep ng2-smart-table .ng2-smart-actions ng2-st-tbody-edit-delete,
+::ng-deep ng2-smart-table .ng2-smart-actions ng2-st-tbody-edit-delete a.ng2-smart-action {
+    height: 2rem;
+}
+
+::ng-deep ng2-smart-table td {
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    >* {
+        flex: 1;
+    }
+
+    &:first-child {
+        border-top: none;
+    }
+
+    span {
+
+        &:first-child,
+        &:last-child {
+            max-width: 5rem !important;
+        }
+
+        // &:nth-child(2) {
+        //     max-width: 10rem !important;
+        // }
+
+        // &:nth-child(2),
+        // &:nth-child(3) {
+        //     flex: 2 !important;
+        // }
+    }
+}

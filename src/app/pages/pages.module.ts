@@ -75,6 +75,7 @@ import { PostsComponent } from './management/events/posts/posts.component';
 import { NotificationsComponent } from './management/notifications/notifications.component';
 import { NotificationConfigurationComponent } from './management/notifications/notification-configuration/notification-configuration.component';
 import { SemestersComponent } from './management/semesters/semesters.component';
+import { DepartmentDetailComponent } from './management/departments/department-detail/department-detail.component';
 
 // import { TasksComponent } from "./management/events/tasks/tasks.component";
 const PIPES = [
@@ -162,7 +163,8 @@ const PIPES = [
     PostsComponent,
     NotificationsComponent,
     NotificationConfigurationComponent,
-    SemestersComponent
+    SemestersComponent,
+    DepartmentDetailComponent
     // TasksComponent,
   ],
 })

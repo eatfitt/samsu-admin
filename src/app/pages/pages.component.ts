@@ -21,8 +21,8 @@ export class PagesComponent implements OnInit {
   isManager = false;
   ngOnInit(): void {
     this.store.select(state => state.user.userSummary).subscribe(userSummary => {
-      this.isAdmin = (userSummary.role === 'ROLE_ADMIN');
-      this.isManager = (userSummary.role === 'ROLE_MANAGER');
+      this.isAdmin = (userSummary?.role === 'ROLE_ADMIN');
+      this.isManager = (userSummary?.role === 'ROLE_MANAGER');
       if (this.isAdmin) {
         this.menu = [...MENU_ITEMS, ...ADMIN_MENU_ITEMS];
       }

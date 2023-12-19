@@ -7,14 +7,19 @@ import {
   ViewChild,
 } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
+import { Router } from "@angular/router";
 import {
   NbDialogRef,
   NbDialogService,
   NbIconLibraries,
   NbToastrService,
 } from "@nebular/theme";
-import { BehaviorSubject, Observable, combineLatest, map, switchMap } from "rxjs";
+import { Store } from "@ngrx/store";
+import _ from "lodash";
+import { BehaviorSubject, Observable, map, switchMap } from "rxjs";
+import { EventProposal, EventProposalService } from "../../../../../services/event-propsal.service";
 import { FileUploadService } from "../../../../../services/file-upload.service";
+import { DepartmentService } from "../../../../@core/services/department/department.service";
 import {
   CreateEventRequest,
   Event,
@@ -26,16 +31,10 @@ import {
 import {
   GradeSubCriteria, GradeSubCriteriaService,
 } from "../../../../@core/services/grade-sub-criteria/grade-sub-criteria.service";
-import { GetAllUsersListResponse, UserService } from "../../../../@core/services/user/user.service";
-import { Router } from "@angular/router";
-import { EventProposalService } from "../../../../../services/event-propsal.service";
-import { EventProposal } from "../../../../../services/event-propsal.service";
 import { SemesterService } from "../../../../@core/services/semester/semester.service";
-import _ from "lodash";
-import { Task } from "../task-detail/task-detail.component";
-import { DepartmentService } from "../../../../@core/services/department/department.service";
+import { GetAllUsersListResponse, UserService } from "../../../../@core/services/user/user.service";
 import { UserState, UserSummary } from "../../../../app-state/user";
-import { Store } from "@ngrx/store";
+import { Task } from "../task-detail/task-detail.component";
 
 enum FeedbackType {
   MultipleSelect = 0,
@@ -145,11 +144,11 @@ export class AddEventComponent implements OnInit {
   ngOnInit(): void {
     this.userService.checkLoggedIn();
     this.store.select(state => state.user.userSummary).subscribe(userSummary => {
-      this.isAdmin = (userSummary.role === 'ROLE_ADMIN');
+      this.isAdmin = (userSummary?.role === 'ROLE_ADMIN');
     });
     this.myEventProposals$ = this.store.select(state => state.user.userSummary).pipe(
       switchMap((userSummary: UserSummary) => {
-        return userSummary.role === 'ROLE_ADMIN'
+        return userSummary?.role === 'ROLE_ADMIN'
           ? this.eventProposalService.getAllAvailableEventProposals()
           : this.eventProposalService.getMyAvailableEventProposal();
       }),

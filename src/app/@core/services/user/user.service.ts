@@ -8,12 +8,10 @@ import { environment } from "../../../../environments/environment";
 import { SocialAuthService, SocialUser } from "../../../../utils/social-login/public-api";
 import {
   UserState,
-  UserSummary,
   setUserJwt,
   setUserSocialUser,
-  setUserUserSummary,
+  setUserUserSummary
 } from "../../../app-state/user";
-import { getUserUserSummaryState } from "../../../app-state/user";
 
 export enum RoleEnum {
   ROLE_ADMIN = 0,
@@ -225,7 +223,7 @@ export class UserService {
     const loggedInUserSummary = JSON.parse(
       localStorage.getItem("userSummary")
     );
-    // if (loggedInUserSummary.role !== 'ROLE_ADMIN' || loggedInUserSummary.role !== 'ROLE_MANAGER') {
+    // if (loggedInuserSummary?.role !== 'ROLE_ADMIN' || loggedInuserSummary?.role !== 'ROLE_MANAGER') {
     //   this.router.navigate(["/"]);
     // }
     if (!!loggedInJwt) {

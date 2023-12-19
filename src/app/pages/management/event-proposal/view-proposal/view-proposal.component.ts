@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NbDialogRef, NbDialogService, NbGlobalPhysicalPosition, NbToastRef, NbToastrService } from '@nebular/theme';
+import { Store } from '@ngrx/store';
 import { isString } from 'lodash';
 import { catchError, throwError } from 'rxjs';
 import { EventProposal, EventProposalService, EventProposalStatus } from '../../../../../services/event-propsal.service';
-import { Store } from '@ngrx/store';
-import { UserState } from '../../../../app-state/user';
 import { UserService } from '../../../../@core/services/user/user.service';
+import { UserState } from '../../../../app-state/user';
 
 interface Feedback {
   content: string;
@@ -36,7 +36,7 @@ export class ViewProposalComponent implements OnInit {
   ngOnInit(): void {
     this.userService.checkLoggedIn();
     this.store.select(state => state.user.userSummary).subscribe(userSummary => {
-      this.isAdmin = (userSummary.role === 'ROLE_ADMIN');
+      this.isAdmin = (userSummary?.role === 'ROLE_ADMIN');
     });
     this.statusOptions = [
       EventProposalStatus.REVIEWED,

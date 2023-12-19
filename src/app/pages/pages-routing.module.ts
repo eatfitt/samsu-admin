@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
+import { AllGradesComponent } from './management/all-grades/all-grades.component';
+import { DepartmentDetailComponent } from './management/departments/department-detail/department-detail.component';
 import { DepartmentsComponent } from './management/departments/departments.component';
 import { AddEventProposalComponent } from './management/event-proposal/add-event-proposal/add-event-proposal.component';
 import { AllEventProposalComponent } from './management/event-proposal/admin/all-event-proposal/all-event-proposal.component';
@@ -11,19 +13,17 @@ import { EventProposalComponent } from './management/event-proposal/event-propos
 import { ViewProposalComponent } from './management/event-proposal/view-proposal/view-proposal.component';
 import { AddEventComponent } from './management/events/add-event/add-event.component';
 import { AllEventsComponent } from './management/events/all-events/all-events.component';
+import { SingleEventComponent } from './management/events/single-event/single-event.component';
 import { GradesComponent } from './management/grades/grades.component';
 import { AllGroupsComponent } from './management/groups/all-groups/all-groups.component';
 import { SingleGroupComponent } from './management/groups/single-group/single-group.component';
+import { InvokePointComponent } from './management/invoke-point/invoke-point.component';
+import { NotificationsComponent } from './management/notifications/notifications.component';
+import { SemestersComponent } from './management/semesters/semesters.component';
 import { AllStudentsComponent } from './management/students/all-students/all-students.component';
 import { UserComponent } from './management/user/user.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { PagesComponent } from './pages.component';
-import { SingleEventComponent } from './management/events/single-event/single-event.component';
-import { EventComponent } from './management/events/event/event.component';
-import { InvokePointComponent } from './management/invoke-point/invoke-point.component';
-import { AllGradesComponent } from './management/all-grades/all-grades.component';
-import { NotificationsComponent } from './management/notifications/notifications.component';
-import { SemestersComponent } from './management/semesters/semesters.component';
 
 const routes: Routes = [{
   path: '',
@@ -76,6 +76,10 @@ const routes: Routes = [{
     {
       path: 'departments',
       component: DepartmentsComponent,
+    },
+    {
+      path: 'departments/:id',
+      component: DepartmentDetailComponent,
     },
     {
       path: 'grades',

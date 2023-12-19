@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 
 export interface Department {
@@ -32,6 +32,34 @@ export class DepartmentService {
     return this.http.post(`${this.apiEndPoint}/departments`, name).pipe(
       catchError((error) => {
         console.error("Error in createDepartment:", error);
+        return throwError(error);
+      })
+    );
+  }
+
+
+  public getDepartmentById(id: number) {
+    return this.http.get(`${this.apiEndPoint}/departments/${id}`).pipe(
+      catchError((error) => {
+        console.error("Error in getDepartmentById:", error);
+        return throwError(error);
+      })
+    );
+  }
+
+  public deleteDepartment(id: number) {
+    return this.http.delete(`${this.apiEndPoint}/departments/${id}`).pipe(
+      catchError((error) => {
+        console.error("Error in deleteDepartment:", error);
+        return throwError(error);
+      })
+    );
+  }
+
+  public viewDepartmentUsers(id: number) {
+    return this.http.get(`${this.apiEndPoint}/departments/${id}/staff`).pipe(
+      catchError((error) => {
+        console.error("Error in viewDepartmentUsers:", error);
         return throwError(error);
       })
     );

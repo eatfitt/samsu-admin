@@ -22,8 +22,9 @@
                         <button class="btn btn-link" (click)="editMode[i] = false" style="font-size: .75rem;">Cancel</button>
                     </div>
                 </span>
-                <span>View</span>
-                <span>Delete</span>
+                <span><a [routerLink]="'../departments/'+department.id">View</a></span>
+                <span><button class="btn btn-link" (click)="deleteDepartment(department)"
+                        style="font-size: .75rem;">Delete</button></span>
             </nb-list-item>
         </nb-list>
     </nb-card-body>

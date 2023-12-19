@@ -1,0 +1,45 @@
+<nb-card>
+    <nb-card-header>
+        <div class="d-flex justify-content-between">
+            <div class="d-flex">
+                <h5 class="hover-pointer" [routerLink]="['..', 'departments']">Department: {{departmentName}}</h5>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body class="p-0">
+        <!-- <ng2-smart-table [settings]="settings" [source]="source"
+      (deleteConfirm)="onDeleteConfirm($event)" (editConfirm)="onEditConfirm($event)" (custom)="onCustomAction($event)">
+    </ng2-smart-table> -->
+        <nb-tabset>
+            <!-- MANAGERS -->
+            <nb-tab tabTitle="Staffs">
+                <nb-list>
+                    <nb-list-item class="item small">
+                        <span>Avatar</span>
+                        <span>Name</span>
+                        <span>Rollnumber</span>
+                        <span>Username</span>
+                        <span>Department</span>
+                    </nb-list-item>
+                    <nb-list-item class="item small" *ngFor="let staff of staffList">
+                        <span>
+                            <img *ngIf="staff.avatar" class="table-avatar-img" [src]="staff.avatar" alt="N/A">
+                            <img *ngIf="!staff.avatar" class="table-avatar-img"
+                                src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="N/A">
+                        </span>
+                        <span><a [routerLink]="'../../' + getUserDetailLink(staff.rollnumber)">{{ staff.name
+                                }}</a></span>
+                        <span>{{ staff.rollnumber }}</span>
+                        <span>{{ staff.username }}</span>
+                        <span>{{ departmentName ?? 'N/A' }}</span>
+                        <!-- Pagination controls -->
+                    </nb-list-item>
+                    <!-- Show empty template when there are no proposals -->
+                </nb-list>
+                <div *ngIf="staffList?.length === 0" class="col-md-12">
+                    <div class="alert alert-info">No staff available.</div>
+                </div>
+            </nb-tab>
+        </nb-tabset>
+    </nb-card-body>
+</nb-card>

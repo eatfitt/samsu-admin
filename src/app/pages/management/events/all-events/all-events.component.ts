@@ -1,16 +1,16 @@
-import { Component, ViewChild, TemplateRef } from "@angular/core";
+import { Component, TemplateRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { NbDialogRef, NbDialogService, NbIconLibraries } from "@nebular/theme";
 import { Store } from "@ngrx/store";
+import { isEmpty } from "lodash";
+import { map, switchMap } from "rxjs";
+import { EventProposalService } from "../../../../../services/event-propsal.service";
 import {
   Event,
   EventService,
 } from "../../../../@core/services/event/event.service";
-import { UserState, UserSummary } from "../../../../app-state/user";
 import { UserService } from "../../../../@core/services/user/user.service";
-import { isEmpty } from "lodash";
-import { map, switchMap } from "rxjs";
-import { EventProposalService } from "../../../../../services/event-propsal.service";
+import { UserState, UserSummary } from "../../../../app-state/user";
 @Component({
   selector: "ngx-all-events",
   templateUrl: "./all-events.component.html",
@@ -52,7 +52,7 @@ export class AllEventsComponent {
     this.fetchData();
     this.store.select(state => state.user.userSummary).pipe(
       switchMap((userSummary: UserSummary) => {
-        return userSummary.role === 'ROLE_ADMIN'
+        return userSummary?.role === 'ROLE_ADMIN'
           ? this.eventProposalService.getAllAvailableEventProposals()
           : this.eventProposalService.getMyAvailableEventProposal();
       }),

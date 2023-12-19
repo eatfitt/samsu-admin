@@ -1,7 +1,7 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { NbDialogRef, NbDialogService, NbIconLibraries, NbToastrService } from '@nebular/theme';
 import { Department, DepartmentService } from '../../../@core/services/department/department.service';
 import { UserService } from '../../../@core/services/user/user.service';
-import { NbDialogRef, NbDialogService, NbIconLibraries, NbToastrService } from '@nebular/theme';
 
 interface GetAllDepartmentsResponse {
   content: Department[];
@@ -58,6 +58,18 @@ export class DepartmentsComponent {
       },
       failed => {
         this.toastrService.show('Add Department Failed', `Failed`, { status: 'danger'});
+      }
+    )
+  }
+  deleteDepartment(department: Department) {
+    this.departmentService.deleteDepartment(department.id).subscribe(
+      success => {
+        this.toastrService.show('Delete Department Successfully', `Success`, { status: 'success' });
+        this.fetchData();
+        this.contentTemplateRef.close();
+      },
+      failed => {
+        this.toastrService.show('Delete Department Failed', `Failed`, { status: 'danger' });
       }
     )
   }
