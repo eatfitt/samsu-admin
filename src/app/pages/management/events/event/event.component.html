@@ -189,14 +189,14 @@
                     <nb-select [(selected)]="eventToEdit.processStatus" (selectedChange)="updateEventStatus()"
                         [disabled]="viewOnly" size="small" class="d-block w-50 mb-2" filled="true"
                         [status]="eventToEdit.processStatus === 0 || eventToEdit.processStatus === 1 ? 'basic' : eventToEdit.processStatus === 2 || eventToEdit.processStatus === 3 ? 'warning' : eventToEdit.processStatus === 7 ? 'danger' : 'success'">
-                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="0">Coming</nb-option>
-                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="1">Check in</nb-option>
-                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="2">Processing</nb-option>
-                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="3">Check out</nb-option>
-                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="4">Complete</nb-option>
-                        <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="5">Reviewed</nb-option>
+                        <nb-option [disabled]="eventToEdit.processStatus === 7 || eventToEdit.processStatus > 0" [value]="0">Coming</nb-option>
+                        <nb-option (click)="sendNotification(1)" [disabled]="eventToEdit.processStatus === 7 || eventToEdit.processStatus > 1" [value]="1">Check in</nb-option>
+                        <nb-option (click)="sendNotification(2)" [disabled]="eventToEdit.processStatus === 7 || eventToEdit.processStatus > 2" [value]="2">Processing</nb-option>
+                        <nb-option (click)="sendNotification(3)" [disabled]="eventToEdit.processStatus === 7 || eventToEdit.processStatus > 3" [value]="3">Check out</nb-option>
+                        <nb-option (click)="sendNotification(4)" [disabled]="eventToEdit.processStatus === 7 || eventToEdit.processStatus > 4" [value]="4">Complete</nb-option>
+                        <nb-option [disabled]="eventToEdit.processStatus === 7 || eventToEdit.processStatus > 5" [value]="5">Reviewed</nb-option>
                         <nb-option [disabled]="eventToEdit.processStatus === 7" [value]="6">Finished</nb-option>
-                        <nb-option [value]="7" (click)="openDialog(sendCancelNotification, 117)">Canceled</nb-option>
+                        <nb-option [value]="7" [disabled]="eventToEdit.processStatus === 6" (click)="openDialog(sendCancelNotification, 117)">Canceled</nb-option>
                     </nb-select>
                     <nb-card>
                         <nb-card-header>Details</nb-card-header>
@@ -331,6 +331,10 @@
             <label for="startTime" class="label">Start time</label>
             <input fullWidth type="datetime" [(ngModel)]="eventToEdit.startTime" nbInput id="startTime" placeholder="Start time" [nbDatepicker]="dateTimePicker">
             <nb-datepicker [min]="minDate" #dateTimePicker></nb-datepicker>
+            <!-- <input class="w-50" nbInput [(ngModel)]="startTimeOClock" [nbTimepicker]="timepicker" style="border-radius: 0.25rem 0 0 0.25rem;">
+            <nb-timepicker #timepicker></nb-timepicker>
+            <input class="w-75" type="datetime" [defau]="startTime" nbInput id="startTime" placeholder="Start time" [nbDatepicker]="dateTimePicker" style="border-radius: 0 0.25rem 0.25rem 0;">
+            <nb-datepicker [min]="minDate" #dateTimePicker></nb-datepicker> -->
         </nb-card-body>
         <nb-card-footer>
             <button nbButton (click)="editEvent(); openDialog(sendCancelNotification, 120)">Reschedule</button>

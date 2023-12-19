@@ -67,7 +67,7 @@ export class AddEventProposalComponent {
         const proposalBody = {
           title: this.title,
           content: this.editorContent,
-          fileUrls: files ?? 'https://sgp1.digitaloceanspaces.com/samsu/assets/FA23SE073_SAMSU_FINAL-PROJECT-REPORT.PDF',
+          fileUrls: files ?? 'https://sgp1.digitaloceanspaces.com/samsu/assets/PROPOSAL.XLSX',
         };
 
         // Submit the event proposal

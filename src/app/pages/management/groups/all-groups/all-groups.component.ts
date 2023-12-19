@@ -1,9 +1,10 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { NbDialogService, NbIconLibraries } from '@nebular/theme';
+import { NbDialogRef, NbDialogService, NbIconLibraries } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Group, GroupService } from '../../../../@core/services/group/group.service';
 import { UserService } from '../../../../@core/services/user/user.service';
 import { UserState } from '../../../../app-state/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ngx-all-groups',
@@ -19,12 +20,14 @@ export class AllGroupsComponent {
   newGroupName = '';
   isApiSuccess: boolean;
   isApiFailed: boolean;
+  private contentTemplateRef: NbDialogRef<AllGroupsComponent>;
   constructor(
     private userService: UserService,
     private groupService: GroupService,
     private store: Store<{ user: UserState }>,
     private dialogService: NbDialogService,
-    iconsLibrary: NbIconLibraries
+    iconsLibrary: NbIconLibraries,
+    private router: Router,
   ) {
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
   }
@@ -46,7 +49,7 @@ export class AllGroupsComponent {
   }
 
   openDialog(dialog) {
-    this.dialogService.open(dialog);
+    this.contentTemplateRef = this.dialogService.open(dialog);
   }
 
   identify(index, item) {
@@ -56,10 +59,12 @@ export class AllGroupsComponent {
   createGroup() {
     this.groupService.createGroup(this.bearerToken, {name: this.newGroupName, userRollnumbers: []})
     .subscribe(
-      data => {
+      (data: any) => {
         this.isApiFailed = false;
         this.isApiSuccess = true;
         this.fetchData();
+        this.contentTemplateRef.close();
+        this.router.navigate(['pages', 'group', data.id])
       },
       error => {
         console.error(error);

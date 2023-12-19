@@ -7,6 +7,7 @@ import { FileUploadService } from '../../../../../services/file-upload.service';
 import { FeedbackService } from '../../../../@core/services/feedback/feedback.service';
 import { TaskService } from '../../../../@core/services/task/task.service';
 import { Task } from '../task-detail/task-detail.component';
+import { Notification, NotificationService, SendNotificationRequest } from '../../../../@core/services/notification/notification.service';
 @Component({
   selector: 'ngx-event',
   templateUrl: './event.component.html',
@@ -35,6 +36,10 @@ export class EventComponent {
   durationObject = null;
   isShowStatistic = false;
   isShowPosts = false;
+
+  // TIME RESCHEDULE
+  startTimeOClock: Date;
+  startTime: Date;
   
   // CHECK FIELD IS EDITING
   isEditContent = false;
@@ -82,6 +87,7 @@ export class EventComponent {
     private uploadService: FileUploadService,
     private feedbackService: FeedbackService,
     private taskService: TaskService,
+    private notiService: NotificationService,
   ) {}
 
   ngOnInit() {
@@ -108,6 +114,8 @@ export class EventComponent {
         }),
         feedbackQuestions: this.feedback ?? this.event?.feedbackQuestions
       };
+      this.startTimeOClock = {...this.event?.startTime};
+      this.startTime = {...this.event?.startTime};
       this.filteredParticipantList = this.participants;
       this.rollnumbers = this.participants.map(p => p?.user?.rollnumber);
       this.getDuration();
@@ -115,6 +123,7 @@ export class EventComponent {
   }
 
   editEvent() {
+
     const eventPayload: CreateEventRequest = {
       status: this.eventToEdit.status,
       duration: this.eventToEdit.duration,
@@ -384,5 +393,41 @@ export class EventComponent {
         this.eventToEdit = { ...this.event };
       }
     )
+  }
+
+  sendNotification(processStatus: number) {
+    let notiId: number;
+    switch(processStatus) {
+      case 1:
+        notiId = 125;
+        break;
+        case 2:
+        notiId = 126;
+        break;
+        case 3:
+        notiId = 127;
+        break;
+        case 4:
+        notiId = 128;
+        break;
+    }
+    this.notiService.getNotification(notiId).subscribe((data: Notification) => {
+      const payload: SendNotificationRequest = {
+        title: data.title,
+        content: `${data.content} ${this.eventToEdit.title}`,
+        image: '',
+        isSendEmail: false,
+        isSendNotification: true,
+        rollnumbers: this.rollnumbers,
+      }
+      this.notiService.sendNotification(payload).subscribe(
+        (data: any) => this.toastrService.show("Send notification successfully", "Success", {
+          status: "success",
+        }),
+        (failed: any) => this.toastrService.show(failed, "Failed", {
+          status: "danger",
+        })
+      )
+    })
   }
 }
