@@ -1,16 +1,16 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import {
-  Jwt,
-  UserSummary,
-} from "../../../app-state/user";
-import { UserService } from "../../../@core/services/user/user.service";
-import { Observable, combineLatest, map, switchMap, tap } from "rxjs";
+import { Observable, combineLatest, map, switchMap } from "rxjs";
+import { GradeService } from "../../../@core/services/grade/grade.service";
 import {
   Semester,
   SemesterService,
 } from "../../../@core/services/semester/semester.service";
-import { GradeService } from "../../../@core/services/grade/grade.service";
+import { UserService } from "../../../@core/services/user/user.service";
+import {
+  Jwt,
+  UserSummary,
+} from "../../../app-state/user";
 
 @Component({
   selector: "ngx-user",
@@ -41,6 +41,7 @@ export class UserComponent {
   }
   user: UserSummary;
   jwt: Jwt;
+  userScore: number;
   ngOnInit() {
     this.userService.checkLoggedIn();
     this.fetchData();
@@ -85,9 +86,9 @@ export class UserComponent {
       })
     );
     this.gradesBySemester$.subscribe((data) => {
-      this.ticketGradesBySemester = data.filter((d) => d.type === 0);
-      this.participantsGradesBySemester = data.filter((d) => d.type === 1);
-      this.taskGradesBySemester = data.filter((d) => d.type === 2);
+      this.ticketGradesBySemester = data?.filter((d) => d.type === 0);
+      this.participantsGradesBySemester = data?.filter((d) => d.type === 1);
+      this.taskGradesBySemester = data?.filter((d) => d.type === 2);
     });
     this.ticketGradesBySemester$ = this.gradesBySemester$.pipe(
       map((grades) => grades.filter((grade) => grade.type === 0))
@@ -100,16 +101,16 @@ export class UserComponent {
     );
   }
 
-  fetchData() {}
+  fetchData() { }
   selectSemester(semester) {
     this.selectedSemester = semester.tabTitle;
     this.gradeService
       .getGradeBySemesterAndRollnumber(this.selectedSemester, this.rollNumber)
       .subscribe((data: any) => {
-        this.ticketGradesBySemester = data.filter((d) => d.type === 0);
-        this.participantsGradesBySemester = data.filter((d) => d.type === 1);
-        this.taskGradesBySemester = data.filter((d) => d.type === 2);
+        this.userScore = data.score;
+        this.ticketGradesBySemester = data.gradeHistory?.filter((d) => d.type === 0);
+        this.participantsGradesBySemester = data.gradeHistory?.filter((d) => d.type === 1);
+        this.taskGradesBySemester = data.gradeHistory?.filter((d) => d.type === 2);
       });
-    console.log(this.participantsGradesBySemester);
   }
 }
