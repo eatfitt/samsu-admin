@@ -9,7 +9,7 @@ export function isImageFile(filename) {
     var extensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];
     
     // Get the file extension
-    var fileExtension = filename.split('.').pop().toLowerCase();
+    var fileExtension = filename?.split('.').pop().toLowerCase();
     
     // Check if the file extension is in the list of image file extensions
     return extensions.includes(fileExtension);

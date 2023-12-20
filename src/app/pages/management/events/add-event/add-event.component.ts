@@ -106,6 +106,7 @@ export class AddEventComponent implements OnInit {
   department = null;
   proposalId = 14;
   startTime: Date = new Date(this.today);
+  startTimeOClock: Date = new Date(this.today);
   duration = 0;
   status = 2;
   attendScore = 0;
@@ -154,8 +155,13 @@ export class AddEventComponent implements OnInit {
       }),
       map(data => (data as any)?.filter(content => content.status === "APPROVED")),
     );
-    this.minDate.setDate(this.today.getDate());
-    this.startTime.setDate(this.today.getDate() + 1);
+    this.minDate.setDate(this.today.getDate() - 1);
+    this.minDate.setMinutes(this.today.getMinutes() + 30);
+    this.startTimeOClock.setDate(this.today.getDate() - 1);
+    this.startTimeOClock.setMinutes(this.today.getMinutes() + 30);
+    this.startTime.setDate(this.today.getDate());
+    this.startTime.setMinutes(this.today.getMinutes() + 30);
+
     this.semesters$ = this.semesterService.getAllSemesters().pipe(map((data: any) => data.content));
     this.departments$ = this.departmentService.getAllDepartments().pipe(map((data: any) => data.content));
   }
@@ -253,15 +259,27 @@ export class AddEventComponent implements OnInit {
   }
 
   createEventReview() {
+    let startDate = new Date(this.startTime); // your date from the date picker
+    let startTimeOClock = new Date(this.startTimeOClock); // your time from the time picker
+
+    let combinedDateTime = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth(),
+      startDate.getDate(),
+      startTimeOClock.getHours(),
+      startTimeOClock.getMinutes(),
+      startTimeOClock.getSeconds()
+    );
+
     this.eventReview = {
       semestersName: this.semester,
       title: this.title,
       content: this.content,
       status: Number(this.status),
-      startTime: this.startTime,
+      startTime: combinedDateTime,
       duration: Number(this.duration),
-      bannerUrl: this.bannerUrl ?? 'https://sgp1.digitaloceanspaces.com/samsu/assets/d66741de-93fc-4ca7-a393-2e75830fe34e_fpt-edu-got-talent-2023-820x1024.jpeg',
-      fileUrls: this.fileUrls ?? 'https://sgp1.digitaloceanspaces.com/samsu/assets/b94705b8-9392-4b90-8eeb-a78004fddb22_samsu_event_attachment.xlsx',
+      bannerUrl: this.bannerUrl ?? 'https://sgp1.digitaloceanspaces.com/samsu/assets/EVENT-BANNER.PNG',
+      fileUrls: this.fileUrls ?? 'https://sgp1.digitaloceanspaces.com/samsu/assets/PROPOSAL.XLSX ',
       participants: this.attendanceList,
       attendScore: Number(this.attendScore),
       creator: null,
@@ -358,6 +376,17 @@ export class AddEventComponent implements OnInit {
   }
 
   createEvent() {
+    let startDate = new Date(this.startTime); // your date from the date picker
+    let startTimeOClock = new Date(this.startTimeOClock); // your time from the time picker
+
+    let combinedDateTime = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth(),
+      startDate.getDate(),
+      startTimeOClock.getHours(),
+      startTimeOClock.getMinutes(),
+      startTimeOClock.getSeconds()
+    );
     const feedbackPayload: FeedbackQuestionRequest[] =
       this.feedbackQuestionList.map((question) => {
         return {
@@ -402,7 +431,7 @@ export class AddEventComponent implements OnInit {
       semester: this.semester,
       bannerUrl: this.bannerUrl,
       fileUrls: this.fileUrls,
-      startTime: this.startTime,
+      startTime: combinedDateTime,
       feedbackQuestionRequestList: feedbackPayload,
       rollnumbers: rollnumbersPayload,
       taskRequests: taskPayload,
@@ -464,5 +493,35 @@ export class AddEventComponent implements OnInit {
     if (value > this.selectedSubGradeCriteria.maxScore || value < this.selectedSubGradeCriteria.minScore) {
         event.preventDefault();
     }
+  }
+
+  checkTimeBeforeEventIsCreated(event) {
+    this.startTimeOClock = event.time;
+    const actualMinDate = new Date();
+    actualMinDate.setDate(this.today.getDate());
+    actualMinDate.setMinutes(this.today.getMinutes() + 30);
+    if (actualMinDate.getFullYear() === this.startTime.getFullYear() &&
+    actualMinDate.getMonth() === this.startTime.getMonth() &&
+    actualMinDate.getDate() === this.startTime.getDate()) {
+      if (this.minDate.getHours() > this.startTimeOClock.getHours()) {
+        this.toastrService.show("Start time should be 30 minutes away", "Select a latter time", {
+          status: "danger",
+        });
+        this.startTimeOClock = new Date(this.minDate.getTime());
+        return;
+      }
+      if (this.minDate.getHours() === this.startTimeOClock.getHours()) {
+        if (this.startTimeOClock.getMinutes() - this.minDate.getMinutes() < 0) {
+          this.toastrService.show("Start time should be 30 minutes away", "Select a latter time", {
+            status: "danger",
+          });
+          this.startTimeOClock = new Date(this.minDate.getTime());
+        }
+        
+      }
+    } else {
+      this.startTimeOClock = event.time;
+    }
+    this.cdr.detectChanges();
   }
 }
